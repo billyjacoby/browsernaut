@@ -17,6 +17,9 @@
       "menuOnLeftClick": false
     },
     "allowlist": {
+      "window": {
+        "all": true
+      },
       "fs": {
         "all": true,
         "readFile": true,
@@ -29,7 +32,6 @@
         "renameFile": true,
         "exists": true
       },
-      "all": false,
       "shell": {
         "all": true,
         "open": true,
@@ -72,6 +74,7 @@
     "macOSPrivateApi": true,
     "windows": [
       {
+        "label": "menu_bar",
         "fullscreen": false,
         "height": 400,
         "resizable": false,
