@@ -1,7 +1,6 @@
-# Tauri + React + Typescript
+# Browsernaut
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+An application that opens links in their respective applications instead of in the browser. Strongly inspired by [Browserosaurus](https://github.com/will-stone/browserosaurus) but built using Tauri instead of Electron in order to drastically decrease the size.
 
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+Intended to include all of the currently supported features of Browserosaurus plus:
+- Remember what applications should open for which base URLs
