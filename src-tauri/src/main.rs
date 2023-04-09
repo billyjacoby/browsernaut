@@ -1,7 +1,11 @@
-use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
+use tauri::{
+    ActivationPolicy, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
+};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 fn main() {
+    tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
+
     let quit = CustomMenuItem::new("quit".to_string(), "Quit").accelerator("Cmd+Q");
     let preferences =
         CustomMenuItem::new("preferences".to_string(), "Preferences").accelerator("Cmd+P");
@@ -9,17 +13,17 @@ fn main() {
 
     tauri::Builder::default()
         .setup(|app| {
-            // Build the preferences window here
-            tauri::WindowBuilder::new(
-                app,
-                "preferences_window",
-                tauri::WindowUrl::App("index.html".into()),
-            )
-            // Not visible by default
-            .visible(false)
-            .build()?;
+            //? Allows application to receive and parse the URI passed in when opened.
+            let handle = app.handle();
+            tauri_plugin_deep_link::register("https", move |request| {
+                dbg!(&request);
+                handle.emit_all("scheme-request-received", request).unwrap();
+            })
+            .unwrap();
+            app.set_activation_policy(ActivationPolicy::Accessory);
             Ok(())
         })
+        //? Allows for application positioning - for menu bar now and near cursor in the future
         .plugin(tauri_plugin_positioner::init())
         .system_tray(SystemTray::new().with_menu(system_tray_menu))
         .on_system_tray_event(|app, event| {
@@ -47,13 +51,25 @@ fn main() {
                     }
                     "preferences" => {
                         // Check if the menu window is open, if so we want to hide it
-                        let main_window = app.get_window("menu_bar").unwrap();
-                        if main_window.is_visible().unwrap() {
-                            main_window.hide().unwrap();
+                        let menu_window = app.get_window("menu_bar").unwrap();
+                        if menu_window.is_visible().unwrap() {
+                            menu_window.hide().unwrap();
                         }
-                        // Check if the preference window already exists, if so just focus on it
-                        let prefs_window = app.get_window("preferences_window").unwrap();
-                        prefs_window.show().unwrap();
+                        //? Check if we have a prefs window already
+                        let prefs_window = app.get_window("preferences_window");
+                        if prefs_window.is_none() {
+                            //? If we don't then we build a new onw
+                            let _ = tauri::WindowBuilder::new(
+                                app,
+                                "preferences_window", /* the unique window label */
+                                tauri::WindowUrl::App("index.html".into()),
+                            )
+                            .build()
+                            .unwrap();
+                        } else {
+                            //? If we do then we just show it
+                            prefs_window.unwrap().show().unwrap();
+                        }
                     }
                     _ => {}
                 },
@@ -61,9 +77,17 @@ fn main() {
             }
         })
         .on_window_event(|event| match event.event() {
+            //? When clicking outside the menu bar window, we want to hide the menu bar window
+            //? but not other windows
             tauri::WindowEvent::Focused(is_focused) => {
+                //TODO: this still acts a bit wonky when the prefs window it open
                 if !is_focused {
-                    event.window().hide().unwrap();
+                    event
+                        .window()
+                        .get_window("menu_bar")
+                        .unwrap()
+                        .hide()
+                        .unwrap();
                 }
             }
             _ => {}
