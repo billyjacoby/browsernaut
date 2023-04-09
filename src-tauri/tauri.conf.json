@@ -54,6 +54,10 @@
       }
     },
     "bundle": {
+      "macOS": {
+        "entitlements": "./entitlements.mac.plist",
+        "minimumSystemVersion": "10.13"
+      },
       "active": true,
       "icon": [
         "icons/32x32.png",
@@ -62,7 +66,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.billyjacpby.browsernaut",
       "targets": "all"
     },
     "security": {
