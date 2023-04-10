@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 
 import reactLogo from './assets/react.svg';
 import { Command } from '@tauri-apps/api/shell';

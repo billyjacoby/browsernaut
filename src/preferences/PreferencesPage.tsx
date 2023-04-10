@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { colors } from '../constants';
 
 export const PreferencesPage = () => {
   React.useEffect(() => {
@@ -13,12 +14,15 @@ export const PreferencesPage = () => {
   );
 };
 
-const Heading = styled.h1`
+const Heading = styled.h2`
   font-weight: 500;
 `;
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
+  flex: 1;
+  height: 100vh;
   justify-content: center;
+  background: ${colors.background};
+  color: ${colors.text};
 `;

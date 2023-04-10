@@ -25,6 +25,7 @@ fn main() {
         })
         //? Allows for application positioning - for menu bar now and near cursor in the future
         .plugin(tauri_plugin_positioner::init())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .system_tray(SystemTray::new().with_menu(system_tray_menu))
         .on_system_tray_event(|app, event| {
             tauri_plugin_positioner::on_tray_event(app, &event);
@@ -40,7 +41,7 @@ fn main() {
                     if window.is_visible().unwrap() {
                         window.hide().unwrap();
                     } else {
-                        // Need to hide the prefs window here
+                        // Need to hide the preferences window here
                         window.show().unwrap();
                         window.set_focus().unwrap();
                     }
@@ -55,20 +56,16 @@ fn main() {
                         if menu_window.is_visible().unwrap() {
                             menu_window.hide().unwrap();
                         }
-                        //? Check if we have a prefs window already
-                        let prefs_window = app.get_window("preferences_window");
-                        if prefs_window.is_none() {
+                        //? Check if we have a preferences window already
+                        let preferences_window = app.get_window("preferences_window");
+                        if preferences_window.is_none() {
                             //? If we don't then we build a new onw
-                            let _ = tauri::WindowBuilder::new(
-                                app,
-                                "preferences_window", /* the unique window label */
-                                tauri::WindowUrl::App("index.html".into()),
-                            )
-                            .build()
-                            .unwrap();
+                            println!("building new window");
+                            open_preferences_window(app.clone());
                         } else {
                             //? If we do then we just show it
-                            prefs_window.unwrap().show().unwrap();
+                            println!("showing existing window");
+                            preferences_window.unwrap().show().unwrap();
                         }
                     }
                     _ => {}
@@ -80,7 +77,7 @@ fn main() {
             //? When clicking outside the menu bar window, we want to hide the menu bar window
             //? but not other windows
             tauri::WindowEvent::Focused(is_focused) => {
-                //TODO: this still acts a bit wonky when the prefs window it open
+                //TODO: this still acts a bit wonky when the preferences window it open
                 if !is_focused {
                     event
                         .window()
@@ -94,4 +91,18 @@ fn main() {
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+// Command to make creating prefs window easier in the future
+#[tauri::command]
+fn open_preferences_window(app_handle: tauri::AppHandle) {
+    let window = tauri::WindowBuilder::new(
+        &app_handle,
+        "preferences_window",
+        tauri::WindowUrl::App("index.html".into()),
+    )
+    .build()
+    .unwrap();
+
+    window.set_title("").unwrap();
 }
