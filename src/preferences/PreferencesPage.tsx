@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../constants';
 
+import { PreferencesPage as BPrefsPage } from '../renderers/prefs';
+
 export const PreferencesPage = () => {
   React.useEffect(() => {
     document.body.classList.remove('arrow');
@@ -9,7 +11,8 @@ export const PreferencesPage = () => {
   }, []);
   return (
     <Container>
-      <Heading>Preferences Page</Heading>
+      {/* <Heading className="underline">Preferences Page</Heading> */}
+      <BPrefsPage />
     </Container>
   );
 };
