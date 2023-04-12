@@ -1,1 +1,1 @@
-export { PreferencesPage } from './components/PreferencesPage';
+export { PreferencesPage } from './PreferencesPage';
