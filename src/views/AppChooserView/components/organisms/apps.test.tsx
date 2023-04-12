@@ -1,24 +1,24 @@
-import '../../../shared/preload'
+import '../../../shared/preload';
 
-import { fireEvent, render, screen } from '@testing-library/react'
-import electron from 'electron'
-import cloneDeep from 'lodash/cloneDeep'
+import { fireEvent, render, screen } from '@testing-library/react';
+import electron from 'electron';
+import cloneDeep from 'lodash/cloneDeep';
 
-import { keyLayout } from '../../../../../__fixtures__/key-layout'
+import { keyLayout } from '../../../../../__fixtures__/key-layout';
 import {
   openedUrl,
   receivedRendererStartupSignal,
   retrievedInstalledApps,
-} from '../../../../main/state/actions'
-import { Channel } from '../../../../shared/state/channels'
-import { defaultData } from '../../../../shared/state/reducer.data'
-import { addChannelToAction } from '../../../../shared/utils/add-channel-to-action'
-import { reorderedApp } from '../../../prefs/state/actions'
-import { customWindow } from '../../../shared/custom.window'
-import { clickedApp, pressedKey } from '../../state/actions'
-import Wrapper from '../_bootstrap'
+} from '../../../../main/state/actions';
+import { Channel } from '../../../../shared/state/channels';
+import { defaultData } from '../../../../shared/state/reducer.data';
+import { addChannelToAction } from '../../../../shared/utils/add-channel-to-action';
+import { reorderedApp } from '../../../PreferencesView/state/actions';
+import { customWindow } from '../../../shared/custom.window';
+import { clickedApp, pressedKey } from '../../state/actions';
+import Wrapper from '../_bootstrap';
 
-const originalNavigator = cloneDeep(customWindow.navigator)
+const originalNavigator = cloneDeep(customWindow.navigator);
 
 beforeAll(() => {
   customWindow.navigator = {
@@ -28,31 +28,33 @@ beforeAll(() => {
         .fn()
         .mockResolvedValue({ entries: jest.fn().mockReturnValue(keyLayout) }),
     },
-  }
-})
+  };
+});
 
 afterAll(() => {
-  customWindow.navigator = originalNavigator
-})
+  customWindow.navigator = originalNavigator;
+});
 
 test('kitchen sink', () => {
-  render(<Wrapper />)
-  const win = new electron.BrowserWindow()
+  render(<Wrapper />);
+  const win = new electron.BrowserWindow();
   win.webContents.send(
     Channel.MAIN,
-    retrievedInstalledApps(['Firefox', 'Safari', 'Brave Browser']),
-  )
+    retrievedInstalledApps(['Firefox', 'Safari', 'Brave Browser'])
+  );
   // Check apps and app logos shown
-  expect(screen.getByTestId('Firefox')).toBeVisible()
-  expect(screen.getByRole('button', { name: 'Firefox App' })).toBeVisible()
-  expect(screen.getByTestId('Safari')).toBeVisible()
-  expect(screen.getByRole('button', { name: 'Safari App' })).toBeVisible()
-  expect(screen.getByTestId('Brave Browser')).toBeVisible()
+  expect(screen.getByTestId('Firefox')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Firefox App' })).toBeVisible();
+  expect(screen.getByTestId('Safari')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Safari App' })).toBeVisible();
+  expect(screen.getByTestId('Brave Browser')).toBeVisible();
   expect(
-    screen.getByRole('button', { name: 'Brave Browser App' }),
-  ).toBeVisible()
+    screen.getByRole('button', { name: 'Brave Browser App' })
+  ).toBeVisible();
 
-  expect(screen.getAllByRole('button', { name: /[A-z]+ App/u })).toHaveLength(3)
+  expect(screen.getAllByRole('button', { name: /[A-z]+ App/u })).toHaveLength(
+    3
+  );
 
   win.webContents.send(
     Channel.MAIN,
@@ -87,15 +89,15 @@ test('kitchen sink', () => {
         isSetup: true,
         supportMessage: -1,
       },
-    }),
-  )
+    })
+  );
 
   expect(
-    screen.queryByRole('alert', { name: 'Loading browsers' }),
-  ).not.toBeInTheDocument()
+    screen.queryByRole('alert', { name: 'Loading browsers' })
+  ).not.toBeInTheDocument();
 
   // Correct info sent to main when app clicked
-  fireEvent.click(screen.getByRole('button', { name: 'Firefox App' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Firefox App' }));
   expect(electron.ipcRenderer.send).toHaveBeenCalledWith(
     Channel.PICKER,
     addChannelToAction(
@@ -104,16 +106,16 @@ test('kitchen sink', () => {
         isAlt: false,
         isShift: false,
       }),
-      Channel.PICKER,
-    ),
-  )
+      Channel.PICKER
+    )
+  );
 
   // Correct info sent to main when app clicked
-  const url = 'http://example.com'
-  win.webContents.send(Channel.MAIN, openedUrl(url))
+  const url = 'http://example.com';
+  win.webContents.send(Channel.MAIN, openedUrl(url));
   fireEvent.click(screen.getByRole('button', { name: 'Brave Browser App' }), {
     altKey: true,
-  })
+  });
   expect(electron.ipcRenderer.send).toHaveBeenCalledWith(
     Channel.PICKER,
     addChannelToAction(
@@ -122,14 +124,14 @@ test('kitchen sink', () => {
         isAlt: true,
         isShift: false,
       }),
-      Channel.PICKER,
-    ),
-  )
-})
+      Channel.PICKER
+    )
+  );
+});
 
 test('should show spinner when no installed apps are found', () => {
-  render(<Wrapper />)
-  const win = new electron.BrowserWindow()
+  render(<Wrapper />);
+  const win = new electron.BrowserWindow();
   win.webContents.send(
     Channel.MAIN,
     receivedRendererStartupSignal({
@@ -146,15 +148,15 @@ test('should show spinner when no installed apps are found', () => {
         isSetup: true,
         supportMessage: -1,
       },
-    }),
-  )
-  expect(screen.getByRole('alert', { name: 'Loading browsers' })).toBeVisible()
-})
+    })
+  );
+  expect(screen.getByRole('alert', { name: 'Loading browsers' })).toBeVisible();
+});
 
 test('should use hotkey', () => {
-  render(<Wrapper />)
-  const win = new electron.BrowserWindow()
-  win.webContents.send(Channel.MAIN, retrievedInstalledApps(['Safari']))
+  render(<Wrapper />);
+  const win = new electron.BrowserWindow();
+  win.webContents.send(Channel.MAIN, retrievedInstalledApps(['Safari']));
   win.webContents.send(
     Channel.MAIN,
     receivedRendererStartupSignal({
@@ -171,12 +173,12 @@ test('should use hotkey', () => {
         isSetup: true,
         supportMessage: -1,
       },
-    }),
-  )
+    })
+  );
 
-  const url = 'http://example.com'
-  win.webContents.send(Channel.MAIN, openedUrl(url))
-  fireEvent.keyDown(document, { code: 'KeyS', key: 'S', keyCode: 83 })
+  const url = 'http://example.com';
+  win.webContents.send(Channel.MAIN, openedUrl(url));
+  fireEvent.keyDown(document, { code: 'KeyS', key: 'S', keyCode: 83 });
   expect(electron.ipcRenderer.send).toHaveBeenCalledWith(
     Channel.PICKER,
     addChannelToAction(
@@ -187,15 +189,15 @@ test('should use hotkey', () => {
         shiftKey: false,
         virtualKey: 's',
       }),
-      Channel.PICKER,
-    ),
-  )
-})
+      Channel.PICKER
+    )
+  );
+});
 
 test('should use hotkey with alt', () => {
-  render(<Wrapper />)
-  const win = new electron.BrowserWindow()
-  win.webContents.send(Channel.MAIN, retrievedInstalledApps(['Safari']))
+  render(<Wrapper />);
+  const win = new electron.BrowserWindow();
+  win.webContents.send(Channel.MAIN, retrievedInstalledApps(['Safari']));
 
   win.webContents.send(
     Channel.MAIN,
@@ -213,17 +215,17 @@ test('should use hotkey with alt', () => {
         isSetup: true,
         supportMessage: -1,
       },
-    }),
-  )
+    })
+  );
 
-  const url = 'http://example.com'
-  win.webContents.send(Channel.MAIN, openedUrl(url))
+  const url = 'http://example.com';
+  win.webContents.send(Channel.MAIN, openedUrl(url));
   fireEvent.keyDown(document, {
     altKey: true,
     code: 'KeyS',
     key: 's',
     keyCode: 83,
-  })
+  });
   expect(electron.ipcRenderer.send).toHaveBeenCalledWith(
     Channel.PICKER,
     addChannelToAction(
@@ -234,19 +236,19 @@ test('should use hotkey with alt', () => {
         shiftKey: false,
         virtualKey: 's',
       }),
-      Channel.PICKER,
-    ),
-  )
-})
+      Channel.PICKER
+    )
+  );
+});
 
 test('should hold shift', () => {
-  render(<Wrapper />)
-  const win = new electron.BrowserWindow()
-  win.webContents.send(Channel.MAIN, retrievedInstalledApps(['Firefox']))
-  win.webContents.send(Channel.MAIN, openedUrl('http://example.com'))
+  render(<Wrapper />);
+  const win = new electron.BrowserWindow();
+  win.webContents.send(Channel.MAIN, retrievedInstalledApps(['Firefox']));
+  win.webContents.send(Channel.MAIN, openedUrl('http://example.com'));
   fireEvent.click(screen.getByRole('button', { name: 'Firefox App' }), {
     shiftKey: true,
-  })
+  });
   expect(electron.ipcRenderer.send).toHaveBeenCalledWith(
     Channel.PICKER,
     addChannelToAction(
@@ -255,15 +257,15 @@ test('should hold shift', () => {
         isAlt: false,
         isShift: true,
       }),
-      Channel.PICKER,
-    ),
-  )
-})
+      Channel.PICKER
+    )
+  );
+});
 
 test('should order tiles', () => {
-  render(<Wrapper />)
+  render(<Wrapper />);
 
-  const win = new electron.BrowserWindow()
+  const win = new electron.BrowserWindow();
 
   win.webContents.send(
     Channel.MAIN,
@@ -275,8 +277,8 @@ test('should order tiles', () => {
         isSetup: true,
         supportMessage: -1,
       },
-    }),
-  )
+    })
+  );
 
   win.webContents.send(
     Channel.MAIN,
@@ -286,40 +288,40 @@ test('should order tiles', () => {
       'Opera',
       'Microsoft Edge',
       'Brave Browser',
-    ]),
-  )
+    ])
+  );
   // Check tiles and tile logos shown
-  const apps = screen.getAllByRole('button', { name: /[A-z]+ App/u })
+  const apps = screen.getAllByRole('button', { name: /[A-z]+ App/u });
 
-  expect(apps).toHaveLength(5)
+  expect(apps).toHaveLength(5);
 
   win.webContents.send(
     Channel.MAIN,
     reorderedApp({
       destinationName: 'Firefox',
       sourceName: 'Safari',
-    }),
-  )
+    })
+  );
   win.webContents.send(
     Channel.MAIN,
     reorderedApp({
       destinationName: 'Firefox',
       sourceName: 'Opera',
-    }),
-  )
+    })
+  );
   win.webContents.send(
     Channel.MAIN,
     reorderedApp({
       destinationName: 'Firefox',
       sourceName: 'Brave Browser',
-    }),
-  )
+    })
+  );
 
-  const updatedApps = screen.getAllByRole('button', { name: /[A-z]+ App/u })
+  const updatedApps = screen.getAllByRole('button', { name: /[A-z]+ App/u });
 
-  expect(updatedApps[0]).toHaveAttribute('aria-label', 'Safari App')
-  expect(updatedApps[1]).toHaveAttribute('aria-label', 'Opera App')
-  expect(updatedApps[2]).toHaveAttribute('aria-label', 'Brave Browser App')
-  expect(updatedApps[3]).toHaveAttribute('aria-label', 'Firefox App')
-  expect(updatedApps[4]).toHaveAttribute('aria-label', 'Microsoft Edge App')
-})
+  expect(updatedApps[0]).toHaveAttribute('aria-label', 'Safari App');
+  expect(updatedApps[1]).toHaveAttribute('aria-label', 'Opera App');
+  expect(updatedApps[2]).toHaveAttribute('aria-label', 'Brave Browser App');
+  expect(updatedApps[3]).toHaveAttribute('aria-label', 'Firefox App');
+  expect(updatedApps[4]).toHaveAttribute('aria-label', 'Microsoft Edge App');
+});
