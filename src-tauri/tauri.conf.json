@@ -91,17 +91,6 @@
         "transparent": true,
         "skipTaskbar": true,
         "alwaysOnTop": true
-      },
-      {
-        "label": "preferences_window",
-        "height": 600,
-        "width": 800,
-        "hiddenTitle": true,
-        "fullscreen": false,
-        "resizable": true,
-        "visible": false,
-        "acceptFirstMouse": true,
-        "transparent": true
       }
     ]
   }

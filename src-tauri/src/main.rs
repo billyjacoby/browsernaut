@@ -58,6 +58,7 @@ fn main() {
                         }
                         //? Check if we have a preferences window already
                         let preferences_window = app.get_window("preferences_window");
+
                         if preferences_window.is_none() {
                             //? If we don't then we build a new onw
                             dbg!("building new window");
@@ -95,7 +96,6 @@ fn main() {
 }
 
 // Command to make creating prefs window easier in the future
-#[tauri::command]
 fn open_preferences_window(app_handle: tauri::AppHandle) {
     let window = tauri::WindowBuilder::new(
         &app_handle,
@@ -107,3 +107,25 @@ fn open_preferences_window(app_handle: tauri::AppHandle) {
 
     window.set_title("").unwrap();
 }
+
+// fn open_picker_window(app_handle: tauri::AppHandle) {
+//     let enigo = Enigo::new();
+//     let (cursor_x, cursor_y): (i32, i32) = Enigo::mouse_location(&enigo);
+//     dbg!(cursor_x);
+//     dbg!(cursor_y);
+//     let window = tauri::WindowBuilder::new(
+//         &app_handle,
+//         "picker_window",
+//         tauri::WindowUrl::App("index.html".into()),
+//     )
+//     .build()
+//     .unwrap();
+
+//     // let window_position = Pos {
+//     //     x: cursor_x,
+//     //     y: cursor_y,
+//     // }
+
+//     window.set_position(window);
+//     window.set_title("").unwrap();
+// }

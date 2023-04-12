@@ -583,6 +583,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "enigo"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "464c869256b1d6c1db151ab7a164fe0a5a6d340095460f92d7e8fba78ab47dc0"
+dependencies = [
+ "core-graphics",
+ "libc",
+ "objc",
+ "pkg-config",
+ "windows 0.48.0",
+]
+
+[[package]]
 name = "errno"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2783,6 +2796,7 @@ dependencies = [
 name = "tauri-app"
 version = "0.0.0"
 dependencies = [
+ "enigo",
  "serde",
  "serde_json",
  "tauri",
@@ -3546,6 +3560,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e745dab35a0c4c77aa3ce42d595e13d2003d6902d6b08c9ef5fc326d08da12b"
 dependencies = [
  "windows-targets 0.42.2",
+]
+
+[[package]]
+name = "windows"
+version = "0.48.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e686886bc078bc1b0b600cac0147aadb815089b6e4da64016cbd754b6342700f"
+dependencies = [
+ "windows-targets 0.48.0",
 ]
 
 [[package]]

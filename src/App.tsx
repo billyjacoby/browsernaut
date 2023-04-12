@@ -2,15 +2,19 @@ import React from 'react';
 
 import reactLogo from './assets/react.svg';
 import { Command } from '@tauri-apps/api/shell';
-import { getCurrent } from '@tauri-apps/api/window';
+import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
 import { listen } from '@tauri-apps/api/event';
 import { PreferencesPage } from './views/PreferencesView/index';
+import { AppPicker } from './views/AppPickerView';
+
+// https://google.com
 
 // import { getAllInstalledAppNames } from './main/utils/get-installed-app-names';
 
-enum WindowLabelEnum {
+export enum WindowLabelEnum {
   MAIN = 'menu_bar',
   PREFS = 'preferences_window',
+  PICKER = 'picker_window',
 }
 
 const URL_EVENT_NAME = 'scheme-request-received';
@@ -38,6 +42,21 @@ function App() {
         (event) => {
           console.log('Received URL to open: ', event.payload);
           setEventData(event.payload);
+          // Open picker window
+          const existingWindow = WebviewWindow.getByLabel(
+            WindowLabelEnum.PICKER
+          );
+          const currentWindow = getCurrent();
+          if (
+            !existingWindow &&
+            currentWindow.label !== WindowLabelEnum.PICKER
+          ) {
+            const webview = new WebviewWindow(WindowLabelEnum.PICKER, {
+              focus: true,
+              titleBarStyle: 'overlay',
+            });
+            webview.show();
+          }
         }
       );
       return () => unlisten();
@@ -47,6 +66,10 @@ function App() {
   if (currentWindow === WindowLabelEnum.PREFS) {
     // return standalone prefs page.
     return <PreferencesPage />;
+  }
+  if (currentWindow === WindowLabelEnum.PICKER) {
+    // return standalone prefs page.
+    return <AppPicker />;
   }
 
   return (
