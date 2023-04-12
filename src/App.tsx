@@ -4,7 +4,7 @@ import reactLogo from './assets/react.svg';
 import { Command } from '@tauri-apps/api/shell';
 import { getCurrent } from '@tauri-apps/api/window';
 import { listen } from '@tauri-apps/api/event';
-import { PreferencesPage } from './preferences';
+import { PreferencesPage } from './views/prefs/index';
 
 // import { getAllInstalledAppNames } from './main/utils/get-installed-app-names';
 

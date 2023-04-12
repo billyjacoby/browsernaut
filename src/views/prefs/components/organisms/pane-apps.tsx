@@ -1,4 +1,4 @@
-import type { DragEndEvent } from '@dnd-kit/core'
+import type { DragEndEvent } from '@dnd-kit/core';
 import {
   closestCenter,
   DndContext,
@@ -6,36 +6,36 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from '@dnd-kit/core'
+} from '@dnd-kit/core';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import clsx from 'clsx'
-import { useDispatch } from 'react-redux'
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import clsx from 'clsx';
 
-import type { AppName } from '../../../../config/apps'
-import Input from '../../../shared/components/atoms/input'
-import { Spinner } from '../../../shared/components/atoms/spinner'
-import type { InstalledApp } from '../../../shared/state/hooks'
-import {
-  useDeepEqualSelector,
-  useInstalledApps,
-  useKeyCodeMap,
-} from '../../../shared/state/hooks'
-import { reorderedApp, updatedHotCode } from '../../state/actions'
-import { Pane } from '../molecules/pane'
+import type { AppName, InstalledApp } from '../../../../config/apps';
+import Input from '../../../shared/components/atoms/input';
+import { Spinner } from '../../../shared/components/atoms/spinner';
+// import {
+//   useDeepEqualSelector,
+//   useInstalledApps,
+//   useKeyCodeMap,
+// } from '../../../shared/state/hooks'
+// import { reorderedApp, updatedHotCode } from '../../state/actions';
+import { Pane } from '../molecules/pane';
 
 interface SortableItemProps {
-  id: InstalledApp['name']
-  name: InstalledApp['name']
-  index: number
-  icon?: string
-  keyCode?: string
+  id: InstalledApp['name'];
+  name: InstalledApp['name'];
+  index: number;
+  icon?: string;
+  keyCode?: string;
 }
+
+const useDispatch = () => (any: any) => console.log('dispatch: ', any);
 
 const SortableItem = ({
   id,
@@ -51,14 +51,14 @@ const SortableItem = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id })
+  } = useSortable({ id });
 
-  const dispatch = useDispatch()
+  const dispatch = (any: any) => console.log(any);
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  }
+  };
 
   return (
     <div
@@ -72,7 +72,7 @@ const SortableItem = ({
         'mb-4 rounded-xl',
         'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
         isDragging &&
-          'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100',
+          'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
       )}
     >
       <div className="flex w-16 items-center justify-center p-4">
@@ -95,15 +95,15 @@ const SortableItem = ({
           minLength={0}
           onChange={(event) => event.preventDefault()}
           onFocus={(event) => {
-            event.target.select()
+            event.target.select();
           }}
           onKeyPress={(event) => {
             dispatch(
-              updatedHotCode({
+              `updatedHotCode({
                 appName: id,
                 value: event.code,
-              }),
-            )
+              })`
+            );
           }}
           placeholder="Key"
           type="text"
@@ -111,38 +111,39 @@ const SortableItem = ({
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export function AppsPane(): JSX.Element {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const installedApps = useInstalledApps().map((installedApp) => ({
+  const installedApps = [].map((installedApp: any) => ({
     ...installedApp,
     id: installedApp.name,
-  }))
+  }));
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
+    })
+  );
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {
       dispatch(
-        reorderedApp({
+        `reorderedApp({
           destinationName: over?.id as AppName,
           sourceName: active.id as AppName,
-        }),
-      )
+        })`
+      );
     }
-  }
+  };
 
-  const icons = useDeepEqualSelector((state) => state.data.icons)
+  // const icons = useDeepEqualSelector((state) => state.data.icons);
+  const icons: any[] = [];
 
-  const keyCodeMap = useKeyCodeMap()
+  const keyCodeMap = new Map<string, string>();
 
   return (
     <Pane pane="apps">
@@ -181,5 +182,5 @@ export function AppsPane(): JSX.Element {
         </p>
       )}
     </Pane>
-  )
+  );
 }

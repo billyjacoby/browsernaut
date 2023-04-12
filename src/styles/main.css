@@ -4,6 +4,8 @@
 
 body {
   margin: 0;
+  position: fixed;
+  overflow: hidden;
 }
 
 :root {

@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../constants';
-
-import { PreferencesPage as BPrefsPage } from '../renderers/prefs';
+import { colors } from '../../../constants';
+import Layout from './layout';
 
 export const PreferencesPage = () => {
   React.useEffect(() => {
@@ -11,21 +10,17 @@ export const PreferencesPage = () => {
   }, []);
   return (
     <Container>
-      {/* <Heading className="underline">Preferences Page</Heading> */}
-      <BPrefsPage />
+      <Layout />
     </Container>
   );
 };
 
-const Heading = styled.h2`
-  font-weight: 500;
-`;
-
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
   flex: 1;
   height: 100vh;
-  justify-content: center;
+  align-items: center;
   background: ${colors.background};
   color: ${colors.text};
 `;
