@@ -60,12 +60,13 @@ fn main() {
                         let preferences_window = app.get_window("preferences_window");
                         if preferences_window.is_none() {
                             //? If we don't then we build a new onw
-                            println!("building new window");
+                            dbg!("building new window");
                             open_preferences_window(app.clone());
                         } else {
                             //? If we do then we just show it
-                            println!("showing existing window");
-                            preferences_window.unwrap().show().unwrap();
+                            dbg!("showing existing window");
+                            // preferences_window.unwrap().show().unwrap();
+                            preferences_window.unwrap().set_focus().unwrap();
                         }
                     }
                     _ => {}
