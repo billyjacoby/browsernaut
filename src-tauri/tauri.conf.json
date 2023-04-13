@@ -4,7 +4,7 @@
     "beforeBuildCommand": "yarn build",
     "devPath": "http://localhost:1420",
     "distDir": "../dist",
-    "withGlobalTauri": false
+    "withGlobalTauri": true
   },
   "package": {
     "productName": "browsernaut",
@@ -18,7 +18,8 @@
     },
     "allowlist": {
       "window": {
-        "all": true
+        "all": true,
+        "startDragging": true
       },
       "fs": {
         "all": true,

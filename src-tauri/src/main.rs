@@ -97,15 +97,16 @@ fn main() {
 
 // Command to make creating prefs window easier in the future
 fn open_preferences_window(app_handle: tauri::AppHandle) {
-    let window = tauri::WindowBuilder::new(
+    tauri::WindowBuilder::new(
         &app_handle,
         "preferences_window",
         tauri::WindowUrl::App("index.html".into()),
     )
+    .accept_first_mouse(true)
+    .title_bar_style(tauri::TitleBarStyle::Overlay)
+    .title("")
     .build()
     .unwrap();
-
-    window.set_title("").unwrap();
 }
 
 // fn open_picker_window(app_handle: tauri::AppHandle) {

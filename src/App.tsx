@@ -43,13 +43,20 @@ function App() {
           console.log('Received URL to open: ', event.payload);
           setEventData(event.payload);
           // Open picker window
+          if (event?.payload) {
+            console.log('event?.payload', event?.payload);
+          } else {
+            return;
+          }
           const existingWindow = WebviewWindow.getByLabel(
             WindowLabelEnum.PICKER
           );
+          console.log('existingWindow', existingWindow);
           const currentWindow = getCurrent();
           if (
             !existingWindow &&
-            currentWindow.label !== WindowLabelEnum.PICKER
+            currentWindow.label !== WindowLabelEnum.PICKER &&
+            event?.payload
           ) {
             const webview = new WebviewWindow(WindowLabelEnum.PICKER, {
               focus: true,

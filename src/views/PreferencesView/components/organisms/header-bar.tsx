@@ -44,7 +44,10 @@ export const HeaderBar = ({ className }: HeaderBarProps): JSX.Element => {
         className
       )}
     >
-      <div className="flex items-center justify-center space-x-12">
+      <div
+        className="flex items-center justify-center space-x-12"
+        data-tauri-drag-region
+      >
         <TabButton tab="general">General</TabButton>
         <TabButton tab="apps">Apps</TabButton>
         <TabButton tab="about">About</TabButton>
