@@ -6,10 +6,10 @@ import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
 import { listen } from '@tauri-apps/api/event';
 import { PreferencesPage } from './views/PreferencesView/index';
 import { AppPicker } from './views/AppPickerView';
+import { useAppDataStore } from './stores/appDataStore';
+import { URL_EVENT_NAME } from './constants';
 
 // https://google.com
-
-// import { getAllInstalledAppNames } from './main/utils/get-installed-app-names';
 
 export enum WindowLabelEnum {
   MAIN = 'menu_bar',
@@ -17,10 +17,7 @@ export enum WindowLabelEnum {
   PICKER = 'picker_window',
 }
 
-const URL_EVENT_NAME = 'scheme-request-received';
-
 function App() {
-  const [appNames, setAppNames] = React.useState<string[]>([]);
   const [eventData, setEventData] = React.useState<string | undefined>(
     undefined
   );
@@ -28,44 +25,37 @@ function App() {
   const currentWindow: WindowLabelEnum = getCurrent().label as WindowLabelEnum;
   console.log('currentWindow', currentWindow);
 
-  const getAppNames = async () => {
-    const output = await new Command('findApps').execute();
-    const newAppNames = output.stdout.trim().split('\n');
-    console.log(newAppNames);
-    setAppNames(newAppNames);
-  };
+  const updateURL = useAppDataStore((state) => state.updateURL);
 
   React.useEffect(() => {
     (async () => {
-      const unlisten = await listen<string>(
-        'scheme-request-received',
-        (event) => {
-          console.log('Received URL to open: ', event.payload);
-          setEventData(event.payload);
-          // Open picker window
-          if (event?.payload) {
-            console.log('event?.payload', event?.payload);
-          } else {
-            return;
-          }
-          const existingWindow = WebviewWindow.getByLabel(
-            WindowLabelEnum.PICKER
-          );
-          console.log('existingWindow', existingWindow);
-          const currentWindow = getCurrent();
-          if (
-            !existingWindow &&
-            currentWindow.label !== WindowLabelEnum.PICKER &&
-            event?.payload
-          ) {
-            const webview = new WebviewWindow(WindowLabelEnum.PICKER, {
-              focus: true,
-              titleBarStyle: 'overlay',
-            });
-            webview.show();
-          }
+      const unlisten = await listen<string>(URL_EVENT_NAME, (event) => {
+        console.log('Received URL to open: ', event.payload);
+        setEventData(event.payload);
+        // Open picker window
+        if (event?.payload) {
+          console.log('event?.payload', event?.payload);
+          updateURL(event.payload);
+        } else {
+          return;
         }
-      );
+        const existingWindow = WebviewWindow.getByLabel(WindowLabelEnum.PICKER);
+        console.log('existingWindow', existingWindow);
+        const currentWindow = getCurrent();
+        if (
+          !existingWindow &&
+          currentWindow.label !== WindowLabelEnum.PICKER &&
+          event?.payload
+        ) {
+          //? No matter what in dev mode this will cause more than one window to open sometimes
+          //? https://github.com/FabianLars/tauri-plugin-deep-link#macos
+          const webview = new WebviewWindow(WindowLabelEnum.PICKER, {
+            focus: true,
+            titleBarStyle: 'overlay',
+          });
+          webview.show();
+        }
+      });
       return () => unlisten();
     })();
   }, []);
@@ -94,13 +84,13 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <button onClick={getAppNames}>Get app names</button>
+      {/* <button onClick={getAppNames}>Get app names</button>
       {appNames?.length
         ? appNames.map((name) => {
             return <p>{name}</p>;
           })
-        : null}
-      {eventData ? <p>Event Data: {eventData}</p> : null}
+        : null} */}
+      {eventData ? <p>Received URL Data: {eventData}</p> : null}
 
       <p>Click on the Tauri, Vite, and React logos to learn more.</p>
     </div>

@@ -1,5 +1,4 @@
-import { execSync } from 'node:child_process';
-import path from 'node:path';
+import { path } from '@tauri-apps/api';
 
 import type { AppName } from '../config/apps';
 import { apps } from '../config/apps';
@@ -7,15 +6,19 @@ import { Command } from '@tauri-apps/api/shell';
 
 async function getAllInstalledAppNames(): Promise<string[]> {
   const output = await new Command('findApps').execute();
-  const appNames = output.stdout
-    .trim()
-    .split('\n')
-    .map((appPath) => path.parse(appPath).name);
+  const appNamesRaw = output.stdout.trim().split('\n');
+  const appNamePromises = appNamesRaw.map(async (appPath) => {
+    const baseName = await path.basename(appPath);
+    const appName = baseName.substring(0, baseName.length - 4);
+    return appName;
+  });
 
-  return appNames;
+  const results = await Promise.all(appNamePromises);
+
+  return results;
 }
 
-async function getInstalledAppNames(): Promise<void> {
+async function getInstalledAppNames(): Promise<AppName[]> {
   // dispatch(startedScanning());
 
   const allInstalledAppNames = await getAllInstalledAppNames();
@@ -24,17 +27,15 @@ async function getInstalledAppNames(): Promise<void> {
     allInstalledAppNames.includes(appName)
   ) as AppName[];
 
-  // It appears that sometimes the installed app IDs are not fetched, maybe a
-  // race with Spotlight index? So if none found, keep retrying.
-  // TODO is this needed any more, now using we're `find` method?
-  // https://github.com/will-stone/browserosaurus/issues/425
-  if (installedApps.length === 0) {
-    setTimeout(() => {
-      // getInstalledAppNames();
-    }, 500);
-  } else {
-    // dispatch(retrievedInstalledApps(installedApps));
-  }
+  return installedApps;
 }
 
 export { getInstalledAppNames };
+
+// const getInstalledApps = (): InstalledApp[] => {
+//   return apps.filter((storedApp) => storedApp.isInstalled)
+//     .map((storedApp) => ({
+//       hotCode: storedApp.hotCode,
+//       name: storedApp.name,
+//     }))
+// }

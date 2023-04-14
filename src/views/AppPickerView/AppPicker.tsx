@@ -4,7 +4,11 @@ import { useEffect } from 'react';
 import { Spinner } from '../shared/components/atoms/spinner';
 import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
 import React from 'react';
-import { WindowLabelEnum } from '../../App';
+import styled from 'styled-components';
+import { useAppDataStore } from '../../stores/appDataStore';
+import { getInstalledAppNames } from '../../utils/get-installed-app-names';
+import { AppName, InstalledApp } from '../../config/apps';
+import { colors } from '../../constants';
 // import {
 //   useDeepEqualSelector,
 //   useInstalledApps,
@@ -20,26 +24,31 @@ import { WindowLabelEnum } from '../../App';
 // import UpdateBar from './components/organisms/update-bar';
 // import UrlBar from './components/organisms/url-bar';
 
+// https://getfrontrunner.com
+
 const useDispatch = () => (action: any) => console.log(JSON.stringify(action));
 
 export const AppPicker = () => {
+  const url = useAppDataStore((state) => state.URL);
   const pickerWindow = getCurrent();
 
   const dispatch = useDispatch();
+
+  const [apps, setApps] = React.useState<InstalledApp[]>([]);
+
+  React.useEffect(() => {
+    (async () => {
+      const installedAppNames = await getInstalledAppNames();
+      console.log('installedAppNames', installedAppNames);
+      // TODO: map these to actual app objects now
+    })();
+  }, []);
 
   /**
    * Setup keyboard listeners
    */
   // useKeyboardEvents();
 
-  const apps = [
-    {
-      name: 'Test app',
-      isAlt: false,
-      isShift: false,
-    },
-  ];
-  // const url = useSelector((state) => state.data.url)
   // const icons = useDeepEqualSelector((state) => state.data.icons)
 
   // const keyCodeMap = useKeyCodeMap()
@@ -49,7 +58,7 @@ export const AppPicker = () => {
   // useEffect(() => {}, [totalApps])
 
   return (
-    <div
+    <Container
       className="relative flex h-screen w-screen select-none flex-col items-center px-2 pt-4 dark:text-white"
       title="Title"
     >
@@ -130,6 +139,16 @@ export const AppPicker = () => {
       <UpdateBar />
 
       <SupportMessage /> */}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  align-items: center;
+  background: ${colors.background};
+  color: ${colors.text};
+`;
