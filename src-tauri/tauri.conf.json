@@ -37,7 +37,8 @@
         "all": true,
         "open": true,
         "scope": [
-          { "name": "echo", "cmd": "echo", "args": ["message"] },
+          { "name": "echo", "cmd": "echo", "args": true },
+          { "name": "openApp", "cmd": "open", "args": true },
           {
             "name": "findApps",
             "cmd": "find",

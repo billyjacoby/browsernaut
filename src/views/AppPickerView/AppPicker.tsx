@@ -9,6 +9,8 @@ import { useAppDataStore } from '../../stores/appDataStore';
 import { getInstalledAppNames } from '../../utils/get-installed-app-names';
 import { AppName, InstalledApp } from '../../config/apps';
 import { colors } from '../../constants';
+import { Command } from '@tauri-apps/api/shell';
+import { openApp } from '../../utils/open-app';
 // import {
 //   useDeepEqualSelector,
 //   useInstalledApps,
@@ -29,10 +31,8 @@ import { colors } from '../../constants';
 const useDispatch = () => (action: any) => console.log(JSON.stringify(action));
 
 export const AppPicker = () => {
-  const url = useAppDataStore((state) => state.URL);
+  const URL = useAppDataStore((state) => state.URL);
   const pickerWindow = getCurrent();
-
-  const dispatch = useDispatch();
 
   const [apps, setApps] = React.useState<InstalledApp[]>([]);
 
@@ -40,7 +40,11 @@ export const AppPicker = () => {
     (async () => {
       const installedAppNames = await getInstalledAppNames();
       console.log('installedAppNames', installedAppNames);
-      // TODO: map these to actual app objects now
+      const newApps: InstalledApp[] = installedAppNames.map((name) => ({
+        name,
+        hotCode: null,
+      }));
+      setApps(newApps);
     })();
   }, []);
 
@@ -56,6 +60,24 @@ export const AppPicker = () => {
   // const totalApps = apps.length
 
   // useEffect(() => {}, [totalApps])
+
+  const onBrowserButtonClick = (
+    app: InstalledApp,
+    shiftPressed?: boolean,
+    altPressed?: boolean
+  ) => {
+    console.log('URL', URL);
+    // if (URL) {
+    console.log('Opening');
+    openApp(
+      app.name,
+      URL || 'https://getfrontrunner.com',
+      altPressed,
+      shiftPressed
+    );
+    pickerWindow.close();
+    // }
+  };
 
   return (
     <Container
@@ -93,15 +115,17 @@ export const AppPicker = () => {
                   'rounded-xl'
                 )}
                 onClick={(event) => {
-                  dispatch(
-                    `clickedApp({
-                      appName: ${app.name},
-                      isAlt: ${event.altKey},
-                      isShift: ${event.shiftKey},
-                    })`
-                  );
+                  console.log('dispatching click');
+                  onBrowserButtonClick(app, event.altKey, event.shiftKey);
+                  // dispatch(
+                  //   `clickedApp({
+                  //     appName: ${app.name},
+                  //     isAlt: ${event.altKey},
+                  //     isShift: ${event.shiftKey},
+                  //   })`
+                  // );
                   console.log('pickerWindow', pickerWindow);
-                  pickerWindow?.close();
+                  // pickerWindow?.close();
                 }}
                 onKeyDown={(event) => {
                   if (event.code === 'ArrowDown') {

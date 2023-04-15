@@ -1,8 +1,9 @@
 import { path } from '@tauri-apps/api';
 
-import type { AppName } from '../config/apps';
+import type { AppName, InstalledApp } from '../config/apps';
 import { apps } from '../config/apps';
 import { Command } from '@tauri-apps/api/shell';
+import App from '../App';
 
 async function getAllInstalledAppNames(): Promise<string[]> {
   const output = await new Command('findApps').execute();
@@ -32,10 +33,8 @@ async function getInstalledAppNames(): Promise<AppName[]> {
 
 export { getInstalledAppNames };
 
-// const getInstalledApps = (): InstalledApp[] => {
-//   return apps.filter((storedApp) => storedApp.isInstalled)
-//     .map((storedApp) => ({
-//       hotCode: storedApp.hotCode,
-//       name: storedApp.name,
-//     }))
-// }
+// const getInstalledApps = (appNames: string[]): typeof App[] => {
+//   const installedAppNames = appNames.filter((appName) => appName in apps);
+
+//   return installedAppNames.map((app) => apps[app as AppName]);
+// };
