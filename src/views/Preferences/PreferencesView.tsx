@@ -5,15 +5,13 @@ import { HeaderBar } from './components/organisms/header-bar';
 import { AboutPane } from './components/organisms/pane-about';
 import { AppsPane } from './components/organisms/pane-apps';
 import { GeneralPane } from './components/organisms/pane-general';
+import { DraggableTitleBar } from '../../components/DraggableTitleBar';
 
-export const PreferencesPage = () => {
-  React.useEffect(() => {
-    document.body.classList.remove('arrow');
-    return () => document.body.classList.add('arrow');
-  }, []);
+export const PreferencesView = () => {
   return (
     <Container>
       <div className="flex h-screen w-screen flex-col text-gray-800 dark:text-gray-300">
+        <DraggableTitleBar />
         <HeaderBar className="shrink-0" />
         <div className="flex grow flex-col overflow-hidden p-8">
           <GeneralPane />

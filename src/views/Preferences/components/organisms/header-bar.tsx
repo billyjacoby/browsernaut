@@ -16,7 +16,6 @@ const TabButton = ({ tab, children }: TabButtonProps) => {
   return (
     <button
       className={clsx(
-        'mt-4',
         'bg-black dark:bg-white',
         prefsTab === tab
           ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
@@ -44,10 +43,7 @@ export const HeaderBar = ({ className }: HeaderBarProps): JSX.Element => {
         className
       )}
     >
-      <div
-        className="flex items-center justify-center space-x-12"
-        data-tauri-drag-region
-      >
+      <div className="flex items-center justify-center space-x-12">
         <TabButton tab="general">General</TabButton>
         <TabButton tab="apps">Apps</TabButton>
         <TabButton tab="about">About</TabButton>

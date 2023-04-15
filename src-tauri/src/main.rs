@@ -3,6 +3,8 @@ use tauri::{
 };
 use tauri_plugin_positioner::{Position, WindowExt};
 
+use enigo::{Enigo, MouseControllable};
+
 fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
 
@@ -12,14 +14,19 @@ fn main() {
     let system_tray_menu = SystemTrayMenu::new().add_item(quit).add_item(preferences);
 
     tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![open_picker_window])
         .setup(|app| {
             //? Allows application to receive and parse the URI passed in when opened.
             let handle = app.handle();
+
             tauri_plugin_deep_link::register("https", move |request| {
                 dbg!(&request);
+                //TODO figure out how to reliably pass URL from here to the window, otherwise FE cannot read it
+                // open_picker_window(handle.clone());
                 handle.emit_all("scheme-request-received", request).unwrap();
             })
             .unwrap();
+
             app.set_activation_policy(ActivationPolicy::Accessory);
             Ok(())
         })
@@ -109,24 +116,24 @@ fn open_preferences_window(app_handle: tauri::AppHandle) {
     .unwrap();
 }
 
-// fn open_picker_window(app_handle: tauri::AppHandle) {
-//     let enigo = Enigo::new();
-//     let (cursor_x, cursor_y): (i32, i32) = Enigo::mouse_location(&enigo);
-//     dbg!(cursor_x);
-//     dbg!(cursor_y);
-//     let window = tauri::WindowBuilder::new(
-//         &app_handle,
-//         "picker_window",
-//         tauri::WindowUrl::App("index.html".into()),
-//     )
-//     .build()
-//     .unwrap();
-
-//     // let window_position = Pos {
-//     //     x: cursor_x,
-//     //     y: cursor_y,
-//     // }
-
-//     window.set_position(window);
-//     window.set_title("").unwrap();
-// }
+#[tauri::command]
+fn open_picker_window(app_handle: tauri::AppHandle) {
+    let enigo = Enigo::new();
+    let (cursor_x, cursor_y): (i32, i32) = Enigo::mouse_location(&enigo);
+    let picker_window = app_handle.get_window("picker_window");
+    if picker_window.is_none() {
+        let _ = tauri::WindowBuilder::new(
+            &app_handle,
+            "picker_window",
+            tauri::WindowUrl::App("index.html".into()),
+        )
+        .title_bar_style(tauri::TitleBarStyle::Overlay)
+        .inner_size(300 as f64, 200 as f64)
+        .title("")
+        .position(cursor_x as f64 - 150 as f64, cursor_y as f64 - 48 as f64)
+        .build()
+        .unwrap();
+    } else {
+        picker_window.unwrap().show().unwrap()
+    }
+}

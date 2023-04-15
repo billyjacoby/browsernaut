@@ -13,7 +13,7 @@ import {
 import { Channel } from '../../../../shared/state/channels';
 import { defaultData } from '../../../../shared/state/reducer.data';
 import { addChannelToAction } from '../../../../shared/utils/add-channel-to-action';
-import { reorderedApp } from '../../../PreferencesView/state/actions';
+import { reorderedApp } from '../../../Preferences/state/actions';
 import { customWindow } from '../../../shared/custom.window';
 import { clickedApp, pressedKey } from '../../state/actions';
 import Wrapper from '../_bootstrap';

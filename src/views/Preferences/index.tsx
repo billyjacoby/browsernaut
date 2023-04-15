@@ -1,0 +1,1 @@
+export { PreferencesView } from './PreferencesView';
