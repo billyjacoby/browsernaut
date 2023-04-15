@@ -12,6 +12,7 @@ import { colors } from '../../constants';
 import { Command } from '@tauri-apps/api/shell';
 import { openApp } from '../../utils/open-app';
 import { DraggableTitleBar } from '../../components/DraggableTitleBar';
+import { Store } from 'tauri-plugin-store-api';
 // import {
 //   useDeepEqualSelector,
 //   useInstalledApps,
@@ -30,9 +31,12 @@ import { DraggableTitleBar } from '../../components/DraggableTitleBar';
 // https://google.com
 
 export const AppPicker = () => {
-  const URL = useAppDataStore((state) => state.URL);
-  console.log('AppPicker.tsx URL', URL);
+  const store = new Store('.settings.dat');
   const pickerWindow = getCurrent();
+
+  const [URL, setURL] = React.useState<string | undefined>();
+
+  console.log('AppPicker.tsx URL', URL);
 
   const [apps, setApps] = React.useState<InstalledApp[]>([]);
 
@@ -45,6 +49,13 @@ export const AppPicker = () => {
         hotCode: null,
       }));
       setApps(newApps);
+      const storedURL: string | null = await store.get('URL');
+      console.log('storedURL', storedURL);
+      if (storedURL) {
+        setURL(storedURL);
+      } else {
+        console.warn('No URL again...');
+      }
     })();
   }, []);
 
@@ -107,6 +118,7 @@ export const AppPicker = () => {
                   //     appsRef.current[index] = element
                   //   }
                   // }}
+                  disabled={!URL}
                   aria-label={`${app.name} App`}
                   className={clsx(
                     'flex h-12 w-full shrink-0 items-center justify-between space-x-4 px-4 py-2 text-left',

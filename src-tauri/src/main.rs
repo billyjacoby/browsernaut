@@ -21,8 +21,8 @@ fn main() {
 
             tauri_plugin_deep_link::register("https", move |request| {
                 dbg!(&request);
-                //TODO figure out how to reliably pass URL from here to the window, otherwise FE cannot read it
-                // open_picker_window(handle.clone());
+                //TODO add the URL value to state here so that it can be accessed on first app load
+                open_picker_window(handle.clone());
                 handle.emit_all("scheme-request-received", request).unwrap();
             })
             .unwrap();
@@ -134,6 +134,6 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
         .build()
         .unwrap();
     } else {
-        picker_window.unwrap().show().unwrap()
+        picker_window.unwrap().show().unwrap();
     }
 }

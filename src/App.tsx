@@ -7,6 +7,7 @@ import { AppPicker } from './views/AppPicker';
 import { useAppDataStore } from './stores/appDataStore';
 import { URL_EVENT_NAME } from './constants';
 import { MenuView } from './views/Menu/Menu';
+import { Store } from 'tauri-plugin-store-api';
 
 // https://google.com
 
@@ -19,9 +20,9 @@ export enum WindowLabelEnum {
 function App() {
   const currentWindow: WindowLabelEnum = getCurrent().label as WindowLabelEnum;
 
+  const store = new Store('.settings.dat');
+
   const updateURL = useAppDataStore((state) => state.updateURL);
-  const URL = useAppDataStore((state) => state.URL);
-  console.log('app.tsx URL', URL);
 
   React.useEffect(() => {
     (async () => {
@@ -30,6 +31,7 @@ function App() {
         // Open picker window
         if (event?.payload) {
           console.log('event?.payload', event?.payload);
+          store.set('URL', event?.payload);
           updateURL(event.payload);
         } else {
           return;
