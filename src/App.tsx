@@ -1,11 +1,8 @@
 import React from 'react';
-import { invoke } from '@tauri-apps/api';
-import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
-import { listen } from '@tauri-apps/api/event';
+import { getCurrent } from '@tauri-apps/api/window';
 import { PreferencesView } from './views/Preferences/index';
 import { AppPicker } from './views/AppPicker';
 import { useAppDataStore } from './stores/appDataStore';
-import { URL_EVENT_NAME } from './constants';
 import { MenuView } from './views/Menu/Menu';
 import { Store } from 'tauri-plugin-store-api';
 
@@ -22,33 +19,9 @@ function App() {
 
   const store = new Store('.settings.dat');
 
-  const updateURL = useAppDataStore((state) => state.updateURL);
-
   React.useEffect(() => {
     (async () => {
-      const unlisten = await listen<string>(URL_EVENT_NAME, (event) => {
-        console.log('Received URL to open: ', event.payload);
-        // Open picker window
-        if (event?.payload) {
-          console.log('event?.payload', event?.payload);
-          store.set('URL', event?.payload);
-          updateURL(event.payload);
-        } else {
-          return;
-        }
-        const existingWindow = WebviewWindow.getByLabel(WindowLabelEnum.PICKER);
-        const currentWindow = getCurrent();
-        if (
-          !existingWindow &&
-          currentWindow.label !== WindowLabelEnum.PICKER &&
-          event?.payload
-        ) {
-          //? No matter what in dev mode this will cause more than one window to open sometimes
-          //? https://github.com/FabianLars/tauri-plugin-deep-link#macos
-          invoke('open_picker_window');
-        }
-      });
-      return () => unlisten();
+      const storeData = await store.entries();
     })();
   }, []);
 

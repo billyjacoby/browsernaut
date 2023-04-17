@@ -1,9 +1,13 @@
+use std::path::PathBuf;
+
+use serde_json::json;
 use tauri::{
-    ActivationPolicy, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
+    ActivationPolicy, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, Wry,
 };
 use tauri_plugin_positioner::{Position, WindowExt};
 
 use enigo::{Enigo, MouseControllable};
+use tauri_plugin_store::{with_store, StoreCollection};
 
 fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
@@ -14,13 +18,25 @@ fn main() {
     let system_tray_menu = SystemTrayMenu::new().add_item(quit).add_item(preferences);
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![open_picker_window])
+        .invoke_handler(tauri::generate_handler![
+            open_picker_window,
+            open_preferences_window
+        ])
         .setup(|app| {
             //? Allows application to receive and parse the URI passed in when opened.
             let handle = app.handle();
 
             tauri_plugin_deep_link::register("https", move |request| {
                 dbg!(&request);
+
+                //? Stores URL in app state to be accessed by FE
+                let stores = handle.state::<StoreCollection<Wry>>();
+                let path = PathBuf::from(".settings.dat");
+                with_store(handle.clone(), stores, path, |store| {
+                    store.insert("URL".to_string(), json!(request.to_string()))
+                })
+                .unwrap();
+
                 //TODO add the URL value to state here so that it can be accessed on first app load
                 open_picker_window(handle.clone());
                 handle.emit_all("scheme-request-received", request).unwrap();
@@ -102,7 +118,7 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-// Command to make creating prefs window easier in the future
+#[tauri::command]
 fn open_preferences_window(app_handle: tauri::AppHandle) {
     tauri::WindowBuilder::new(
         &app_handle,
@@ -128,6 +144,8 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
             tauri::WindowUrl::App("index.html".into()),
         )
         .title_bar_style(tauri::TitleBarStyle::Overlay)
+        .accept_first_mouse(true)
+        .always_on_top(true)
         .inner_size(300 as f64, 200 as f64)
         .title("")
         .position(cursor_x as f64 - 150 as f64, cursor_y as f64 - 48 as f64)
@@ -137,3 +155,5 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
         picker_window.unwrap().show().unwrap();
     }
 }
+
+// https://google.com
