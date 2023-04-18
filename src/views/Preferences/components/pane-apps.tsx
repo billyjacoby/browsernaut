@@ -16,16 +16,19 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 
-import type { AppName, InstalledApp } from '../../../../config/apps';
-import Input from '../../../../components/Input';
-import { Spinner } from '../../../../components/Spinner';
+import type { AppName, InstalledApp } from '../../../config/apps';
+import Input from '../../../components/Input';
+import { Spinner } from '../../../components/Spinner';
 // import {
 //   useDeepEqualSelector,
 //   useInstalledApps,
 //   useKeyCodeMap,
 // } from '../../../shared/state/hooks'
 // import { reorderedApp, updatedHotCode } from '../../state/actions';
-import { Pane } from '../molecules/pane';
+import { Pane } from './pane';
+import React from 'react';
+import { getCurrent } from '@tauri-apps/api/window';
+import { getInstalledAppNames } from '../../../utils/get-installed-app-names';
 
 interface SortableItemProps {
   id: InstalledApp['name'];
@@ -52,8 +55,6 @@ const SortableItem = ({
     transition,
     isDragging,
   } = useSortable({ id });
-
-  const dispatch = (any: any) => console.log(any);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -98,12 +99,12 @@ const SortableItem = ({
             event.target.select();
           }}
           onKeyPress={(event) => {
-            dispatch(
-              `updatedHotCode({
-                appName: id,
-                value: event.code,
-              })`
-            );
+            // dispatch(
+            //   `updatedHotCode({
+            //     appName: id,
+            //     value: event.code,
+            //   })`
+            // );
           }}
           placeholder="Key"
           type="text"
@@ -116,11 +117,7 @@ const SortableItem = ({
 
 export function AppsPane(): JSX.Element {
   const dispatch = useDispatch();
-
-  const installedApps = [].map((installedApp: any) => ({
-    ...installedApp,
-    id: installedApp.name,
-  }));
+  const [apps, setApps] = React.useState<InstalledApp[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -145,9 +142,20 @@ export function AppsPane(): JSX.Element {
 
   const keyCodeMap = new Map<string, string>();
 
+  React.useEffect(() => {
+    (async () => {
+      const installedAppNames = await getInstalledAppNames();
+      const newApps: InstalledApp[] = installedAppNames.map((name) => ({
+        name,
+        hotCode: null,
+      }));
+      setApps(newApps);
+    })();
+  }, []);
+
   return (
     <Pane pane="apps">
-      {installedApps.length === 0 && (
+      {apps.length === 0 && (
         <div className="flex h-full items-center justify-center">
           <Spinner />
         </div>
@@ -159,24 +167,21 @@ export function AppsPane(): JSX.Element {
           onDragEnd={onDragEnd}
           sensors={sensors}
         >
-          <SortableContext
-            items={installedApps}
-            strategy={verticalListSortingStrategy}
-          >
-            {installedApps.map(({ id, name, hotCode }, index) => (
+          <SortableContext items={apps} strategy={verticalListSortingStrategy}>
+            {apps.map(({ name, hotCode }, index) => (
               <SortableItem
-                key={id}
-                icon={icons[id]}
-                id={id}
+                key={name}
+                // icon={icons[name]}
+                id={name}
                 index={index}
-                keyCode={keyCodeMap[hotCode || '']}
+                // keyCode={keyCodeMap[hotCode || '']}
                 name={name}
               />
             ))}
           </SortableContext>
         </DndContext>
       </div>
-      {installedApps.length > 1 && (
+      {apps.length > 1 && (
         <p className="mt-2 text-sm opacity-70">
           Drag and drop to sort the list of apps.
         </p>

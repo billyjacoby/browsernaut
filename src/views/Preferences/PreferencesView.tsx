@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../../constants';
-import { HeaderBar } from './components/organisms/header-bar';
-import { AboutPane } from './components/organisms/pane-about';
-import { AppsPane } from './components/organisms/pane-apps';
-import { GeneralPane } from './components/organisms/pane-general';
+import { HeaderBar } from './components/header-bar';
+import { AboutPane } from './components/pane-about';
+import { AppsPane } from './components/pane-apps';
+import { GeneralPane } from './components/pane-general';
 import { DraggableTitleBar } from '../../components/DraggableTitleBar';
 
 export const PreferencesView = () => {

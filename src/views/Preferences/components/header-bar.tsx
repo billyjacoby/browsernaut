@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useAppDataStore } from '../../../../stores/appDataStore';
+import { useAppDataStore } from '../../../stores/appDataStore';
 
 // import { useSelector } from '../../../shared/state/hooks';
 // import { clickedTabButton } from '../../state/actions';

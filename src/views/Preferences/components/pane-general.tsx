@@ -1,4 +1,4 @@
-import Button from '../../../../components/Button';
+import Button from '../../../components/Button';
 // import { useSelector } from '../../../shared/state/hooks';
 // import {
 //   clickedRescanApps,
@@ -7,7 +7,7 @@ import Button from '../../../../components/Button';
 //   clickedUpdateRestartButton,
 //   confirmedReset,
 // } from '../../state/actions';
-import { Pane } from '../molecules/pane';
+import { Pane } from './pane';
 
 interface RowProps {
   children: React.ReactNode;

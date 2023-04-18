@@ -7,7 +7,7 @@ import Button from '@components/Button';
 //   clickedHomepageButton,
 //   clickedOpenIssueButton,
 // } from '../../state/actions';
-import { Pane } from '../molecules/pane';
+import { Pane } from './pane';
 
 const useDispatch = () => (any: any) => console.log('dispatch: ', any);
 
