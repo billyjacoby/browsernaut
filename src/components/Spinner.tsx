@@ -23,5 +23,5 @@ export const Spinner = (): JSX.Element => {
         fill="currentColor"
       />
     </svg>
-  )
-}
+  );
+};

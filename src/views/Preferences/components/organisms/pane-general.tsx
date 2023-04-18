@@ -1,4 +1,4 @@
-import Button from '../../../shared/components/atoms/button';
+import Button from '../../../../components/Button';
 // import { useSelector } from '../../../shared/state/hooks';
 // import {
 //   clickedRescanApps,

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 const mobile =
   process.env.TAURI_PLATFORM === 'android' ||
@@ -27,5 +28,12 @@ export default defineConfig(async () => ({
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_DEBUG,
+  },
+  resolve: {
+    alias: {
+      '@components': path.resolve(__dirname, './src/components'),
+      '@views': path.resolve(__dirname, './src/views'),
+      '@stores': path.resolve(__dirname, './src/stores'),
+    },
   },
 }));

@@ -17,8 +17,8 @@ import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 
 import type { AppName, InstalledApp } from '../../../../config/apps';
-import Input from '../../../shared/components/atoms/input';
-import { Spinner } from '../../../shared/components/atoms/spinner';
+import Input from '../../../../components/Input';
+import { Spinner } from '../../../../components/Spinner';
 // import {
 //   useDeepEqualSelector,
 //   useInstalledApps,

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useAppDataStore } from '../../../../stores/appDataStore';
+import { useAppDataStore } from '@stores/appDataStore';
 
 interface Props {
   children: React.ReactNode;

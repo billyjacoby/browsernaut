@@ -1,7 +1,7 @@
 // import { useDispatch } from 'react-redux'
 
 // import icon from '../../../../shared/static/icon/icon.png';
-import Button from '../../../shared/components/atoms/button';
+import Button from '@components/Button';
 // import { useSelector } from '../../../shared/state/hooks'
 // import {
 //   clickedHomepageButton,
