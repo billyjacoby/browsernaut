@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "unused-imports", "react", "react-hooks"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "no-duplicate-imports": "error",
+    "no-template-curly-in-string": "error",
+    "react/boolean-prop-naming": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-unescaped-entities": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "eqeqeq": "error",
+    "no-console": [
+      "warn",
+      {
+        "allow": ["error", "warn"]
+      }
+    ],
+    "prefer-const": "warn",
+    "no-await-in-loop": "warn"
+  },
+  "overrides": [
+    {
+      "files": "*",
+      "rules": {
+        "@next/next/no-img-element": "off",
+        "quotes": ["warn", "single", "avoid-escape"],
+        "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off"
+      }
+    }
+  ],
+  "root": true
+}
