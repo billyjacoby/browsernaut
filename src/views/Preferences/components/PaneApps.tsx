@@ -25,10 +25,10 @@ import { Spinner } from '../../../components/Spinner';
 //   useKeyCodeMap,
 // } from '../../../shared/state/hooks'
 // import { reorderedApp, updatedHotCode } from '../../state/actions';
-import { Pane } from './pane';
+import { Pane } from './Pane';
 import React from 'react';
-import { getCurrent } from '@tauri-apps/api/window';
 import { getInstalledAppNames } from '../../../utils/get-installed-app-names';
+import { useAppDataStore } from '@stores/appDataStore';
 
 interface SortableItemProps {
   id: InstalledApp['name'];
@@ -40,13 +40,7 @@ interface SortableItemProps {
 
 const useDispatch = () => (any: any) => console.log('dispatch: ', any);
 
-const SortableItem = ({
-  id,
-  name,
-  keyCode = '',
-  index,
-  icon = '',
-}: SortableItemProps) => {
+const SortableItem = ({ id, name, keyCode = '', index }: SortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -80,17 +74,12 @@ const SortableItem = ({
         {index + 1}
       </div>
       <div className="flex grow items-center p-4">
-        <img
-          alt=""
-          className={clsx('mr-4 h-8 w-8', !icon && 'hidden')}
-          src={icon}
-        />
         <span>{name}</span>
       </div>
       <div className="flex items-center justify-center p-4">
         <Input
           aria-label={`${name} hotkey`}
-          className="h-8 w-12"
+          className="h-8 w-20"
           data-app-id={id}
           maxLength={1}
           minLength={0}
@@ -117,7 +106,9 @@ const SortableItem = ({
 
 export function AppsPane(): JSX.Element {
   const dispatch = useDispatch();
-  const [apps, setApps] = React.useState<InstalledApp[]>([]);
+  const apps = useAppDataStore((state) => state.installedApps);
+
+  const updateApps = useAppDataStore((state) => state.updateInstalledApps);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -137,21 +128,7 @@ export function AppsPane(): JSX.Element {
     }
   };
 
-  // const icons = useDeepEqualSelector((state) => state.data.icons);
-  const icons: any[] = [];
-
   const keyCodeMap = new Map<string, string>();
-
-  React.useEffect(() => {
-    (async () => {
-      const installedAppNames = await getInstalledAppNames();
-      const newApps: InstalledApp[] = installedAppNames.map((name) => ({
-        name,
-        hotCode: null,
-      }));
-      setApps(newApps);
-    })();
-  }, []);
 
   return (
     <Pane pane="apps">
@@ -167,14 +144,16 @@ export function AppsPane(): JSX.Element {
           onDragEnd={onDragEnd}
           sensors={sensors}
         >
-          <SortableContext items={apps} strategy={verticalListSortingStrategy}>
+          <SortableContext
+            items={apps.map((app) => ({ ...app, id: app.name }))}
+            strategy={verticalListSortingStrategy}
+          >
             {apps.map(({ name, hotCode }, index) => (
               <SortableItem
                 key={name}
-                // icon={icons[name]}
                 id={name}
                 index={index}
-                // keyCode={keyCodeMap[hotCode || '']}
+                keyCode={keyCodeMap.get(hotCode || '') || ''}
                 name={name}
               />
             ))}

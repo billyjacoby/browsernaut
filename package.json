@@ -19,6 +19,8 @@
     "file-icon": "^5.1.1",
     "postcss": "^8.4.21",
     "react": "^18.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "styled-components": "^5.3.9",
     "tailwindcss": "^3.3.1",

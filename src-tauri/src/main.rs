@@ -125,6 +125,7 @@ fn open_preferences_window(app_handle: tauri::AppHandle) {
         "preferences_window",
         tauri::WindowUrl::App("index.html".into()),
     )
+    .visible(false)
     .accept_first_mouse(true)
     .title_bar_style(tauri::TitleBarStyle::Overlay)
     .title("")
@@ -144,12 +145,12 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
             tauri::WindowUrl::App("index.html".into()),
         )
         .title_bar_style(tauri::TitleBarStyle::Overlay)
+        .visible(false)
         .accept_first_mouse(true)
-        .focused(true)
         .always_on_top(true)
         .inner_size(200 as f64, 200 as f64)
         .title("")
-        .position(cursor_x as f64 - 150 as f64, cursor_y as f64 - 48 as f64)
+        .position(cursor_x as f64 - 100 as f64, cursor_y as f64 - 48 as f64)
         .build()
         .unwrap();
     } else {

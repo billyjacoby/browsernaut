@@ -14,13 +14,16 @@ import {
 } from '../../utils/hooks/useIsKeyPressed';
 import { AppButton } from './components/AppButton';
 import { useAppDataStore } from '@stores/appDataStore';
+import { useCloseOnUnfocus } from '../../utils/hooks/useCloseOnUnfocus';
 
 // https://getfrontrunner.com
 
 export const AppPicker = () => {
   const pickerWindow = getCurrent();
-  const [apps, setApps] = React.useState<InstalledApp[]>([]);
+  const apps = useAppDataStore((state) => state.installedApps);
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
+
+  useCloseOnUnfocus(getCurrent());
 
   const URL = useAppDataStore((state) => state.URL);
 
@@ -31,22 +34,9 @@ export const AppPicker = () => {
   }, [isEscPressed]);
 
   React.useEffect(() => {
-    (async () => {
-      const installedAppNames = await getInstalledAppNames();
-      const newApps: InstalledApp[] = installedAppNames.map((name) => ({
-        name,
-        hotCode: null,
-      }));
-      setApps(newApps);
-      const unlisten = await getCurrent().onFocusChanged(
-        ({ payload: focused }) => {
-          if (!focused) {
-            getCurrent().close();
-          }
-        }
-      );
-      return unlisten;
-    })();
+    //* Supposed workaround to the flashing white screen on load
+    getCurrent().show();
+    getCurrent().setFocus();
   }, []);
 
   const buttonRefs = React.useRef<HTMLButtonElement[]>([]);

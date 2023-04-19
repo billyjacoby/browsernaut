@@ -7,7 +7,7 @@ import Button from '../../../components/Button';
 //   clickedUpdateRestartButton,
 //   confirmedReset,
 // } from '../../state/actions';
-import { Pane } from './pane';
+import { Pane } from './Pane';
 
 interface RowProps {
   children: React.ReactNode;

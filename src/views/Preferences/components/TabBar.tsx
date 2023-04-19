@@ -35,7 +35,7 @@ interface HeaderBarProps {
   className?: string;
 }
 
-export const HeaderBar = ({ className }: HeaderBarProps): JSX.Element => {
+export const TabBar = ({ className }: HeaderBarProps): JSX.Element => {
   return (
     <div
       className={clsx(
