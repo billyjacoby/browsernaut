@@ -19,7 +19,7 @@ import { useAppDataStore } from '@stores/appDataStore';
 
 export const AppPicker = () => {
   const pickerWindow = getCurrent();
-  const [apps, setApps] = React.useState<InstalledApp[]>([]);
+  const apps = useAppDataStore((state) => state.installedApps);
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
 
   const URL = useAppDataStore((state) => state.URL);
@@ -31,13 +31,10 @@ export const AppPicker = () => {
   }, [isEscPressed]);
 
   React.useEffect(() => {
+    //* Supposed workaround to the flashing white screen on load
+    getCurrent().show();
+    getCurrent().setFocus();
     (async () => {
-      const installedAppNames = await getInstalledAppNames();
-      const newApps: InstalledApp[] = installedAppNames.map((name) => ({
-        name,
-        hotCode: null,
-      }));
-      setApps(newApps);
       const unlisten = await getCurrent().onFocusChanged(
         ({ payload: focused }) => {
           if (!focused) {
