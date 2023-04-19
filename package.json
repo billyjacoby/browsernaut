@@ -23,7 +23,8 @@
     "styled-components": "^5.3.9",
     "tailwindcss": "^3.3.1",
     "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store",
-    "zustand": "^4.3.7"
+    "zustand": "^4.3.7",
+    "zustand-tauri-storage": "file:./packages/zustand-tauri-storage"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.2.2",

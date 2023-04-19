@@ -7,22 +7,22 @@ import { getInstalledAppNames } from '../../utils/get-installed-app-names';
 import { InstalledApp } from '../../config/apps';
 import { colors } from '../../constants';
 import { openApp } from '../../utils/open-app';
-import { Store } from 'tauri-plugin-store-api';
 import UrlBar from './components/UrlBar';
 import {
   ListenedKeyboardCodes,
   useIsKeyPressed,
 } from '../../utils/hooks/useIsKeyPressed';
 import { AppButton } from './components/AppButton';
+import { useAppDataStore } from '@stores/appDataStore';
 
-// https://google.com
+// https://getfrontrunner.com
 
 export const AppPicker = () => {
-  const store = new Store('.settings.dat');
   const pickerWindow = getCurrent();
-  const [URL, setURL] = React.useState<string | undefined>();
   const [apps, setApps] = React.useState<InstalledApp[]>([]);
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
+
+  const URL = useAppDataStore((state) => state.URL);
 
   React.useEffect(() => {
     if (isEscPressed) {
@@ -45,13 +45,6 @@ export const AppPicker = () => {
           }
         }
       );
-      const storedURL: string | null = await store.get('URL');
-      if (storedURL) {
-        setURL(storedURL);
-      } else {
-        console.warn('No URL again...');
-      }
-
       return unlisten;
     })();
   }, []);

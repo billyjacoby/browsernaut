@@ -1,8 +1,11 @@
 import React from 'react';
 import { getCurrent } from '@tauri-apps/api/window';
 import { PreferencesView, MenuView, AppPicker } from '@views/index';
+import { Store } from 'tauri-plugin-store-api';
+import { useAppDataStore } from '@stores/appDataStore';
 
 // https://google.com
+
 export enum WindowLabelEnum {
   MAIN = 'menu_bar',
   PREFS = 'preferences_window',
@@ -11,6 +14,19 @@ export enum WindowLabelEnum {
 
 function App() {
   const currentWindow: WindowLabelEnum = getCurrent().label as WindowLabelEnum;
+  const store = new Store('.settings.dat');
+
+  const updateUrl = useAppDataStore((state) => state.updateURL);
+
+  React.useEffect(() => {
+    (async () => {
+      console.log('Effect running');
+      const storedURL: string | null = await store.get('URL');
+      if (storedURL) {
+        updateUrl(storedURL);
+      }
+    })();
+  }, [store]);
 
   if (currentWindow === WindowLabelEnum.PREFS) {
     return <PreferencesView />;

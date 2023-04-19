@@ -1090,6 +1090,7 @@ __metadata:
     typescript: ^4.6.4
     vite: ^4.0.0
     zustand: ^4.3.7
+    zustand-tauri-storage: "file:./packages/zustand-tauri-storage"
   languageName: unknown
   linkType: soft
 
@@ -3037,6 +3038,16 @@ __metadata:
   version: 1.10.2
   resolution: "yaml@npm:1.10.2"
   checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
+  languageName: node
+  linkType: hard
+
+"zustand-tauri-storage@file:./packages/zustand-tauri-storage::locator=browsernaut%40workspace%3A.":
+  version: 0.0.0
+  resolution: "zustand-tauri-storage@file:./packages/zustand-tauri-storage#./packages/zustand-tauri-storage::hash=be8f55&locator=browsernaut%40workspace%3A."
+  peerDependencies:
+    tauri-plugin-store-api: "*"
+    zustand: "*"
+  checksum: 86cf65cd5a906924f6579c78b68e44a8473cb4ae50a492e5befccaa5da4f2a0bea6205c0e6c2d1984bf0ff2543356b4cb3548f830ec0dd5a885fcd863de86bbb
   languageName: node
   linkType: hard
 
