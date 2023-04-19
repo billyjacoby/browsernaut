@@ -1,22 +1,6 @@
-import type { DragEndEvent } from '@dnd-kit/core';
-import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 
-import type { AppName, InstalledApp } from '../../../config/apps';
+import type { InstalledApp } from '../../../config/apps';
 import Input from '../../../components/Input';
 import { Spinner } from '../../../components/Spinner';
 // import {
