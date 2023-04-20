@@ -26,5 +26,6 @@
     "src/tailwind.config.jssrc/postcss.config.jsg.js",
     "tailwind.config.js"
   ],
+  "exclude": ["/src-tauri/target"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

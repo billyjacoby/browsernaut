@@ -6,7 +6,13 @@ interface Props {
   URL: string;
 }
 
-const UrlBar: React.FC<Props> = ({ className, URL: url }) => {
+const UrlBar: React.FC<Props> = ({
+  className,
+  URL: url,
+}: {
+  className?: string;
+  URL: string;
+}) => {
   let parsedUrl;
 
   try {

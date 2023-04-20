@@ -1,4 +1,9 @@
-import clsx from 'clsx'
+import clsx from 'clsx';
+
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
+  disabled?: boolean;
+  className?: string;
+}
 
 const Button: React.FC<React.ComponentPropsWithoutRef<'button'>> = ({
   className,
@@ -6,7 +11,7 @@ const Button: React.FC<React.ComponentPropsWithoutRef<'button'>> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- type is hardcoded
   type,
   ...restProperties
-}) => {
+}: ButtonProps) => {
   return (
     <button
       className={clsx(
@@ -23,13 +28,13 @@ const Button: React.FC<React.ComponentPropsWithoutRef<'button'>> = ({
         'border-b-[#C1BFBF] dark:border-b-[#56555C]',
         'border-l-[#D4D2D2] dark:border-l-[#56555C]',
         'border-r-[#D4D2D2] dark:border-r-[#56555C]',
-        'border-t-[#DAD8D8] dark:border-t-[#6E6D73]',
+        'border-t-[#DAD8D8] dark:border-t-[#6E6D73]'
       )}
       disabled={disabled}
       type="button"
       {...restProperties}
     />
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

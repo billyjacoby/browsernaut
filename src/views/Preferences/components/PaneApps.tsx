@@ -65,6 +65,8 @@ const SortableItem = ({
           onFocus={(event) => {
             event.target.select();
           }}
+          // TODO
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           onKeyPress={(event) => {
             // dispatch(
             //   `updatedHotCode({

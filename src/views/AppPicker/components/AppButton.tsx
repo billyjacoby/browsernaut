@@ -1,4 +1,3 @@
-import { MutableRefObject, PropsWithoutRef } from 'react';
 import { InstalledApp } from '../../../config/apps';
 import clsx from 'clsx';
 
