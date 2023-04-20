@@ -3,7 +3,6 @@ import { DraggableTitleBar } from '@components/DraggableTitleBar';
 import { getCurrent } from '@tauri-apps/api/window';
 import React from 'react';
 import styled from 'styled-components';
-import { getInstalledAppNames } from '../../utils/get-installed-app-names';
 import { InstalledApp } from '../../config/apps';
 import { colors } from '../../constants';
 import { openApp } from '../../utils/open-app';
@@ -72,6 +71,7 @@ export const AppPicker = () => {
         <div className="relative w-full grow overflow-y-auto px-2 pb-2">
           {apps.map((app, index) => (
             <AppButton
+              key={app.name}
               index={index}
               buttonRefs={buttonRefs}
               app={app}

@@ -1,5 +1,4 @@
-import { KeyboardCode } from '@dnd-kit/core';
-import React, { KeyboardEventHandler } from 'react';
+import React from 'react';
 
 // TODO: update with vim bindings and other arrow keys
 export enum ListenedKeyboardCodes {
