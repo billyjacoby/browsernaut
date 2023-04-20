@@ -3,54 +3,48 @@ import clsx from 'clsx';
 import type { InstalledApp } from '../../../config/apps';
 import Input from '../../../components/Input';
 import { Spinner } from '../../../components/Spinner';
-// import {
-//   useDeepEqualSelector,
-//   useInstalledApps,
-//   useKeyCodeMap,
-// } from '../../../shared/state/hooks'
-// import { reorderedApp, updatedHotCode } from '../../state/actions';
 import { Pane } from './Pane';
-import React from 'react';
-import { getInstalledAppNames } from '../../../utils/get-installed-app-names';
 import { useAppDataStore } from '@stores/appDataStore';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DraggableProvided,
+  DraggableStateSnapshot,
+  DropResult,
+} from '@hello-pangea/dnd';
+
+// https://getfrontrunner.com
 
 interface SortableItemProps {
   id: InstalledApp['name'];
   name: InstalledApp['name'];
+  provided: DraggableProvided;
+  snapshot: DraggableStateSnapshot;
   index: number;
   icon?: string;
   keyCode?: string;
 }
 
-const useDispatch = () => (any: any) => console.log('dispatch: ', any);
-
-const SortableItem = ({ id, name, keyCode = '', index }: SortableItemProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
+const SortableItem = ({
+  id,
+  name,
+  keyCode = '',
+  index,
+  provided,
+  snapshot,
+}: SortableItemProps) => {
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
       className={clsx(
         'flex',
         'bg-black/5 shadow dark:bg-white/5',
         'mb-4 rounded-xl',
         'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
-        isDragging &&
+        snapshot.isDragging &&
           'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
       )}
     >
@@ -89,27 +83,18 @@ const SortableItem = ({ id, name, keyCode = '', index }: SortableItemProps) => {
 };
 
 export function AppsPane(): JSX.Element {
-  const dispatch = useDispatch();
   const apps = useAppDataStore((state) => state.installedApps);
 
   const updateApps = useAppDataStore((state) => state.updateInstalledApps);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const onDragEnd = ({ active, over }: DragEndEvent) => {
-    if (active.id !== over?.id) {
-      dispatch(
-        `reorderedApp({
-          destinationName: over?.id as AppName,
-          sourceName: active.id as AppName,
-        })`
-      );
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return;
     }
+    const newApps = Array.from(apps);
+    const [removed] = newApps.splice(result.source.index, 1);
+    newApps.splice(result.destination.index, 0, removed);
+    updateApps(newApps);
   };
 
   const keyCodeMap = new Map<string, string>();
@@ -123,26 +108,30 @@ export function AppsPane(): JSX.Element {
       )}
 
       <div className="overflow-y-auto p-2">
-        <DndContext
-          collisionDetection={closestCenter}
-          onDragEnd={onDragEnd}
-          sensors={sensors}
-        >
-          <SortableContext
-            items={apps.map((app) => ({ ...app, id: app.name }))}
-            strategy={verticalListSortingStrategy}
-          >
-            {apps.map(({ name, hotCode }, index) => (
-              <SortableItem
-                key={name}
-                id={name}
-                index={index}
-                keyCode={keyCodeMap.get(hotCode || '') || ''}
-                name={name}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {apps.map(({ name, hotCode }, index) => (
+                  <Draggable key={name} draggableId={name} index={index}>
+                    {(provided, snapshot) => (
+                      <SortableItem
+                        key={name}
+                        id={name}
+                        index={index}
+                        keyCode={keyCodeMap.get(hotCode || '') || ''}
+                        name={name}
+                        provided={provided}
+                        snapshot={snapshot}
+                      />
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
       {apps.length > 1 && (
         <p className="mt-2 text-sm opacity-70">
