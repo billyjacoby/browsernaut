@@ -73,7 +73,7 @@
     "bundle": {
       "macOS": {
         "entitlements": "./entitlements.mac.plist",
-        "minimumSystemVersion": "10.13"
+        "minimumSystemVersion": "10.15"
       },
       "active": true,
       "icon": [

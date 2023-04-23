@@ -7,7 +7,10 @@ use tauri::{
 use tauri_plugin_positioner::{Position, WindowExt};
 
 use enigo::{Enigo, MouseControllable};
+use swift_rs::{swift, SRString};
 use tauri_plugin_store::{with_store, StoreCollection};
+
+swift!(fn get_default_browser() -> SRString);
 
 fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
@@ -120,6 +123,10 @@ fn main() {
 
 #[tauri::command]
 fn open_preferences_window(app_handle: tauri::AppHandle) {
+    unsafe {
+        let string = get_default_browser();
+        dbg!(string.to_string());
+    }
     tauri::WindowBuilder::new(
         &app_handle,
         "preferences_window",
