@@ -2,6 +2,8 @@ import { useAppDataStore } from '@stores/appDataStore';
 import Button from '../../../components/Button';
 import { Pane } from './Pane';
 
+import { confirm, message } from '@tauri-apps/api/dialog';
+
 export const GeneralPane = (): JSX.Element => {
   const dispatch = () => null;
   const installedApps = useAppDataStore((state) => state.installedApps);
@@ -15,6 +17,16 @@ export const GeneralPane = (): JSX.Element => {
   // );
 
   const numberOfInstalledApps = installedApps.length;
+
+  const onResetClick = async () => {
+    const result = await confirm(
+      'Are you sure you wish to reset all of your preferences'
+    );
+    if (result) {
+      resetAppData();
+      message('App data reset!');
+    }
+  };
 
   return (
     <Pane className="space-y-8" pane="general">
@@ -64,17 +76,7 @@ export const GeneralPane = (): JSX.Element => {
       <Row>
         <Left>Factory Reset:</Left>
         <Right>
-          <Button
-            onClick={() => {
-              // eslint-disable-next-line no-restricted-globals, no-alert
-              if (confirm('Are you sure you wish to reset all preferences?')) {
-                resetAppData();
-                alert('Reset data successfully!');
-              }
-            }}
-          >
-            Reset
-          </Button>
+          <Button onClick={onResetClick}>Reset</Button>
           <p className="mt-2 text-sm opacity-70">
             Restores all preferences to initial defaults and restarts the app as
             if run for the first time.
