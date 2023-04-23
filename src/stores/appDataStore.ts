@@ -3,6 +3,7 @@ import { PersistOptions, PersistStorage, persist } from 'zustand/middleware';
 
 import { tauriPersistStorage } from 'zustand-tauri-storage/src/index';
 import { InstalledApp } from '../config/apps';
+import { getInstalledAppNames } from '../utils/get-installed-app-names';
 
 const app_data_key = 'appData';
 const storageKey = '.settings.dat';
@@ -19,8 +20,16 @@ interface AppDataStore {
   updateState: (state: Partial<AppDataStore>) => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
+  getInstalledApps: () => void;
   updateURL: (URL: string) => void;
+  resetAppData: () => void;
 }
+
+const resetAppData: Partial<AppDataStore> = {
+  prefsTab: 'general',
+  URL: undefined,
+  installedApps: [],
+};
 
 export const useAppDataStore = create<AppDataStore>(
   (persist as TauriPersist)(
@@ -29,10 +38,20 @@ export const useAppDataStore = create<AppDataStore>(
       URL: undefined,
       installedApps: [],
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
+      getInstalledApps: async () => {
+        const installedAppNames = await getInstalledAppNames();
+        const newApps: InstalledApp[] = installedAppNames.map((name) => ({
+          name,
+          hotCode: null,
+        }));
+        //TODO: make it so that installed app objects can be merged
+        set({ installedApps: newApps });
+      },
       updateInstalledApps: (apps: InstalledApp[]) =>
         set({ installedApps: apps }),
       updateURL: (URL: string) => set({ URL }),
       updateState: (update: Partial<AppDataStore>) => set(update),
+      resetAppData: () => set({ ...resetAppData }),
     }),
     {
       name: 'unique-name',

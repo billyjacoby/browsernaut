@@ -41,6 +41,14 @@
           { "name": "echo", "cmd": "echo", "args": true },
           { "name": "openApp", "cmd": "open", "args": true },
           {
+            "name": "defaultBrowser",
+            "cmd": "defaults",
+            "args": [
+              "read",
+              "~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure"
+            ]
+          },
+          {
             "name": "findApps",
             "cmd": "find",
             "args": [
@@ -75,7 +83,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.billyjacpby.browsernaut",
+      "identifier": "com.billyjacoby.browsernaut",
       "targets": "all"
     },
     "security": {
