@@ -3,20 +3,31 @@ import Button from '../../../components/Button';
 import { Pane } from './Pane';
 
 import { confirm, message } from '@tauri-apps/api/dialog';
+import { invoke } from '@tauri-apps/api';
+import React from 'react';
 
 export const GeneralPane = (): JSX.Element => {
-  const dispatch = () => null;
   const installedApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
   const resetAppData = useAppDataStore((state) => state.resetAppData);
 
-  //TODO: can't figure out how to get this yet
-  const isDefaultProtocolClient = true;
-  // const isDefaultProtocolClient = useSelector(
-  //   (state) => state.data.isDefaultProtocolClient
-  // );
+  const [isDefaultBrowser, setIsDefaultBrowser] = React.useState<
+    null | boolean
+  >(null);
 
   const numberOfInstalledApps = installedApps.length;
+
+  const setDefaultBrowser = async () => {
+    const result = await invoke<boolean>('make_default_browser');
+    if (result) {
+      // Confetti or something fun here
+      setIsDefaultBrowser(true);
+    } else {
+      message(
+        'Could not set default browser. Open the settings app to proceed.'
+      );
+    }
+  };
 
   const onResetClick = async () => {
     const result = await confirm(
@@ -28,15 +39,22 @@ export const GeneralPane = (): JSX.Element => {
     }
   };
 
+  React.useEffect(() => {
+    (async () => {
+      const _isDefaultBrowser = await invoke<boolean>('is_default_browser');
+      setIsDefaultBrowser(_isDefaultBrowser);
+    })();
+  }, []);
+
   return (
     <Pane className="space-y-8" pane="general">
       <Row>
         <Left>Default web browser:</Left>
         <Right>
-          {isDefaultProtocolClient ? (
-            'Browsernaut is the default web browser'
+          {isDefaultBrowser === false ? (
+            <Button onClick={setDefaultBrowser}>Set As Default Browser</Button>
           ) : (
-            <Button onClick={() => dispatch()}>Set As Default Browser</Button>
+            '🎉 Browsernaut is the default web browser'
           )}
           <p className="mt-2 text-sm opacity-70">
             Setting Browsernaut as your default web browser means links clicked

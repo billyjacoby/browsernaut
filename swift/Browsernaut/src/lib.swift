@@ -12,7 +12,7 @@ import AppKit
 @_cdecl("get_default_browser")
 public func getDefaultAppURL() -> SRString? {
     let url =  LSCopyDefaultApplicationURLForURL(URL(string: "https://google.com")! as CFURL, .all, nil)?.takeRetainedValue() as URL?
-    return SRString(url?.absoluteString ?? "")
+    return SRString(url?.lastPathComponent ?? "")
     
 }
 
@@ -27,6 +27,7 @@ public func setDefaultBrowser() -> Bool {
     
 }
 
+// TODO: implement function to get app icons for installed apps
 @_cdecl("get_file_thumbnail_base64")
 func getFileThumbnailBase64(path: SRString) -> SRString {
     let path = path.toString();
