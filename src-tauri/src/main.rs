@@ -7,7 +7,13 @@ use tauri::{
 use tauri_plugin_positioner::{Position, WindowExt};
 
 use enigo::{Enigo, MouseControllable};
+use swift_rs::{swift, Bool, SRString};
 use tauri_plugin_store::{with_store, StoreCollection};
+
+swift!(fn get_default_browser() -> SRString);
+swift!(fn set_default_browser() -> Bool);
+
+const APP_NAME: &str = "browsernaut.app";
 
 fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
@@ -19,6 +25,8 @@ fn main() {
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
+            is_default_browser,
+            make_default_browser,
             open_picker_window,
             open_preferences_window
         ])
@@ -119,7 +127,24 @@ fn main() {
 }
 
 #[tauri::command]
+fn is_default_browser() -> bool {
+    let default_browser_name = unsafe { get_default_browser() };
+    dbg!(APP_NAME);
+    dbg!(default_browser_name.to_string());
+    return default_browser_name.to_string().eq(APP_NAME);
+}
+
+#[tauri::command]
+fn make_default_browser() -> bool {
+    return unsafe { set_default_browser() };
+}
+
+#[tauri::command]
 fn open_preferences_window(app_handle: tauri::AppHandle) {
+    unsafe {
+        let string = get_default_browser();
+        dbg!(string.to_string());
+    }
     tauri::WindowBuilder::new(
         &app_handle,
         "preferences_window",
