@@ -11,6 +11,7 @@ use swift_rs::{swift, SRString};
 use tauri_plugin_store::{with_store, StoreCollection};
 
 swift!(fn get_default_browser() -> SRString);
+swift!(fn get_file_thumbnail_base64() -> SRString);
 
 fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
