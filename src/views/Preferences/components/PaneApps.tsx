@@ -13,6 +13,8 @@ import {
   DraggableStateSnapshot,
   DropResult,
 } from '@hello-pangea/dnd';
+import React from 'react';
+import { getAppIcons } from '../../../utils/get-app-icon';
 
 // https://getfrontrunner.com
 
@@ -24,6 +26,7 @@ interface SortableItemProps {
   index: number;
   icon?: string;
   keyCode?: string;
+  iconString?: string;
 }
 
 const SortableItem = ({
@@ -33,6 +36,7 @@ const SortableItem = ({
   index,
   provided,
   snapshot,
+  iconString,
 }: SortableItemProps) => {
   return (
     <div
@@ -51,7 +55,10 @@ const SortableItem = ({
       <div className="flex w-16 items-center justify-center p-4">
         {index + 1}
       </div>
-      <div className="flex grow items-center p-4">
+      <div className="flex h-14 w-14 mr-4 my-auto align-middle">
+        <img src={iconString} />
+      </div>
+      <div className="flex grow items-center">
         <span>{name}</span>
       </div>
       <div className="flex items-center justify-center p-4">
@@ -86,8 +93,9 @@ const SortableItem = ({
 
 export function AppsPane(): JSX.Element {
   const apps = useAppDataStore((state) => state.installedApps);
-
   const updateApps = useAppDataStore((state) => state.updateInstalledApps);
+
+  const [appIcons, setAppIcons] = React.useState<null | string[]>(null);
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -98,6 +106,18 @@ export function AppsPane(): JSX.Element {
     newApps.splice(result.destination.index, 0, removed);
     updateApps(newApps);
   };
+
+  React.useEffect(() => {
+    if (apps.length) {
+      (async () => {
+        const _appIcons = await getAppIcons(
+          apps.map((app) => app.name),
+          128
+        );
+        setAppIcons(_appIcons);
+      })();
+    }
+  }, [apps]);
 
   const keyCodeMap = new Map<string, string>();
 
@@ -125,6 +145,7 @@ export function AppsPane(): JSX.Element {
                         name={name}
                         provided={provided}
                         snapshot={snapshot}
+                        iconString={appIcons?.[index] ?? ''}
                       />
                     )}
                   </Draggable>

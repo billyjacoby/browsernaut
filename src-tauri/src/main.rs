@@ -7,11 +7,12 @@ use tauri::{
 use tauri_plugin_positioner::{Position, WindowExt};
 
 use enigo::{Enigo, MouseControllable};
-use swift_rs::{swift, Bool, SRString};
+use swift_rs::{swift, Bool, Int, SRString};
 use tauri_plugin_store::{with_store, StoreCollection};
 
 swift!(fn get_default_browser() -> SRString);
 swift!(fn set_default_browser() -> Bool);
+swift!(fn get_app_icon(file: &SRString, size: Int) -> SRString);
 
 const APP_NAME: &str = "browsernaut.app";
 
@@ -27,6 +28,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             is_default_browser,
             make_default_browser,
+            retrieve_app_icon,
             open_picker_window,
             open_preferences_window
         ])
@@ -127,6 +129,13 @@ fn main() {
 }
 
 #[tauri::command]
+fn retrieve_app_icon(file: &str, size: Option<Int>) -> String {
+    let input: SRString = file.into();
+    let result = unsafe { get_app_icon(&input, size.unwrap_or(256)) };
+    return result.to_string();
+}
+
+#[tauri::command]
 fn is_default_browser() -> bool {
     let default_browser_name = unsafe { get_default_browser() };
     dbg!(APP_NAME);
@@ -141,10 +150,6 @@ fn make_default_browser() -> bool {
 
 #[tauri::command]
 fn open_preferences_window(app_handle: tauri::AppHandle) {
-    unsafe {
-        let string = get_default_browser();
-        dbg!(string.to_string());
-    }
     tauri::WindowBuilder::new(
         &app_handle,
         "preferences_window",
