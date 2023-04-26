@@ -166,6 +166,7 @@ fn open_preferences_window(app_handle: tauri::AppHandle) {
 #[tauri::command]
 fn open_picker_window(app_handle: tauri::AppHandle) {
     let enigo = Enigo::new();
+    let window_width: f64 = 250.0;
     let (cursor_x, cursor_y): (i32, i32) = Enigo::mouse_location(&enigo);
     let picker_window = app_handle.get_window("picker_window");
     if picker_window.is_none() {
@@ -178,9 +179,12 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
         .visible(false)
         .accept_first_mouse(true)
         .always_on_top(true)
-        .inner_size(200 as f64, 200 as f64)
+        .inner_size(window_width as f64, 200 as f64)
         .title("")
-        .position(cursor_x as f64 - 100 as f64, cursor_y as f64 - 48 as f64)
+        .position(
+            cursor_x as f64 - (window_width / 2.0) as f64,
+            cursor_y as f64 - 48 as f64,
+        )
         .build()
         .unwrap();
     } else {

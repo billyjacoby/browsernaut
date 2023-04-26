@@ -5,6 +5,7 @@ interface AppButtonProps {
   app: InstalledApp;
   buttonRefs: React.MutableRefObject<HTMLButtonElement[]>;
   index: number;
+  iconString: string;
   onBrowserButtonClick: (
     app: InstalledApp,
     shiftPressed?: boolean,
@@ -13,7 +14,7 @@ interface AppButtonProps {
 }
 
 export const AppButton = (props: AppButtonProps) => {
-  const { app, buttonRefs, index, onBrowserButtonClick } = props;
+  const { app, buttonRefs, index, onBrowserButtonClick, iconString } = props;
   return (
     <div key={app.name}>
       <button
@@ -30,7 +31,7 @@ export const AppButton = (props: AppButtonProps) => {
         disabled={!URL}
         aria-label={`${app.name} App`}
         className={clsx(
-          'flex h-12 w-full shrink-0 items-center justify-between space-x-4 px-4 py-2 text-left',
+          'my-1 flex h-12 w-full shrink-0 items-center justify-between space-x-4 px-4 py-2 text-left',
           'focus:bg-blue-500 focus:text-white focus:outline-none focus:dark:bg-blue-700',
           'hover:bg-black/10 hover:dark:bg-blue-50/10',
           'rounded-xl'
@@ -55,6 +56,7 @@ export const AppButton = (props: AppButtonProps) => {
         type="button"
       >
         <span>{app.name}</span>
+        <img src={iconString} className="h-10 w-10" />
       </button>
     </div>
   );
