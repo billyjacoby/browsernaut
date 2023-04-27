@@ -40,52 +40,63 @@ const SortableItem = ({
 }: SortableItemProps) => {
   return (
     <div
+      style={{ transition: 'all' }}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={clsx(
+        'w-full rounded-md p-0.5 bg-gradient-to-r from-green-600/50 via-blue-800/50 to-pink-600/50',
         'flex',
-        'bg-black/5 shadow dark:bg-white/5',
-        'mb-4 rounded-xl',
+        'mb-4',
         'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
         snapshot.isDragging &&
           'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
       )}
     >
-      <div className="flex w-16 items-center justify-center p-4">
-        {index + 1}
-      </div>
-      <div className="flex h-14 w-14 mr-4 my-auto align-middle">
-        <img src={iconString} />
-      </div>
-      <div className="flex grow items-center">
-        <span>{name}</span>
-      </div>
-      <div className="flex items-center justify-center p-4">
-        <Input
-          aria-label={`${name} hotkey`}
-          className="h-8 w-20"
-          data-app-id={id}
-          maxLength={1}
-          minLength={0}
-          onChange={(event) => event.preventDefault()}
-          onFocus={(event) => {
-            event.target.select();
-          }}
-          // TODO
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          onKeyPress={(event) => {
-            // dispatch(
-            //   `updatedHotCode({
-            //     appName: id,
-            //     value: event.code,
-            //   })`
-            // );
-          }}
-          placeholder="Key"
-          type="text"
-          value={keyCode}
-        />
+      <div
+        className={clsx(
+          'flex',
+          'w-full',
+          'rounded-md',
+          'transition-all',
+          !snapshot.isDragging && 'bg-zinc-800 transition-all'
+        )}
+      >
+        <div className="flex w-16 items-center justify-center p-4">
+          {index + 1}
+        </div>
+        <div className="flex h-14 w-14 mr-4 my-auto align-middle">
+          <img src={iconString} />
+        </div>
+        <div className="flex grow items-center">
+          <span>{name}</span>
+        </div>
+        <div className="flex items-center justify-center p-4">
+          <Input
+            aria-label={`${name} hotkey`}
+            className="h-8 w-20"
+            data-app-id={id}
+            maxLength={1}
+            minLength={0}
+            onChange={(event) => event.preventDefault()}
+            onFocus={(event) => {
+              event.target.select();
+            }}
+            // TODO
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onKeyPress={(event) => {
+              // dispatch(
+              //   `updatedHotCode({
+              //     appName: id,
+              //     value: event.code,
+              //   })`
+              // );
+            }}
+            placeholder="Key"
+            type="text"
+            value={keyCode}
+          />
+        </div>
       </div>
     </div>
   );
