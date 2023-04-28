@@ -97,10 +97,10 @@
       {
         "label": "menu_bar",
         "fullscreen": false,
-        "height": 400,
+        "height": 350,
         "resizable": false,
         "title": "menubar",
-        "width": 500,
+        "width": 300,
         "visible": false,
         "hiddenTitle": true,
         "decorations": false,

@@ -69,12 +69,10 @@ fn main() {
                     ..
                 } => {
                     let window = app.get_window("menu_bar").unwrap();
-                    // use TrayCenter as initial window position
                     let _ = window.move_window(Position::TrayCenter);
                     if window.is_visible().unwrap() {
                         window.hide().unwrap();
                     } else {
-                        // Need to hide the preferences window here
                         window.show().unwrap();
                         window.set_focus().unwrap();
                     }
@@ -112,7 +110,7 @@ fn main() {
             //? When clicking outside the menu bar window, we want to hide the menu bar window
             //? but not other windows
             tauri::WindowEvent::Focused(is_focused) => {
-                //TODO: this still acts a bit wonky when the preferences window it open
+                // DEV
                 if !is_focused {
                     event
                         .window()
@@ -150,17 +148,22 @@ fn make_default_browser() -> bool {
 
 #[tauri::command]
 fn open_preferences_window(app_handle: tauri::AppHandle) {
-    tauri::WindowBuilder::new(
-        &app_handle,
-        "preferences_window",
-        tauri::WindowUrl::App("index.html".into()),
-    )
-    .visible(false)
-    .accept_first_mouse(true)
-    .title_bar_style(tauri::TitleBarStyle::Overlay)
-    .title("")
-    .build()
-    .unwrap();
+    let preferences_window = app_handle.get_window("preferences_window");
+    if preferences_window.is_none() {
+        tauri::WindowBuilder::new(
+            &app_handle,
+            "preferences_window",
+            tauri::WindowUrl::App("index.html".into()),
+        )
+        .visible(false)
+        .accept_first_mouse(true)
+        .title_bar_style(tauri::TitleBarStyle::Overlay)
+        .title("")
+        .build()
+        .unwrap();
+    } else {
+        preferences_window.unwrap().set_focus().unwrap();
+    }
 }
 
 #[tauri::command]
@@ -191,5 +194,3 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
         picker_window.unwrap().show().unwrap();
     }
 }
-
-// https://google.com

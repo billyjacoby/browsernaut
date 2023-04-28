@@ -15,6 +15,7 @@ import {
 } from '@hello-pangea/dnd';
 import React from 'react';
 import { getAppIcons } from '../../../utils/get-app-icon';
+import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from '../../../config/CONSTANTS';
 
 // https://getfrontrunner.com
 
@@ -45,12 +46,13 @@ const SortableItem = ({
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={clsx(
-        'w-full rounded-md p-0.5 bg-gradient-to-r from-green-600/50 via-blue-800/50 to-pink-600/50',
+        'w-full rounded-md p-0.5',
+        BG_GRADIENT,
         'flex',
         'mb-4',
         'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
-        snapshot.isDragging &&
-          'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
+        snapshot.isDragging && BG_GRADIENT_ACTIVE,
+        'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
       )}
     >
       <div
@@ -140,7 +142,7 @@ export function AppsPane(): JSX.Element {
         </div>
       )}
 
-      <div className="overflow-y-auto p-2">
+      <div className="overflow-y-auto p-2 scrollbar-hide">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
