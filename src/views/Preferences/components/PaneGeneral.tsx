@@ -13,6 +13,7 @@ export const GeneralPane = (): JSX.Element => {
   const installedApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
   const resetAppData = useAppDataStore((state) => state.resetAppData);
+  const prefsTab = useAppDataStore((state) => state.prefsTab);
 
   const [isDefaultBrowser, setIsDefaultBrowser] = React.useState<
     null | boolean
@@ -97,7 +98,10 @@ export const GeneralPane = (): JSX.Element => {
             <Button onClick={setDefaultBrowser}>Set As Default Browser</Button>
           ) : (
             <>
-              <ConfettiExplosion colors={[GREEN, BLUE, PINK]} />
+              {prefsTab === 'general' && (
+                // TODO: maybe make this less frequent? Or at least turn-off-able
+                <ConfettiExplosion colors={[GREEN, BLUE, PINK]} />
+              )}
               🎉 Browsernaut is the default web browser
             </>
           )}
