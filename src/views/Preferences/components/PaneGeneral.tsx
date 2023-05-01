@@ -5,6 +5,9 @@ import { Pane } from './Pane';
 import { confirm, message } from '@tauri-apps/api/dialog';
 import { invoke } from '@tauri-apps/api';
 import React from 'react';
+import ConfettiExplosion from 'react-confetti-explosion';
+import { BLUE, GREEN, PINK } from '../../../config/CONSTANTS';
+import { getCurrent } from '@tauri-apps/api/window';
 
 export const GeneralPane = (): JSX.Element => {
   const installedApps = useAppDataStore((state) => state.installedApps);
@@ -14,14 +17,28 @@ export const GeneralPane = (): JSX.Element => {
   const [isDefaultBrowser, setIsDefaultBrowser] = React.useState<
     null | boolean
   >(null);
+  const [isDefaultBrowserLoading, setIsDefaultBrowserLoading] =
+    React.useState(false);
 
   const numberOfInstalledApps = installedApps.length;
 
+  const intervalRef = React.useRef<NodeJS.Timer | null>(null);
+  const intervalChecksRef = React.useRef<number>(0);
+
+  const checkForDefaultBrowser = async () => {
+    const _isDefaultBrowser = await invoke<boolean>('is_default_browser');
+    if (_isDefaultBrowser) {
+      setIsDefaultBrowserLoading(false);
+    }
+    setIsDefaultBrowser(_isDefaultBrowser);
+  };
+
   const setDefaultBrowser = async () => {
+    // Check if default once first:
+    checkForDefaultBrowser();
     const result = await invoke<boolean>('make_default_browser');
     if (result) {
-      // Confetti or something fun here
-      setIsDefaultBrowser(true);
+      setIsDefaultBrowserLoading(true);
     } else {
       message(
         'Could not set default browser. Open the settings app to proceed.'
@@ -40,27 +57,54 @@ export const GeneralPane = (): JSX.Element => {
   };
 
   React.useEffect(() => {
-    (async () => {
-      const _isDefaultBrowser = await invoke<boolean>('is_default_browser');
-      setIsDefaultBrowser(_isDefaultBrowser);
-    })();
+    if (isDefaultBrowserLoading) {
+      // check for default browser every 2 seconds for 15 seconds
+      if (isDefaultBrowser) {
+        clearInterval(intervalRef.current || 0);
+        setIsDefaultBrowserLoading(false);
+      } else {
+        intervalRef.current = setInterval(() => {
+          if (intervalChecksRef.current >= 10 || isDefaultBrowser) {
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current);
+            }
+          } else {
+            intervalChecksRef.current += 1;
+            checkForDefaultBrowser();
+          }
+        }, 2000);
+      }
+    } else {
+      if (intervalRef.current) {
+        // Setting browser takes focus away from app
+        getCurrent().setFocus();
+        intervalChecksRef.current = 0;
+        clearInterval(intervalRef.current);
+      }
+    }
+  }, [isDefaultBrowser, isDefaultBrowserLoading]);
+
+  React.useEffect(() => {
+    checkForDefaultBrowser();
   }, []);
 
   return (
     <Pane className="space-y-8" pane="general">
       <Row>
-        <Left>Default web browser:</Left>
+        <Left>Default browser:</Left>
         <Right>
           {isDefaultBrowser === false ? (
             <Button onClick={setDefaultBrowser}>Set As Default Browser</Button>
           ) : (
-            '🎉 Browsernaut is the default web browser'
+            <>
+              <ConfettiExplosion colors={[GREEN, BLUE, PINK]} />
+              🎉 Browsernaut is the default web browser
+            </>
           )}
           <p className="mt-2 text-sm opacity-70">
-            Setting Browsernaut as your default web browser means links clicked
+            Setting Browsernaut as the default browser means links clicked
             outside of web browsers will open the picker window. This is the
-            primary design of Browsernaut. However, you can also
-            programmatically send URLs to Browsernaut.
+            primary design of Browsernaut.
           </p>
         </Right>
       </Row>

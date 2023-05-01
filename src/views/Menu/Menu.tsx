@@ -20,14 +20,22 @@ export const MenuView = () => {
         Welcome to Browsernaut!
       </h1>
       <button
-        className={clsx('bg-zinc-600 mt-2 mb-1', 'disabled:opacity-25')}
+        className={clsx(
+          'bg-zinc-600 mt-2 mb-1',
+          'disabled:opacity-25',
+          'hover:border-green-500'
+        )}
         disabled={!url}
         onClick={() => invoke('open_picker_window')}
       >
         Reopen last URL
       </button>
       <button
-        className={clsx('bg-zinc-600 my-1')}
+        className={clsx(
+          'bg-zinc-600 mt-2 mb-1',
+          'disabled:opacity-25',
+          'hover:border-green-500'
+        )}
         onClick={() => invoke('open_preferences_window')}
       >
         Open preferences

@@ -4,7 +4,7 @@ import { getCurrent } from '@tauri-apps/api/window';
 import React from 'react';
 import styled from 'styled-components';
 import { InstalledApp } from '../../config/apps';
-import { colors } from '../../constants';
+import { colors } from '../../config/CONSTANTS';
 import { openApp } from '../../utils/open-app';
 import UrlBar from './components/UrlBar';
 import {

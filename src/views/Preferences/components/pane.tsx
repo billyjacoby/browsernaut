@@ -14,7 +14,6 @@ export function Pane({ children, pane, className }: Props): JSX.Element {
   return (
     <div
       className={clsx(
-        'scrollbar-hide',
         isVisible ? 'flex grow flex-col overflow-hidden' : 'hidden',
         className
       )}

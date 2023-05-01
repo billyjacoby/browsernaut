@@ -28,7 +28,8 @@ const Button: React.FC<React.ComponentPropsWithoutRef<'button'>> = ({
         'border-b-[#C1BFBF] dark:border-b-[#56555C]',
         'border-l-[#D4D2D2] dark:border-l-[#56555C]',
         'border-r-[#D4D2D2] dark:border-r-[#56555C]',
-        'border-t-[#DAD8D8] dark:border-t-[#6E6D73]'
+        'border-t-[#DAD8D8] dark:border-t-[#6E6D73]',
+        'hover:border-green-400'
       )}
       disabled={disabled}
       type="button"

@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import { useAppDataStore } from '../../../stores/appDataStore';
-
-// import { useSelector } from '../../../shared/state/hooks';
-// import { clickedTabButton } from '../../state/actions';
+import { BG_GRADIENT_ACTIVE } from '../../../config/CONSTANTS';
 
 interface TabButtonProps {
   tab: PrefsTab;
@@ -14,20 +12,27 @@ const TabButton = ({ tab, children }: TabButtonProps) => {
   const prefsTab = useAppDataStore((state) => state.prefsTab);
 
   return (
-    <button
+    <div
       className={clsx(
-        'bg-black dark:bg-white',
-        prefsTab === tab
-          ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-          : 'bg-black/0 hover:bg-black/5 dark:bg-white/0 dark:hover:bg-white/5',
-        'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
-        'rounded px-4 py-2'
+        prefsTab === tab && BG_GRADIENT_ACTIVE,
+        'p-0.5 rounded-md'
       )}
-      onClick={() => updatePrefsTab(tab)}
-      type="button"
     >
-      {children}
-    </button>
+      <button
+        className={clsx(
+          prefsTab === tab
+            ? 'bg-zinc-800'
+            : 'bg-black/0 hover:bg-black/5 dark:bg-white/0 dark:hover:bg-white/5',
+          'hover:border-green-500',
+          'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
+          'rounded px-4 py-2'
+        )}
+        onClick={() => updatePrefsTab(tab)}
+        type="button"
+      >
+        {children}
+      </button>
+    </div>
   );
 };
 
