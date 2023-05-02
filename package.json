@@ -1,12 +1,13 @@
 {
   "name": "browsernaut",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-dev",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "CI=true tsc && vite build",
     "build:debug": "CI=true vite build --debug",
+    "build:release": "CI=true yarn tauri build -target universal-apple-darwin",
     "preview": "vite preview",
     "tauri": "tauri"
   },
