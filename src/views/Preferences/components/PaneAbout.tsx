@@ -2,19 +2,28 @@
 
 // import icon from '../../../../shared/static/icon/icon.png';
 import Button from '@components/Button';
+import { getVersion } from '@tauri-apps/api/app';
 // import { useSelector } from '../../../shared/state/hooks'
 // import {
 //   clickedHomepageButton,
 //   clickedOpenIssueButton,
 // } from '../../state/actions';
 import { Pane } from './Pane';
+import React from 'react';
 
 const useDispatch = () => (any: any) => console.log('dispatch: ', any);
 
 export const AboutPane = (): JSX.Element => {
   const dispatch = useDispatch();
   // const version = useSelector((state) => state.data.version);
-  const version = '1.0.0';
+  const [version, setVersion] = React.useState<null | string>(null);
+
+  React.useEffect(() => {
+    (async () => {
+      const _version = await getVersion();
+      setVersion(_version);
+    })();
+  }, []);
 
   return (
     <Pane className="space-y-8" pane="about">
@@ -24,7 +33,7 @@ export const AboutPane = (): JSX.Element => {
           Browsernaut
         </h1>
         <p className="mb-8 text-xl">Another browser prompter for macOS</p>
-        <p className="mb-4 opacity-70">Version {version}</p>
+        <p className="mb-4 opacity-70">Version {version || 'loading.'}</p>
         <p className="mb-8">Copyright © Billy Jacoby</p>
         <div className="space-x-4">
           <Button onClick={() => dispatch('clickedHomepageButton()')}>
