@@ -8,7 +8,7 @@ import { getVersion } from '@tauri-apps/api/app';
 //   clickedHomepageButton,
 //   clickedOpenIssueButton,
 // } from '../../state/actions';
-import { Pane } from './pane';
+import { Pane } from './Pane';
 import React from 'react';
 
 const useDispatch = () => (any: any) => console.log('dispatch: ', any);
