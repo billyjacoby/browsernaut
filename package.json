@@ -1,7 +1,7 @@
 {
   "name": "browsernaut",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.1-dev.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
     "build:release": "dotenv tauri build --target x86_64-apple-darwin",
     "preview": "vite preview",
     "tauri": "tauri",
-    "release": "dotenv release-it --only-version --"
+    "release": "dotenv release-it --"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
@@ -49,11 +49,6 @@
   "release-it": {
     "git": {
       "commitMessage": "chore: release v${version}"
-    },
-    "github": {
-      "release": true,
-      "web": true,
-      "preRelease": true
     }
   },
   "packageManager": "yarn@3.5.0"
