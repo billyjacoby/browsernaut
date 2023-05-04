@@ -37,7 +37,7 @@ jobs:
         run: yarn install # Change this to npm, yarn or pnpm.
 
       - name: Build the app
-        uses: tauri-apps/tauri-action@v0
+        run: yarn build:release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
