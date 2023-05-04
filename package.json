@@ -7,10 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:debug": "CI=true yarn tauri build --debug --target x86_64-apple-darwin",
-    "build:release": "./bin/build-release.sh",
+    "build:release": "dotenv tauri build --target x86_64-apple-darwin",
     "preview": "vite preview",
     "tauri": "tauri",
-    "release": "release-it"
+    "release": "dotenv release-it --"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
@@ -36,6 +36,8 @@
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "@vitejs/plugin-react": "^3.0.0",
+    "dotenv": "^16.0.3",
+    "dotenv-cli": "^7.2.1",
     "eslint": "^8.38.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -43,6 +45,14 @@
     "release-it": "^15.10.3",
     "typescript": "^5.0.4",
     "vite": "^4.0.0"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v${version}"
+    },
+    "github": {
+      "release": true
+    }
   },
   "packageManager": "yarn@3.5.0"
 }
