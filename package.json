@@ -53,7 +53,8 @@
     "plugins": {
       "@release-it/keep-a-changelog": {
         "filename": "CHANGELOG.md",
-        "strictLatest": false
+        "strictLatest": false,
+        "addVersionUrl": true
       }
     }
   },
