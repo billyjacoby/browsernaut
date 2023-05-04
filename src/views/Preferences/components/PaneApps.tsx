@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import type { InstalledApp } from '../../../config/apps';
 import Input from '../../../components/Input';
 import { Spinner } from '../../../components/Spinner';
-import { Pane } from './Pane';
+import { Pane } from '../../../components/Pane';
 import { useAppDataStore } from '@stores/appDataStore';
 import {
   DragDropContext,

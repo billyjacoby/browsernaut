@@ -1,6 +1,6 @@
 import { useAppDataStore } from '@stores/appDataStore';
 import Button from '../../../components/Button';
-import { Pane } from './Pane';
+import { Pane } from '../../../components/Pane';
 
 import { confirm, message } from '@tauri-apps/api/dialog';
 import { invoke } from '@tauri-apps/api';
