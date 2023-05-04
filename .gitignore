@@ -29,6 +29,5 @@ dist-ssr
 
 
 packages/
-swift/
 
 .env
