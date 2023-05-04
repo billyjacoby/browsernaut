@@ -44,7 +44,7 @@ jobs:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_API_ISSUER: ${{APPLE_API_ISSUER}}
+          APPLE_API_ISSUER: ${{secrets.APPLE_API_ISSUER}}
           APPLE_API_KEY: ${{secrets.APPLE_API_KEY}}
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
