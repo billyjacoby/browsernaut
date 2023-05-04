@@ -851,6 +851,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@release-it/keep-a-changelog@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@release-it/keep-a-changelog@npm:3.1.0"
+  dependencies:
+    detect-newline: ^4.0.0
+    string-template: ^1.0.0
+  peerDependencies:
+    release-it: ^15.0.0-esm.4
+  checksum: 28cf7c8642bc67872c0e69f89ecef05cbdc0eda4c6297410a111f34602ae09691f672dc5e43b4089508663ea890efd94783cc0e81163fb4a2ecef3df89890744
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/is@npm:^5.2.0":
   version: 5.3.0
   resolution: "@sindresorhus/is@npm:5.3.0"
@@ -1631,6 +1643,7 @@ __metadata:
   resolution: "browsernaut@workspace:."
   dependencies:
     "@hello-pangea/dnd": ^16.2.0
+    "@release-it/keep-a-changelog": ^3.1.0
     "@tauri-apps/api": ^1.2.0
     "@tauri-apps/cli": ^1.2.2
     "@types/node": ^18.7.10
@@ -1659,7 +1672,6 @@ __metadata:
     typescript: ^5.0.4
     vite: ^4.0.0
     zustand: ^4.3.7
-    zustand-tauri-storage: "file:./packages/zustand-tauri-storage"
   languageName: unknown
   linkType: soft
 
@@ -2244,6 +2256,13 @@ __metadata:
   version: 2.3.1
   resolution: "deprecation@npm:2.3.1"
   checksum: f56a05e182c2c195071385455956b0c4106fe14e36245b00c689ceef8e8ab639235176a96977ba7c74afb173317fac2e0ec6ec7a1c6d1e6eaa401c586c714132
+  languageName: node
+  linkType: hard
+
+"detect-newline@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "detect-newline@npm:4.0.0"
+  checksum: 52767347c70f485b2d1db6493dde57b8c3c1f249e24bad7eb7424cc1129200aa7e671902ede18bc94a8b69e10dec91456aab4c7e2478559d9eedb31ef3847f36
   languageName: node
   linkType: hard
 
@@ -6176,6 +6195,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"string-template@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "string-template@npm:1.0.0"
+  checksum: 15b0e8616ff25f3ddcd42e4a58a6833cc7be81029f97afc7b8f8d2e7c4d482a136e67399d207b7d2c31080e7a88266c670131a59e50ebc482bfeddb06b3a4215
+  languageName: node
+  linkType: hard
+
 "string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.3":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
@@ -7046,16 +7072,6 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
-  languageName: node
-  linkType: hard
-
-"zustand-tauri-storage@file:./packages/zustand-tauri-storage::locator=browsernaut%40workspace%3A.":
-  version: 0.0.0
-  resolution: "zustand-tauri-storage@file:./packages/zustand-tauri-storage#./packages/zustand-tauri-storage::hash=21bba8&locator=browsernaut%40workspace%3A."
-  peerDependencies:
-    tauri-plugin-store-api: "*"
-    zustand: "*"
-  checksum: 86680ab7b727fda720d829f63f902ca4d0e37439dfc783c5ecf881f262007b758f6ec5a8235ba29dd840ccdeca34e9fc2b614397a35888c6ea4234b11129c2b4
   languageName: node
   linkType: hard
 

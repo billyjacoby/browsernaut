@@ -1,7 +1,7 @@
 {
   "name": "browsernaut",
   "private": true,
-  "version": "0.0.1-dev.1",
+  "version": "0.0.1-dev.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -25,10 +25,10 @@
     "styled-components": "^5.3.9",
     "tailwindcss": "^3.3.1",
     "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store",
-    "zustand": "^4.3.7",
-    "zustand-tauri-storage": "file:./packages/zustand-tauri-storage"
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
+    "@release-it/keep-a-changelog": "^3.1.0",
     "@tauri-apps/cli": "^1.2.2",
     "@types/node": "^18.7.10",
     "@types/react": "^18.0.15",
@@ -49,6 +49,12 @@
   "release-it": {
     "git": {
       "commitMessage": "chore: release v${version}"
+    },
+    "plugins": {
+      "@release-it/keep-a-changelog": {
+        "filename": "CHANGELOG.md",
+        "strictLatest": false
+      }
     }
   },
   "packageManager": "yarn@3.5.0"

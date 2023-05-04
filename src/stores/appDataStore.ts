@@ -1,7 +1,7 @@
 import { StateCreator, create } from 'zustand';
 import { PersistOptions, PersistStorage, persist } from 'zustand/middleware';
 
-import { tauriPersistStorage } from 'zustand-tauri-storage/src/index';
+import { tauriPersistStorage } from '../lib/zustand-persist-tauri';
 import { InstalledApp } from '../config/apps';
 import { getInstalledAppNames } from '../utils/get-installed-app-names';
 
