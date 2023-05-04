@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "CI=true tsc && vite build",
+    "build": "tsc && vite build",
     "build:debug": "CI=true yarn tauri build --debug --target x86_64-apple-darwin",
     "build:release": "./bin/build-release.sh",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "release": "release-it"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
@@ -39,6 +40,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "release-it": "^15.10.3",
     "typescript": "^5.0.4",
     "vite": "^4.0.0"
   },
