@@ -10,7 +10,7 @@
     "build:release": "dotenv tauri build --target x86_64-apple-darwin",
     "preview": "vite preview",
     "tauri": "tauri",
-    "release": "release-it --only-version"
+    "release": "release-it"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
