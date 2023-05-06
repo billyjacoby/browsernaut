@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:debug": "CI=true yarn tauri build --debug --target x86_64-apple-darwin",
-    "build:release": "dotenv tauri build --target x86_64-apple-darwin",
+    "build:release": "dotenv yarn tauri build --target x86_64-apple-darwin",
+    "sign": "dotenv ./bin/apple.sh",
     "preview": "vite preview",
     "tauri": "tauri",
     "release": "release-it"

@@ -14,7 +14,7 @@ swift!(fn get_default_browser() -> SRString);
 swift!(fn set_default_browser() -> Bool);
 swift!(fn get_app_icon(file: &SRString, size: Int) -> SRString);
 
-const APP_NAME: &str = "browsernaut.app";
+const APP_NAME: &str = "Browsernaut.app";
 
 fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");

@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "browsernaut",
+    "productName": "Browsernaut",
     "version": "../package.json"
   },
   "tauri": {
