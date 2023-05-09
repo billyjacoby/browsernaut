@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:debug": "CI=true yarn tauri build --debug --target x86_64-apple-darwin",
+    "build:debug": "dotenv yarn tauri build -d --target x86_64-apple-darwin",
     "build:release": "dotenv yarn tauri build --target x86_64-apple-darwin",
     "sign": "dotenv ./bin/apple.sh",
     "preview": "vite preview",
