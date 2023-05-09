@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { useAppDataStore } from '../../../stores/appDataStore';
-import { BG_GRADIENT_ACTIVE } from '../../../config/CONSTANTS';
+import { useAppDataStore } from '@stores/appDataStore';
+import { BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
 
 interface TabButtonProps {
   tab: PrefsTab;

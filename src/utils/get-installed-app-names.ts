@@ -1,6 +1,6 @@
 import { path } from '@tauri-apps/api';
 
-import { AppName, apps } from '../config/apps';
+import { AppName, apps } from '@config/apps';
 import { Command } from '@tauri-apps/api/shell';
 
 async function getAllInstalledAppNames(): Promise<string[]> {

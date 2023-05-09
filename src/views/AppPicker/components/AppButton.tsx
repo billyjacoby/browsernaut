@@ -1,5 +1,5 @@
-import { BG_GRADIENT } from '../../../config/CONSTANTS';
-import { InstalledApp } from '../../../config/apps';
+import { BG_GRADIENT } from '@config/CONSTANTS';
+import { InstalledApp } from '@config/apps';
 import clsx from 'clsx';
 
 interface AppButtonProps {

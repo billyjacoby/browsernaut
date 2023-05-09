@@ -3,18 +3,18 @@ import { DraggableTitleBar } from '@components/DraggableTitleBar';
 import { getCurrent } from '@tauri-apps/api/window';
 import React from 'react';
 import styled from 'styled-components';
-import { InstalledApp } from '../../config/apps';
-import { colors } from '../../config/CONSTANTS';
-import { openApp } from '../../utils/open-app';
+import { InstalledApp } from '@config/apps';
+import { colors } from '@config/CONSTANTS';
+import { openApp } from '@utils/open-app';
 import UrlBar from './components/UrlBar';
 import {
   ListenedKeyboardCodes,
   useIsKeyPressed,
-} from '../../utils/hooks/useIsKeyPressed';
+} from '@utils/hooks/useIsKeyPressed';
 import { AppButton } from './components/AppButton';
 import { useAppDataStore } from '@stores/appDataStore';
-import { useCloseOnUnfocus } from '../../utils/hooks/useCloseOnUnfocus';
-import { getAppIcons } from '../../utils/get-app-icon';
+import { useCloseOnUnfocus } from '@utils/hooks/useCloseOnUnfocus';
+import { getAppIcons } from '@utils/get-app-icon';
 
 // https://getfrontrunner.com
 

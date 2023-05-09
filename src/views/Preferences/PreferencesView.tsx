@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../../config/CONSTANTS';
+import { colors } from '@config/CONSTANTS';
 import { TabBar } from './components/TabBar';
 import { AboutPane } from './components/PaneAbout';
 import { AppsPane } from './components/PaneApps';
 import { GeneralPane } from './components/PaneGeneral';
-import { DraggableTitleBar } from '../../components/DraggableTitleBar';
+import { DraggableTitleBar } from '@components/DraggableTitleBar';
 import { getCurrent } from '@tauri-apps/api/window';
 
 export const PreferencesView = () => {

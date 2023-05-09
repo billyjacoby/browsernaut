@@ -1,12 +1,12 @@
 import { useAppDataStore } from '@stores/appDataStore';
-import Button from '../../../components/Button';
-import { Pane } from '../../../components/Pane';
+import Button from '@components/Button';
+import { Pane } from '@components/Pane';
 
 import { confirm, message } from '@tauri-apps/api/dialog';
 import { invoke } from '@tauri-apps/api';
 import React from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
-import { BLUE, GREEN, PINK } from '../../../config/CONSTANTS';
+import { BLUE, GREEN, PINK } from '@config/CONSTANTS';
 import { getCurrent } from '@tauri-apps/api/window';
 
 export const GeneralPane = (): JSX.Element => {

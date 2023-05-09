@@ -27,6 +27,9 @@ export default defineConfig(async () => ({
   },
   resolve: {
     alias: {
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@config': path.resolve(__dirname, './src/config'),
+      '@utils': path.resolve(__dirname, './src/utils'),
       '@components': path.resolve(__dirname, './src/components'),
       '@views': path.resolve(__dirname, './src/views'),
       '@stores': path.resolve(__dirname, './src/stores'),

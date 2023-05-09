@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import type { InstalledApp } from '../../../config/apps';
-import Input from '../../../components/Input';
-import { Spinner } from '../../../components/Spinner';
-import { Pane } from '../../../components/Pane';
+import type { InstalledApp } from '@config/apps';
+import Input from '@components/Input';
+import { Spinner } from '@components/Spinner';
+import { Pane } from '@components/Pane';
 import { useAppDataStore } from '@stores/appDataStore';
 import {
   DragDropContext,
@@ -14,8 +14,8 @@ import {
   DropResult,
 } from '@hello-pangea/dnd';
 import React from 'react';
-import { getAppIcons } from '../../../utils/get-app-icon';
-import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from '../../../config/CONSTANTS';
+import { getAppIcons } from '@utils/get-app-icon';
+import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
 
 // https://getfrontrunner.com
 

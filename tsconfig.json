@@ -18,6 +18,9 @@
     "paths": {
       "@components/*": ["./src/components/*"],
       "@views/*": ["./src/views/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@config/*": ["./src/config/*"],
+      "@utils/*": ["./src/utils/*"],
       "@stores/*": ["./src/stores/*"]
     }
   },
