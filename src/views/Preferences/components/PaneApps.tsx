@@ -14,7 +14,6 @@ import {
   DropResult,
 } from '@hello-pangea/dnd';
 import React from 'react';
-import { getAppIcons } from '@utils/get-app-icon';
 import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
 
 // https://getfrontrunner.com
@@ -108,8 +107,6 @@ export function AppsPane(): JSX.Element {
   const apps = useAppDataStore((state) => state.installedApps);
   const updateApps = useAppDataStore((state) => state.updateInstalledApps);
 
-  const [appIcons, setAppIcons] = React.useState<null | string[]>(null);
-
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
@@ -119,18 +116,6 @@ export function AppsPane(): JSX.Element {
     newApps.splice(result.destination.index, 0, removed);
     updateApps(newApps);
   };
-
-  React.useEffect(() => {
-    if (apps.length) {
-      (async () => {
-        const _appIcons = await getAppIcons(
-          apps.map((app) => app.name),
-          128
-        );
-        setAppIcons(_appIcons);
-      })();
-    }
-  }, [apps]);
 
   const keyCodeMap = new Map<string, string>();
 
@@ -147,7 +132,7 @@ export function AppsPane(): JSX.Element {
           <Droppable droppableId="droppable">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {apps.map(({ name, hotCode }, index) => (
+                {apps.map(({ name, hotCode, icon }, index) => (
                   <Draggable key={name} draggableId={name} index={index}>
                     {(provided, snapshot) => (
                       <SortableItem
@@ -158,7 +143,7 @@ export function AppsPane(): JSX.Element {
                         name={name}
                         provided={provided}
                         snapshot={snapshot}
-                        iconString={appIcons?.[index] ?? ''}
+                        iconString={icon ?? ''}
                       />
                     )}
                   </Draggable>

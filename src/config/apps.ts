@@ -138,4 +138,5 @@ export type AppName = keyof typeof apps;
 export interface InstalledApp {
   name: AppName;
   hotCode: string | null;
+  icon?: string;
 }

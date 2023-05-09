@@ -1,4 +1,4 @@
-import { BG_GRADIENT } from '@config/CONSTANTS';
+import { BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
 import { InstalledApp } from '@config/apps';
 import clsx from 'clsx';
 
@@ -31,7 +31,7 @@ export const AppButton = (props: AppButtonProps) => {
       disabled={!URL}
       aria-label={`${app.name} App`}
       className={clsx(
-        BG_GRADIENT,
+        BG_GRADIENT_ACTIVE,
         'my-1 w-full p-0.5',
         'rounded-xl',
         'focus:border-transparent focus:ring-0'

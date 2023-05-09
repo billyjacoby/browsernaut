@@ -14,7 +14,6 @@ import {
 import { AppButton } from './components/AppButton';
 import { useAppDataStore } from '@stores/appDataStore';
 import { useCloseOnUnfocus } from '@utils/hooks/useCloseOnUnfocus';
-import { getAppIcons } from '@utils/get-app-icon';
 
 // https://getfrontrunner.com
 
@@ -26,21 +25,6 @@ export const AppPicker = () => {
   const URL = useAppDataStore((state) => state.URL);
 
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
-
-  //TODO: save these in local storage so we don't have top get them all the time
-  const [appIcons, setAppIcons] = React.useState<string[] | null>(null);
-
-  React.useEffect(() => {
-    if (apps.length) {
-      (async () => {
-        const _appIcons = await getAppIcons(
-          apps.map((app) => app.name),
-          128
-        );
-        setAppIcons(_appIcons);
-      })();
-    }
-  }, [apps]);
 
   React.useEffect(() => {
     if (isEscPressed) {
@@ -90,7 +74,7 @@ export const AppPicker = () => {
               buttonRefs={buttonRefs}
               app={app}
               onBrowserButtonClick={onBrowserButtonClick}
-              iconString={appIcons?.[index] ?? ''}
+              iconString={app?.icon ?? ''}
             />
           ))}
         </div>
