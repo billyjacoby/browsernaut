@@ -26,6 +26,11 @@ export const AppPicker = () => {
 
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
 
+  const hotCodeMap = new Map<string | null, InstalledApp>();
+  apps.forEach((app) =>
+    hotCodeMap.set(app.hotCode ? app.hotCode.toLowerCase() : null, app)
+  );
+
   React.useEffect(() => {
     if (isEscPressed) {
       getCurrent().close();
@@ -54,7 +59,14 @@ export const AppPicker = () => {
   };
 
   return (
-    <OuterContainer>
+    <OuterContainer
+      onKeyDown={(e) => {
+        const app = hotCodeMap.get(e.key.toLowerCase());
+        if (app) {
+          onBrowserButtonClick(app, e.shiftKey, e.altKey);
+        }
+      }}
+    >
       <DraggableTitleBar backgroundColor={colors.background} height={12} />
       <Container
         className="relative flex h-screen w-screen select-none flex-col items-center px-1 pt-3 dark:text-white"

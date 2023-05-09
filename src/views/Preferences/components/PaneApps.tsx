@@ -1,3 +1,4 @@
+import React from 'react';
 import clsx from 'clsx';
 
 import type { InstalledApp } from '@config/apps';
@@ -13,7 +14,6 @@ import {
   DraggableStateSnapshot,
   DropResult,
 } from '@hello-pangea/dnd';
-import React from 'react';
 import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
 
 // https://getfrontrunner.com
@@ -38,6 +38,7 @@ const SortableItem = ({
   snapshot,
   iconString,
 }: SortableItemProps) => {
+  const updateHotCode = useAppDataStore((state) => state.updateHotCode);
   return (
     <div
       style={{ transition: 'all' }}
@@ -85,13 +86,15 @@ const SortableItem = ({
             }}
             // TODO
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onKeyPress={(event) => {
-              // dispatch(
-              //   `updatedHotCode({
-              //     appName: id,
-              //     value: event.code,
-              //   })`
-              // );
+            onKeyDown={(event) => {
+              if (
+                event.key.toLowerCase() === 'backspace' ||
+                event.key.toLowerCase() === 'delete'
+              ) {
+                updateHotCode(name, null);
+              } else {
+                updateHotCode(name, event.key);
+              }
             }}
             placeholder="Key"
             type="text"
@@ -117,8 +120,6 @@ export function AppsPane(): JSX.Element {
     updateApps(newApps);
   };
 
-  const keyCodeMap = new Map<string, string>();
-
   return (
     <Pane pane="apps">
       {apps.length === 0 && (
@@ -139,7 +140,7 @@ export function AppsPane(): JSX.Element {
                         key={name}
                         id={name}
                         index={index}
-                        keyCode={keyCodeMap.get(hotCode || '') || ''}
+                        keyCode={hotCode || ''}
                         name={name}
                         provided={provided}
                         snapshot={snapshot}

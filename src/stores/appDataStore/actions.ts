@@ -19,3 +19,21 @@ export const getInstalledApps = async (
   //TODO: make it so that installed app objects can be merged
   set({ installedApps: newApps });
 };
+
+export const updateHotCode = (
+  set: StoreApi<AppDataStore>['setState'],
+  get: StoreApi<AppDataStore>['getState'],
+  name: string,
+  hotCode: string | null
+) => {
+  const apps = get().installedApps;
+  const appIndex = apps.findIndex((a) => a.name === name);
+
+  if (appIndex > -1) {
+    const updatedApp = apps[appIndex];
+    updatedApp.hotCode = hotCode;
+    apps.splice(appIndex, 1, updatedApp);
+
+    set({ installedApps: Array.from([...apps]) });
+  }
+};

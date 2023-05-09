@@ -66,6 +66,11 @@ export const AppButton = (props: AppButtonProps) => {
         )}
       >
         <span>{app.name}</span>
+        {app.hotCode && (
+          <span className="text-sm ml-auto mr-1 text-zinc-500">
+            {app.hotCode.toUpperCase()}
+          </span>
+        )}
         <img src={iconString} className="h-10 w-10" />
       </div>
     </button>

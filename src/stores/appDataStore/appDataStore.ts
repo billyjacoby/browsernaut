@@ -4,7 +4,10 @@ import { PersistOptions, PersistStorage, persist } from 'zustand/middleware';
 import { tauriPersistStorage } from '@lib/zustand-persist-tauri';
 import { InstalledApp } from '@config/apps';
 
-import { getInstalledApps as _getInstalledApps } from './actions';
+import {
+  getInstalledApps as _getInstalledApps,
+  updateHotCode as _updateHotCode,
+} from './actions';
 
 const app_data_key = 'appData';
 const storageKey = '.settings.dat';
@@ -21,6 +24,7 @@ export interface AppDataStore {
   updateState: (state: Partial<AppDataStore>) => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
+  updateHotCode: (name: string, hotCode: string | null) => void;
   getInstalledApps: () => void;
   updateURL: (URL: string) => void;
   resetAppData: () => void;
@@ -34,12 +38,13 @@ const resetAppData: Partial<AppDataStore> = {
 
 export const useAppDataStore = create<AppDataStore>(
   (persist as TauriPersist)(
-    (set) => ({
+    (set, get) => ({
       prefsTab: 'general',
       URL: undefined,
       installedApps: [],
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
       getInstalledApps: () => _getInstalledApps(set),
+      updateHotCode: (name, hotCode) => _updateHotCode(set, get, name, hotCode),
       updateInstalledApps: (apps: InstalledApp[]) =>
         set({ installedApps: apps }),
       updateURL: (URL: string) => set({ URL }),
