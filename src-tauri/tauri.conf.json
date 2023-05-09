@@ -90,7 +90,12 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "dialog": true,
+      "endpoints": [
+        "https://github.com/billyjacoby/browsernaut/releases/tag/{{current_version}}"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg1ODJGMzM3MDNERUNFRDAKUldUUXp0NEROL09DaGVLdUo1WHErVzkyeEV6K0NzQTUzd1pYMGwxOVl2OXIxT1JIQlo2ZWdkUjAK"
     },
     "macOSPrivateApi": true,
     "windows": [
