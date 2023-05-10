@@ -11,7 +11,7 @@
     "sign": "dotenv ./bin/apple.sh",
     "preview": "vite preview",
     "tauri": "tauri",
-    "release": "release-it"
+    "release": "release-it --verbose"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
@@ -49,7 +49,7 @@
   },
   "release-it": {
     "hooks": {
-      "after:bump": "yarn auto-changelog -p"
+      "after:bump": "yarn auto-changelog -p && VERSION=${version} LATEST_VERSION=${latestVersion} ./bin/post-bump.sh"
     },
     "git": {
       "commitMessage": "chore: release v${version}",
