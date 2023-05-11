@@ -7,6 +7,9 @@ import { InstalledApp } from '@config/apps';
 import {
   getInstalledApps as _getInstalledApps,
   updateHotCode as _updateHotCode,
+  openURL as _openURL,
+  updateURL as _updateURL,
+  OpenURLActionParams,
 } from './actions';
 
 const app_data_key = 'appData';
@@ -21,13 +24,14 @@ export interface AppDataStore {
   prefsTab: PrefsTab;
   URL?: string;
   installedApps: InstalledApp[];
-  updateState: (state: Partial<AppDataStore>) => void;
+  // updateState: (state: Partial<Omit<AppDataStore, 'URL'>>) => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
   updateHotCode: (name: string, hotCode: string | null) => void;
   getInstalledApps: () => void;
   updateURL: (URL: string) => void;
   resetAppData: () => void;
+  openURL: (A: OpenURLActionParams) => void;
 }
 
 const resetAppData: Partial<AppDataStore> = {
@@ -47,9 +51,10 @@ export const useAppDataStore = create<AppDataStore>(
       updateHotCode: (name, hotCode) => _updateHotCode(set, get, name, hotCode),
       updateInstalledApps: (apps: InstalledApp[]) =>
         set({ installedApps: apps }),
-      updateURL: (URL: string) => set({ URL }),
-      updateState: (update: Partial<AppDataStore>) => set(update),
+      updateURL: (URL: string) => _updateURL(set, URL),
+      // updateState: (update: Partial<Omit<AppDataStore, 'URL'>>) => set(update),
       resetAppData: () => set({ ...resetAppData }),
+      openURL: (args: OpenURLActionParams) => _openURL(set, get, args),
     }),
     {
       name: 'unique-name',

@@ -5,7 +5,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { InstalledApp } from '@config/apps';
 import { colors } from '@config/CONSTANTS';
-import { openApp } from '@utils/open-app';
 import UrlBar from './components/UrlBar';
 import {
   ListenedKeyboardCodes,
@@ -16,13 +15,14 @@ import { useAppDataStore } from '@stores/appDataStore';
 import { useCloseOnUnfocus } from '@utils/hooks/useCloseOnUnfocus';
 
 // https://getfrontrunner.com
+// https://billyjacoby.com
 
 export const AppPicker = () => {
   const pickerWindow = getCurrent();
 
   useCloseOnUnfocus(getCurrent());
   const apps = useAppDataStore((state) => state.installedApps);
-  const URL = useAppDataStore((state) => state.URL);
+  const openURL = useAppDataStore((state) => state.openURL);
 
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
 
@@ -50,12 +50,12 @@ export const AppPicker = () => {
     shiftPressed?: boolean,
     altPressed?: boolean
   ) => {
-    if (URL) {
-      openApp(app.name, URL, altPressed, shiftPressed);
-      pickerWindow.close();
-    } else {
-      console.warn('no URL found');
-    }
+    openURL({
+      app,
+      shiftPressed,
+      altPressed,
+      onSuccess: pickerWindow.close,
+    });
   };
 
   return (
@@ -90,7 +90,7 @@ export const AppPicker = () => {
             />
           ))}
         </div>
-        {URL && <UrlBar URL={URL} />}
+        {URL && <UrlBar />}
         {/*
       <UpdateBar />
       <SupportMessage /> */}

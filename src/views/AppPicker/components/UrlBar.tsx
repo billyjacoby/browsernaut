@@ -1,22 +1,14 @@
+import { useAppDataStore } from '@stores/appDataStore';
 import clsx from 'clsx';
 import styled from 'styled-components';
 
-interface Props {
-  className?: string;
-  URL: string;
-}
+const UrlBar = ({ className }: { className?: string }) => {
+  const _URL = useAppDataStore((state) => state.URL) ?? '';
 
-const UrlBar: React.FC<Props> = ({
-  className,
-  URL: url,
-}: {
-  className?: string;
-  URL: string;
-}) => {
   let parsedUrl;
 
   try {
-    parsedUrl = new URL(url);
+    parsedUrl = new URL(_URL);
   } catch {
     parsedUrl = { hostname: '', port: '' };
   }

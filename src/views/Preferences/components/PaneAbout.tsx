@@ -4,10 +4,14 @@ import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
 import { Pane } from '@components/Pane';
 import React from 'react';
 import { confirm } from '@tauri-apps/api/dialog';
+import { useAppDataStore } from '@stores/appDataStore';
+import { HOMEPAGE_URL, ISSUES_URL } from '@config/CONSTANTS';
 
 const BUTTON_UPDATE_STRING = 'Check for update';
 
 export const AboutPane = (): JSX.Element => {
+  const openURL = useAppDataStore((state) => state.openURL);
+
   const [version, setVersion] = React.useState<null | string>(null);
 
   const [isCheckingForUpdate, setIsCheckingForUpdate] = React.useState(false);
@@ -90,10 +94,10 @@ export const AboutPane = (): JSX.Element => {
 
         <p className="mb-8">Copyright © Billy Jacoby</p>
         <div className="space-x-4">
-          <Button onClick={() => "dispatch('clickedHomepageButton()')"}>
+          <Button onClick={() => openURL({ URL: HOMEPAGE_URL })}>
             Homepage
           </Button>
-          <Button onClick={() => " dispatch('clickedOpenIssueButton()')"}>
+          <Button onClick={() => openURL({ URL: ISSUES_URL })}>
             Report an Issue
           </Button>
         </div>
