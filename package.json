@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:debug": "dotenv yarn tauri build -d --target x86_64-apple-darwin",
+    "build:debug": "dotenv $(yarn tauri build --debug --target x86_64-apple-darwin)",
     "build:release": "dotenv yarn tauri build --target x86_64-apple-darwin",
     "sign": "dotenv ./bin/apple.sh",
     "preview": "vite preview",
@@ -54,6 +54,17 @@
     "git": {
       "commitMessage": "chore: release v${version}",
       "changelog": "yarn auto-changelog -p && git add CHANGELOG.md"
+    },
+    "github": {
+      "release": true,
+      "preRelease": true,
+      "draft": true,
+      "web": true,
+      "autoGenerate": true,
+      "assets": [
+        "./src-tauri/target/release/bundle/dmg/Browsernaut_0.0.1-dev.14_x64.dmg",
+        "./src-tauri/target/release/bundle/macos/Browsernaut.app.tar.gz"
+      ]
     }
   },
   "packageManager": "yarn@3.5.0"
