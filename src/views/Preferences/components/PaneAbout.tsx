@@ -5,13 +5,14 @@ import { Pane } from '@components/Pane';
 import React from 'react';
 import { confirm } from '@tauri-apps/api/dialog';
 
-const useDispatch = () => (any: any) => console.log('dispatch: ', any);
+const BUTTON_UPDATE_STRING = 'Check for update';
 
 export const AboutPane = (): JSX.Element => {
-  const dispatch = useDispatch();
   const [version, setVersion] = React.useState<null | string>(null);
 
   const [isCheckingForUpdate, setIsCheckingForUpdate] = React.useState(false);
+  const [updateButtonContent, setUpdateButtonContent] =
+    React.useState(BUTTON_UPDATE_STRING);
 
   React.useEffect(() => {
     (async () => {
@@ -22,19 +23,33 @@ export const AboutPane = (): JSX.Element => {
 
   const checkForUpdate = async () => {
     setIsCheckingForUpdate(true);
+    setUpdateButtonContent('Checking for update.');
 
     try {
-      const _updateAvailable = await checkUpdate();
-      const { manifest, shouldUpdate } = _updateAvailable;
+      const interval = setInterval(() => {
+        setUpdateButtonContent((prev) => {
+          if (prev.endsWith('...')) {
+            return prev.replace('...', '.');
+          }
+          return prev + '.';
+        });
+      }, 500);
+      const timeout = setTimeout(() => {
+        return;
+      }, 10000);
+      const shouldUpdate = await new Promise<boolean>((res) => {
+        const timeout = setTimeout(() => {
+          res(false);
+        }, 5000);
+        checkUpdate().then((result) => {
+          clearTimeout(timeout);
+          clearInterval(interval);
+          res(result.shouldUpdate);
+        });
+      });
 
-      console.log(
-        '🪵 | file: PaneAbout.tsx:23 | checkForUpdate | shouldUpdate:',
-        shouldUpdate
-      );
-      console.log(
-        '🪵 | file: PaneAbout.tsx:23 | checkForUpdate | manifest:',
-        manifest
-      );
+      clearTimeout(timeout);
+      clearInterval(interval);
 
       if (shouldUpdate) {
         const result = await confirm(
@@ -52,6 +67,7 @@ export const AboutPane = (): JSX.Element => {
       }
     } finally {
       setIsCheckingForUpdate(false);
+      setUpdateButtonContent('Up to date!');
     }
   };
 
@@ -69,15 +85,15 @@ export const AboutPane = (): JSX.Element => {
           disabled={isCheckingForUpdate}
           className="mb-8"
         >
-          Check{isCheckingForUpdate ? 'ing' : ''} for update
+          {updateButtonContent}
         </Button>
 
         <p className="mb-8">Copyright © Billy Jacoby</p>
         <div className="space-x-4">
-          <Button onClick={() => dispatch('clickedHomepageButton()')}>
+          <Button onClick={() => "dispatch('clickedHomepageButton()')"}>
             Homepage
           </Button>
-          <Button onClick={() => dispatch('clickedOpenIssueButton()')}>
+          <Button onClick={() => " dispatch('clickedOpenIssueButton()')"}>
             Report an Issue
           </Button>
         </div>
