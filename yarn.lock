@@ -865,7 +865,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tauri-apps/api@npm:^1.2.0, @tauri-apps/api@npm:^1.3.0":
+"@tauri-apps/api@file:./packages/tauri/tooling/api::locator=browsernaut%40workspace%3A.":
+  version: 1.3.0
+  resolution: "@tauri-apps/api@file:./packages/tauri/tooling/api#./packages/tauri/tooling/api::hash=aa100c&locator=browsernaut%40workspace%3A."
+  checksum: a213e8723b7c4b5605b8a8cdecfdf6c37d3e52e8b37c4db221fffb2688c49275e4b4c0ddf30d6d688273450f06e83268a6b509921ef0f28a76e342a243488f1f
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/api@npm:^1.2.0":
   version: 1.3.0
   resolution: "@tauri-apps/api@npm:1.3.0"
   checksum: d2a9b5e312339c5777e0c3a0825f721ef72c0923d15c5d320db89dd445d1cc4363064e04ff3be424d6a2e89ff9bc2502e4a8fd7da165c53d494ac7a5d2f8dc05
@@ -1654,7 +1661,7 @@ __metadata:
   resolution: "browsernaut@workspace:."
   dependencies:
     "@hello-pangea/dnd": ^16.2.0
-    "@tauri-apps/api": ^1.3.0
+    "@tauri-apps/api": "file:./packages/tauri/tooling/api"
     "@tauri-apps/cli": ^1.3.1
     "@types/node": ^20.1.1
     "@types/react": ^18.2.6

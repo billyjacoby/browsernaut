@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
-    "@tauri-apps/api": "^1.3.0",
+    "@tauri-apps/api": "file:./packages/tauri/tooling/api",
     "@types/styled-components": "^5.1.26",
     "autoprefixer": "^10.4.14",
     "clsx": "^1.2.1",

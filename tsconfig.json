@@ -21,7 +21,8 @@
       "@lib/*": ["./src/lib/*"],
       "@config/*": ["./src/config/*"],
       "@utils/*": ["./src/utils/*"],
-      "@stores/*": ["./src/stores/*"]
+      "@stores/*": ["./src/stores/*"],
+      "@tauri-apps/api/*": ["./packages/tauri/tooling/api/src/*"]
     }
   },
   "include": [
