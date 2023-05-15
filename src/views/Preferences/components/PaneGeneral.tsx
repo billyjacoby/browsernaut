@@ -6,7 +6,7 @@ import { confirm, message } from '@tauri-apps/api/dialog';
 import { invoke } from '@tauri-apps/api';
 import React from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
-import { BLUE, GREEN, PINK } from '@config/CONSTANTS';
+import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
 import { getCurrent } from '@tauri-apps/api/window';
 
 export const GeneralPane = (): JSX.Element => {
@@ -100,7 +100,7 @@ export const GeneralPane = (): JSX.Element => {
             <>
               {prefsTab === 'general' && (
                 // TODO: maybe make this less frequent? Or at least turn-off-able
-                <ConfettiExplosion colors={[GREEN, BLUE, PINK]} />
+                <ConfettiExplosion colors={[GREEN_RGB, PINK, PURPLE_RGB]} />
               )}
               🎉 Browsernaut is the default web browser
             </>

@@ -1,12 +1,13 @@
-export const GREEN = 'rgb(22 163 74)';
-export const BLUE = 'rgb(30 64 175)';
 export const PINK = 'rgb(219 39 119)';
+export const PURPLE_HEX = '#5B0FBC';
+export const PURPLE_RGB = 'rgba(91, 15, 188, 1)';
+export const GREEN_HEX = '#61E97F';
+export const GREEN_RGB = 'rgba(97, 233, 127, 1)';
 
 export const BG_GRADIENT =
-  'bg-gradient-to-r from-green-600/50 via-blue-800/50 to-pink-600/50';
+  'bg-gradient-to-r from-BN-green/50 via-pink-600/20 to-BN-purple/90';
 
-export const BG_GRADIENT_ACTIVE =
-  'bg-gradient-to-r from-green-600 via-blue-800 to-pink-600';
+export const BG_GRADIENT_ACTIVE = 'bg-gradient-to-r from-BN-green to-BN-purple';
 export const URL_EVENT_NAME = 'scheme-request-received';
 
 export const COFFEE_URL = 'https://www.buymeacoffee.com/billyjacoby';
