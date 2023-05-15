@@ -11,7 +11,8 @@
     "sign": "dotenv ./bin/apple.sh",
     "preview": "vite preview",
     "tauri": "tauri",
-    "release": "release-it --verbose"
+    "release": "release-it --verbose && yarn gh:upload",
+    "gh:upload": "dotenv release-it --no-increment --no-git --github.release --github.update --github.assets=[./src-tauri/target/release/bundle/dmg/Browsernaut_*_x64.dmg, ./src-tauri/target/release/bundle/macos/Browsernaut.app.tar.gz] "
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
@@ -53,7 +54,8 @@
     },
     "git": {
       "commitMessage": "chore: release v${version}",
-      "changelog": "yarn auto-changelog -p && git add CHANGELOG.md"
+      "changelog": "yarn auto-changelog -p && git add CHANGELOG.md",
+      "tagName": "v${version}"
     },
     "github": {
       "release": true,
@@ -62,7 +64,7 @@
       "web": true,
       "autoGenerate": true,
       "assets": [
-        "./src-tauri/target/release/bundle/dmg/Browsernaut_0.0.1-dev.14_x64.dmg",
+        "./src-tauri/target/release/bundle/dmg/Browsernaut_${latestVersion}_x64.dmg",
         "./src-tauri/target/release/bundle/macos/Browsernaut.app.tar.gz"
       ]
     }
