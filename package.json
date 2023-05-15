@@ -11,7 +11,7 @@
     "sign": "dotenv ./bin/apple.sh",
     "preview": "vite preview",
     "tauri": "tauri",
-    "release": "release-it --verbose && yarn gh:upload",
+    "release": "release-it --verbose",
     "gh:upload": "dotenv release-it --no-increment --no-git --github.release --github.update --github.assets=[./src-tauri/target/release/bundle/dmg/Browsernaut_*_x64.dmg, ./src-tauri/target/release/bundle/macos/Browsernaut.app.tar.gz] "
   },
   "dependencies": {

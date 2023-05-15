@@ -5,7 +5,7 @@
   "platforms": {
     "darwin-x86_64": {
       "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUUXp0NEROL09DaFZwb3hNOWlTNEU0T2pHL2ppNFlCVy9oUEF1d04zZVM0ZWJybGtuRzN3V3FhOU56bkxQUzVQcTkzRHJUN3BYQ3doTS9hVzFGZzg0dWFOS0t0VVAzb0E0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjg0MTU1ODYzCWZpbGU6QnJvd3Nlcm5hdXQuYXBwLnRhci5nego0S0MwVkVZQXhjSVJ5MFFhTUlsQ0NTQU5wa0FZaUFudmFtSms0WWJGa0p1U3pQdFd1K3d6RFRIZFNPWFJPcEZwTXVlVWdmZTJ2KzQxbHNVR3NYa1RBQT09Cg==",
-      "url": "https://github.com/billyjacoby/browsernaut/releases/download/0.0.1-dev.17/Browsernaut.app.tar.gz"
+      "url": "https://github.com/billyjacoby/browsernaut/releases/download/v0.0.1-dev.17/Browsernaut.app.tar.gz"
     }
   }
 }
