@@ -8,18 +8,49 @@ import { invoke } from '@tauri-apps/api';
 import { Store } from 'tauri-plugin-store-api';
 
 export const getInstalledApps = async (
-  set: StoreApi<AppDataStore>['setState']
+  set: StoreApi<AppDataStore>['setState'],
+  get: StoreApi<AppDataStore>['getState']
 ) => {
+  const currentInstalledApps = get().installedApps;
+
+  const currentInstalledAppNames = currentInstalledApps.map(
+    (item) => item.name
+  );
+
   const installedAppNames = await getInstalledAppNames();
 
-  const appIcons = await getAppIcons(installedAppNames, 256);
+  const installedNotStored = installedAppNames.filter(
+    (appName) => !currentInstalledAppNames.includes(appName)
+  );
+  const storedNotInstalled = currentInstalledAppNames.filter(
+    (appName) => !installedAppNames.includes(appName)
+  );
 
-  const newApps: InstalledApp[] = installedAppNames.map((name, index) => ({
-    name,
-    hotCode: null,
+  const newInstalledApps = [...currentInstalledApps];
+  if (installedNotStored.length) {
+    //TODO: enhancement - add new apps at top of list
+    // Add newly found apps here
+    for (const appName of installedNotStored) {
+      newInstalledApps.push({ name: appName, hotCode: null });
+    }
+  }
+
+  if (storedNotInstalled.length) {
+    // Remove newly uninstalled apps here
+    for (const appName of storedNotInstalled) {
+      newInstalledApps.filter((app) => app.name !== appName);
+    }
+  }
+
+  const appIcons = await getAppIcons(
+    newInstalledApps.map((app) => app.name),
+    256
+  );
+
+  const newApps: InstalledApp[] = newInstalledApps.map((app, index) => ({
+    ...app,
     icon: appIcons[index],
   }));
-  //TODO: make it so that installed app objects can be merged
   set({ installedApps: newApps });
 };
 

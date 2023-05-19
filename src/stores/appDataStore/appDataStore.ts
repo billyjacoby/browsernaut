@@ -24,7 +24,6 @@ export interface AppDataStore {
   prefsTab: PrefsTab;
   URL?: string;
   installedApps: InstalledApp[];
-  // updateState: (state: Partial<Omit<AppDataStore, 'URL'>>) => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
   updateHotCode: (name: string, hotCode: string | null) => void;
@@ -47,12 +46,11 @@ export const useAppDataStore = create<AppDataStore>(
       URL: undefined,
       installedApps: [],
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
-      getInstalledApps: () => _getInstalledApps(set),
+      getInstalledApps: () => _getInstalledApps(set, get),
       updateHotCode: (name, hotCode) => _updateHotCode(set, get, name, hotCode),
       updateInstalledApps: (apps: InstalledApp[]) =>
         set({ installedApps: apps }),
       updateURL: (URL: string) => _updateURL(set, URL),
-      // updateState: (update: Partial<Omit<AppDataStore, 'URL'>>) => set(update),
       resetAppData: () => set({ ...resetAppData }),
       openURL: (args: OpenURLActionParams) => _openURL(set, get, args),
     }),
