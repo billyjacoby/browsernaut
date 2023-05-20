@@ -21,9 +21,7 @@ fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
 
     let quit = CustomMenuItem::new("quit".to_string(), "Quit").accelerator("Cmd+Q");
-    let preferences =
-        CustomMenuItem::new("preferences".to_string(), "Preferences").accelerator("Cmd+P");
-    let system_tray_menu = SystemTrayMenu::new().add_item(quit).add_item(preferences);
+    let system_tray_menu = SystemTrayMenu::new().add_item(quit);
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
