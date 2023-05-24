@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{env, path::PathBuf};
 
 use serde_json::json;
 use tauri::{
@@ -35,7 +35,7 @@ fn main() {
             //? Allows application to receive and parse the URI passed in when opened.
             let handle = app.handle();
 
-            tauri_plugin_deep_link::register("https", move |request| {
+            tauri_plugin_deep_link::register("", move |request| {
                 dbg!(&request);
 
                 //? Stores URL in app state to be accessed by FE
@@ -143,7 +143,6 @@ fn open_preferences_window(app_handle: tauri::AppHandle) {
     }
 }
 
-// https://billyjacoby.com
 #[tauri::command]
 fn open_picker_window(app_handle: tauri::AppHandle) {
     let enigo = Enigo::new();
