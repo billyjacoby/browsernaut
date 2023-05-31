@@ -157,6 +157,8 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
             tauri::WindowUrl::App("index.html".into()),
         )
         .resizable(true)
+        .transparent(true)
+        .decorations(false)
         .title_bar_style(tauri::TitleBarStyle::Overlay)
         .visible(false)
         .accept_first_mouse(true)

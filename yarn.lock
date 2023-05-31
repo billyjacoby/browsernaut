@@ -1680,7 +1680,6 @@ __metadata:
     styled-components: ^5.3.10
     tailwindcss: ^3.3.2
     tauri-plugin-store-api: "https://github.com/tauri-apps/tauri-plugin-store"
-    tauri-plugin-window-state-api: "https://github.com/tauri-apps/tauri-plugin-window-state"
     typescript: ^5.0.4
     vite: ^4.3.8
     zustand: ^4.3.8
@@ -6497,15 +6496,6 @@ __metadata:
   dependencies:
     "@tauri-apps/api": ^1.2.0
   checksum: 092a722d0e03611c46c89bb99da5570c0f11c3fa999e1aceb7dee9d632eaf6acbbc51ceecd24b84e2bd66565e18221a84abfc7219799b9310dfe920ddd88cb46
-  languageName: node
-  linkType: hard
-
-"tauri-plugin-window-state-api@https://github.com/tauri-apps/tauri-plugin-window-state":
-  version: 0.0.0
-  resolution: "tauri-plugin-window-state-api@https://github.com/tauri-apps/tauri-plugin-window-state.git#commit=38dcb6625267c8575523b5effbdfb6e0df2c3e87"
-  dependencies:
-    "@tauri-apps/api": ^1.2.0
-  checksum: 440f1dcf61ba54a254df160156a3fe6933d69b1d19c054ef1512a6d078cb2d87d6aa4c489aef981ef0cfe7c7305b62e0aa7af97731a8c1e561b9539429ab4149
   languageName: node
   linkType: hard
 

@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 body {
-  /* position: fixed; */
   overflow: hidden;
 }
 

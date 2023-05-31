@@ -68,17 +68,14 @@ export const AppPicker = () => {
       }}
     >
       <DraggableTitleBar backgroundColor={colors.background} height={12} />
-      <Container
-        className="relative flex h-screen w-screen select-none flex-col items-center px-1 pt-3 dark:text-white"
-        title="Title"
-      >
+      <Container>
         {!apps[0] && (
           <div className="flex h-full items-center justify-center">
             <Spinner />
           </div>
         )}
 
-        <div className="relative w-full grow overflow-y-auto px-2 pb-2">
+        <ButtonContainer>
           {apps.map((app, index) => (
             <AppButton
               key={app.name}
@@ -89,7 +86,7 @@ export const AppPicker = () => {
               iconString={app?.icon ?? ''}
             />
           ))}
-        </div>
+        </ButtonContainer>
         {URL && <UrlBar />}
         {/*
       <UpdateBar />
@@ -99,14 +96,23 @@ export const AppPicker = () => {
   );
 };
 
-const OuterContainer = styled.div``;
+const OuterContainer = styled.div`
+  max-height: 100vh;
+  border-radius: 10px;
+  padding: 4px;
+  background-color: ${colors.background};
+`;
 
 const Container = styled.div`
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   flex: 1;
-  height: 100vh;
-  align-items: center;
   background: ${colors.background};
   color: ${colors.text};
+`;
+
+const ButtonContainer = styled.div`
+  overflow-y: auto;
+  padding: 0 10px;
 `;
