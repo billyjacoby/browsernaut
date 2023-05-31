@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from '../../constants';
+import { colors } from '@config/CONSTANTS';
 import { TabBar } from './components/TabBar';
 import { AboutPane } from './components/PaneAbout';
 import { AppsPane } from './components/PaneApps';
 import { GeneralPane } from './components/PaneGeneral';
-import { DraggableTitleBar } from '../../components/DraggableTitleBar';
+import { DraggableTitleBar } from '@components/DraggableTitleBar';
 import { getCurrent } from '@tauri-apps/api/window';
 
 export const PreferencesView = () => {
@@ -17,9 +17,9 @@ export const PreferencesView = () => {
   return (
     <Container>
       <div className="flex h-screen w-screen flex-col text-gray-800 dark:text-gray-300">
-        <DraggableTitleBar />
-        <TabBar className="shrink-0" />
-        <div className="flex grow flex-col overflow-hidden p-8">
+        <DraggableTitleBar height={36} />
+        <TabBar />
+        <div className="flex flex-col overflow-hidden p-8 flex-shrink">
           <GeneralPane />
           <AppsPane />
           <AboutPane />
@@ -30,11 +30,6 @@ export const PreferencesView = () => {
 };
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  height: 100vh;
-  align-items: center;
   background: ${colors.background};
   color: ${colors.text};
 `;

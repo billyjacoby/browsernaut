@@ -7,12 +7,12 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "browsernaut",
-    "version": "0.0.0"
+    "productName": "Browsernaut",
+    "version": "../package.json"
   },
   "tauri": {
     "systemTray": {
-      "iconPath": "icons/icon.png",
+      "iconPath": "icons/tray-icon.png",
       "iconAsTemplate": true,
       "menuOnLeftClick": false
     },
@@ -41,6 +41,14 @@
           { "name": "echo", "cmd": "echo", "args": true },
           { "name": "openApp", "cmd": "open", "args": true },
           {
+            "name": "defaultBrowser",
+            "cmd": "defaults",
+            "args": [
+              "read",
+              "~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure"
+            ]
+          },
+          {
             "name": "findApps",
             "cmd": "find",
             "args": [
@@ -65,7 +73,7 @@
     "bundle": {
       "macOS": {
         "entitlements": "./entitlements.mac.plist",
-        "minimumSystemVersion": "10.13"
+        "minimumSystemVersion": "10.15"
       },
       "active": true,
       "icon": [
@@ -75,24 +83,29 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.billyjacpby.browsernaut",
+      "identifier": "com.billyjacoby.browsernaut",
       "targets": "all"
     },
     "security": {
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "dialog": true,
+      "endpoints": [
+        "https://raw.githubusercontent.com/billyjacoby/browsernaut/dev/updates.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg1ODJGMzM3MDNERUNFRDAKUldUUXp0NEROL09DaGVLdUo1WHErVzkyeEV6K0NzQTUzd1pYMGwxOVl2OXIxT1JIQlo2ZWdkUjAK"
     },
     "macOSPrivateApi": true,
     "windows": [
       {
         "label": "menu_bar",
         "fullscreen": false,
-        "height": 400,
+        "height": 350,
         "resizable": false,
         "title": "menubar",
-        "width": 500,
+        "width": 300,
         "visible": false,
         "hiddenTitle": true,
         "decorations": false,

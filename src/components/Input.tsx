@@ -1,9 +1,10 @@
-import clsx from 'clsx'
+import clsx from 'clsx';
 
-const Input: React.FC<React.ComponentPropsWithoutRef<'input'>> = ({
-  className,
-  ...restProperties
-}) => {
+interface InputProps extends React.ComponentPropsWithoutRef<'input'> {
+  className?: string;
+}
+
+const Input = ({ className, ...restProperties }: InputProps) => {
   return (
     <input
       className={clsx(
@@ -16,11 +17,11 @@ const Input: React.FC<React.ComponentPropsWithoutRef<'input'>> = ({
         'border-l-[#D4D2D2] dark:border-l-[#56555C]',
         'border-r-[#D4D2D2] dark:border-r-[#56555C]',
         'border-t-[#DAD8D8] dark:border-t-[#6E6D73]',
-        className,
+        className
       )}
       {...restProperties}
     />
-  )
-}
+  );
+};
 
-export default Input
+export default Input;

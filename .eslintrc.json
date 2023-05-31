@@ -36,5 +36,6 @@
       }
     }
   ],
+  "ignorePatterns": ["src-tauri/*", "node_modules/*", "dist/*", "packages/*"],
   "root": true
 }

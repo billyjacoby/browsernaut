@@ -1,9 +1,10 @@
+import React from 'react';
 import clsx from 'clsx';
 
-import type { InstalledApp } from '../../../config/apps';
-import Input from '../../../components/Input';
-import { Spinner } from '../../../components/Spinner';
-import { Pane } from './Pane';
+import type { InstalledApp } from '@config/apps';
+import Input from '@components/Input';
+import { Spinner } from '@components/Spinner';
+import { Pane } from '@components/Pane';
 import { useAppDataStore } from '@stores/appDataStore';
 import {
   DragDropContext,
@@ -13,6 +14,7 @@ import {
   DraggableStateSnapshot,
   DropResult,
 } from '@hello-pangea/dnd';
+import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
 
 // https://getfrontrunner.com
 
@@ -24,6 +26,7 @@ interface SortableItemProps {
   index: number;
   icon?: string;
   keyCode?: string;
+  iconString?: string;
 }
 
 const SortableItem = ({
@@ -33,50 +36,71 @@ const SortableItem = ({
   index,
   provided,
   snapshot,
+  iconString,
 }: SortableItemProps) => {
+  const updateHotCode = useAppDataStore((state) => state.updateHotCode);
   return (
     <div
+      style={{ transition: 'all' }}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={clsx(
+        'w-full rounded-md p-0.5',
+        BG_GRADIENT,
         'flex',
-        'bg-black/5 shadow dark:bg-white/5',
-        'mb-4 rounded-xl',
+        'mb-4',
         'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
-        snapshot.isDragging &&
-          'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
+        snapshot.isDragging && BG_GRADIENT_ACTIVE,
+        'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
       )}
     >
-      <div className="flex w-16 items-center justify-center p-4">
-        {index + 1}
-      </div>
-      <div className="flex grow items-center p-4">
-        <span>{name}</span>
-      </div>
-      <div className="flex items-center justify-center p-4">
-        <Input
-          aria-label={`${name} hotkey`}
-          className="h-8 w-20"
-          data-app-id={id}
-          maxLength={1}
-          minLength={0}
-          onChange={(event) => event.preventDefault()}
-          onFocus={(event) => {
-            event.target.select();
-          }}
-          onKeyPress={(event) => {
-            // dispatch(
-            //   `updatedHotCode({
-            //     appName: id,
-            //     value: event.code,
-            //   })`
-            // );
-          }}
-          placeholder="Key"
-          type="text"
-          value={keyCode}
-        />
+      <div
+        className={clsx(
+          'flex',
+          'w-full',
+          'rounded-md',
+          'transition-all',
+          !snapshot.isDragging && 'bg-zinc-800 transition-all'
+        )}
+      >
+        <div className="flex w-16 items-center justify-center p-4">
+          {index + 1}
+        </div>
+        <div className="flex h-14 w-14 mr-4 my-auto align-middle">
+          <img src={iconString} />
+        </div>
+        <div className="flex grow items-center">
+          <span>{name}</span>
+        </div>
+        <div className="flex items-center justify-center p-4">
+          <Input
+            aria-label={`${name} hotkey`}
+            className="h-8 w-20"
+            data-app-id={id}
+            maxLength={1}
+            minLength={0}
+            onChange={(event) => event.preventDefault()}
+            onFocus={(event) => {
+              event.target.select();
+            }}
+            // TODO
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onKeyDown={(event) => {
+              if (
+                event.key.toLowerCase() === 'backspace' ||
+                event.key.toLowerCase() === 'delete'
+              ) {
+                updateHotCode(name, null);
+              } else {
+                updateHotCode(name, event.key);
+              }
+            }}
+            placeholder="Key"
+            type="text"
+            value={keyCode}
+          />
+        </div>
       </div>
     </div>
   );
@@ -84,7 +108,6 @@ const SortableItem = ({
 
 export function AppsPane(): JSX.Element {
   const apps = useAppDataStore((state) => state.installedApps);
-
   const updateApps = useAppDataStore((state) => state.updateInstalledApps);
 
   const onDragEnd = (result: DropResult) => {
@@ -97,8 +120,6 @@ export function AppsPane(): JSX.Element {
     updateApps(newApps);
   };
 
-  const keyCodeMap = new Map<string, string>();
-
   return (
     <Pane pane="apps">
       {apps.length === 0 && (
@@ -107,22 +128,23 @@ export function AppsPane(): JSX.Element {
         </div>
       )}
 
-      <div className="overflow-y-auto p-2">
+      <div className="overflow-y-auto p-2 scrollbar-hide">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {apps.map(({ name, hotCode }, index) => (
+                {apps.map(({ name, hotCode, icon }, index) => (
                   <Draggable key={name} draggableId={name} index={index}>
                     {(provided, snapshot) => (
                       <SortableItem
                         key={name}
                         id={name}
                         index={index}
-                        keyCode={keyCodeMap.get(hotCode || '') || ''}
+                        keyCode={hotCode || ''}
                         name={name}
                         provided={provided}
                         snapshot={snapshot}
+                        iconString={icon ?? ''}
                       />
                     )}
                   </Draggable>

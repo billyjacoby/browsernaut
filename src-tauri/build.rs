@@ -1,3 +1,9 @@
+use swift_rs::SwiftLinker;
+
 fn main() {
-  tauri_build::build()
+    SwiftLinker::new("10.15")
+        .with_package("Browsernaut", "../swift/Browsernaut")
+        .link();
+
+    tauri_build::build()
 }

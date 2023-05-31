@@ -91,6 +91,7 @@
           <string>ftp</string>
           <string>http</string>
           <string>https</string>
+          <string>file</string>
         </array>
       </dict>
     </array>

@@ -3,8 +3,6 @@ import { getCurrent } from '@tauri-apps/api/window';
 import { PreferencesView, MenuView, AppPicker } from '@views/index';
 import { Store } from 'tauri-plugin-store-api';
 import { useAppDataStore } from '@stores/appDataStore';
-import { getInstalledAppNames } from './utils/get-installed-app-names';
-import { InstalledApp } from './config/apps';
 
 // https://google.com
 
@@ -21,9 +19,7 @@ function App() {
   const updateUrl = useAppDataStore((state) => state.updateURL);
 
   const storedInstalledApps = useAppDataStore((state) => state.installedApps);
-  const updateInstalledApps = useAppDataStore(
-    (state) => state.updateInstalledApps
-  );
+  const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
 
   React.useEffect(() => {
     (async () => {
@@ -36,16 +32,9 @@ function App() {
 
   React.useEffect(() => {
     if (!storedInstalledApps.length) {
-      (async () => {
-        const installedAppNames = await getInstalledAppNames();
-        const newApps: InstalledApp[] = installedAppNames.map((name) => ({
-          name,
-          hotCode: null,
-        }));
-        updateInstalledApps(newApps);
-      })();
+      getInstalledApps();
     }
-  }, [storedInstalledApps, updateInstalledApps]);
+  }, [getInstalledApps, storedInstalledApps]);
 
   if (currentWindow === WindowLabelEnum.PREFS) {
     return <PreferencesView />;

@@ -1,8 +1,16 @@
 import { StateCreator, create } from 'zustand';
 import { PersistOptions, PersistStorage, persist } from 'zustand/middleware';
 
-import { tauriPersistStorage } from 'zustand-tauri-storage/src/index';
-import { InstalledApp } from '../config/apps';
+import { tauriPersistStorage } from '@lib/zustand-persist-tauri';
+import { InstalledApp } from '@config/apps';
+
+import {
+  getInstalledApps as _getInstalledApps,
+  updateHotCode as _updateHotCode,
+  openURL as _openURL,
+  updateURL as _updateURL,
+  OpenURLActionParams,
+} from './actions';
 
 const app_data_key = 'appData';
 const storageKey = '.settings.dat';
@@ -12,27 +20,39 @@ type TauriPersist = (
   options: PersistOptions<AppDataStore>
 ) => StateCreator<AppDataStore>;
 
-interface AppDataStore {
+export interface AppDataStore {
   prefsTab: PrefsTab;
   URL?: string;
   installedApps: InstalledApp[];
-  updateState: (state: Partial<AppDataStore>) => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
+  updateHotCode: (name: string, hotCode: string | null) => void;
+  getInstalledApps: () => void;
   updateURL: (URL: string) => void;
+  resetAppData: () => void;
+  openURL: (A: OpenURLActionParams) => void;
 }
+
+const resetAppData: Partial<AppDataStore> = {
+  prefsTab: 'general',
+  URL: undefined,
+  installedApps: [],
+};
 
 export const useAppDataStore = create<AppDataStore>(
   (persist as TauriPersist)(
-    (set) => ({
+    (set, get) => ({
       prefsTab: 'general',
       URL: undefined,
       installedApps: [],
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
+      getInstalledApps: () => _getInstalledApps(set, get),
+      updateHotCode: (name, hotCode) => _updateHotCode(set, get, name, hotCode),
       updateInstalledApps: (apps: InstalledApp[]) =>
         set({ installedApps: apps }),
-      updateURL: (URL: string) => set({ URL }),
-      updateState: (update: Partial<AppDataStore>) => set(update),
+      updateURL: (URL: string) => _updateURL(set, URL),
+      resetAppData: () => set({ ...resetAppData }),
+      openURL: (args: OpenURLActionParams) => _openURL(set, get, args),
     }),
     {
       name: 'unique-name',

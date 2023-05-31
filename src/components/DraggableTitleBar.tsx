@@ -19,7 +19,7 @@ export const DraggableTitleBar = ({
 
 const TitleBar = styled.div<{ backgroundColor?: string; height?: number }>`
   width: 100%;
-  height: ${({ height }) => (height ? height + 'px' : '36px')};
+  min-height: ${({ height }) => (height ? height + 'px' : '36px')};
   ${(props) =>
     props.backgroundColor && `background-color: ${props.backgroundColor}`};
 `;

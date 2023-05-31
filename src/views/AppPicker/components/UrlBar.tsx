@@ -1,39 +1,29 @@
-import clsx from 'clsx';
+import { useAppDataStore } from '@stores/appDataStore';
 import styled from 'styled-components';
 
-interface Props {
-  className?: string;
-  URL: string;
-}
+const UrlBar = () => {
+  const _URL = useAppDataStore((state) => state.URL) ?? '';
+  const openURL = useAppDataStore((state) => state.openURL);
 
-const UrlBar: React.FC<Props> = ({ className, URL: url }) => {
   let parsedUrl;
 
   try {
-    parsedUrl = new URL(url);
+    parsedUrl = new URL(_URL);
   } catch {
     parsedUrl = { hostname: '', port: '' };
   }
 
   return (
     <Button
-      className={clsx(
-        className,
-        'flex w-full shrink-0 items-center py-2 px-4 text-center text-sm',
-        'border-t border-neutral-400 dark:border-gray-900',
-        'cursor-default'
-      )}
-      // onClick={() => dispatch(clickedUrlBar())}
+      onClick={() => openURL({ URL: _URL })}
       onKeyDown={() => false}
       tabIndex={-1}
       type="button"
     >
-      <div className="grow overflow-hidden text-ellipsis tracking-wider text-black text-opacity-30 dark:text-white dark:text-opacity-30">
-        {parsedUrl.hostname?.replace(/^www\./u, '') || (
-          <span className="">Browsernaut</span>
-        )}
-        {parsedUrl.port ? `:${parsedUrl.port}` : null}
-      </div>
+      {parsedUrl.hostname?.replace(/^www\./u, '') || (
+        <span className="">Browsernaut</span>
+      )}
+      {parsedUrl.port ? `:${parsedUrl.port}` : null}
     </Button>
   );
 };
@@ -41,6 +31,5 @@ const UrlBar: React.FC<Props> = ({ className, URL: url }) => {
 export default UrlBar;
 
 const Button = styled.button`
-  bottom: 0;
-  margin-bottom: 20px;
+  margin: 4px 0;
 `;

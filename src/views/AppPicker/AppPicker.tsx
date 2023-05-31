@@ -3,28 +3,33 @@ import { DraggableTitleBar } from '@components/DraggableTitleBar';
 import { getCurrent } from '@tauri-apps/api/window';
 import React from 'react';
 import styled from 'styled-components';
-import { InstalledApp } from '../../config/apps';
-import { colors } from '../../constants';
-import { openApp } from '../../utils/open-app';
+import { InstalledApp } from '@config/apps';
+import { colors } from '@config/CONSTANTS';
 import UrlBar from './components/UrlBar';
 import {
   ListenedKeyboardCodes,
   useIsKeyPressed,
-} from '../../utils/hooks/useIsKeyPressed';
+} from '@utils/hooks/useIsKeyPressed';
 import { AppButton } from './components/AppButton';
 import { useAppDataStore } from '@stores/appDataStore';
-import { useCloseOnUnfocus } from '../../utils/hooks/useCloseOnUnfocus';
+import { useCloseOnUnfocus } from '@utils/hooks/useCloseOnUnfocus';
 
 // https://getfrontrunner.com
+// https://billyjacoby.com
 
 export const AppPicker = () => {
   const pickerWindow = getCurrent();
-  const apps = useAppDataStore((state) => state.installedApps);
-  const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
 
   useCloseOnUnfocus(getCurrent());
+  const apps = useAppDataStore((state) => state.installedApps);
+  const openURL = useAppDataStore((state) => state.openURL);
 
-  const URL = useAppDataStore((state) => state.URL);
+  const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
+
+  const hotCodeMap = new Map<string | null, InstalledApp>();
+  apps.forEach((app) =>
+    hotCodeMap.set(app.hotCode ? app.hotCode.toLowerCase() : null, app)
+  );
 
   React.useEffect(() => {
     if (isEscPressed) {
@@ -45,30 +50,32 @@ export const AppPicker = () => {
     shiftPressed?: boolean,
     altPressed?: boolean
   ) => {
-    if (URL) {
-      console.log('URL', URL);
-      console.log('Opening');
-      openApp(app.name, URL, altPressed, shiftPressed);
-      pickerWindow.close();
-    } else {
-      console.warn('no URL found');
-    }
+    openURL({
+      app,
+      shiftPressed,
+      altPressed,
+      onSuccess: pickerWindow.close,
+    });
   };
 
   return (
-    <OuterContainer>
+    <OuterContainer
+      onKeyDown={(e) => {
+        const app = hotCodeMap.get(e.key.toLowerCase());
+        if (app) {
+          onBrowserButtonClick(app, e.shiftKey, e.altKey);
+        }
+      }}
+    >
       <DraggableTitleBar backgroundColor={colors.background} height={12} />
-      <Container
-        className="relative flex h-screen w-screen select-none flex-col items-center px-2 pt-4 dark:text-white"
-        title="Title"
-      >
+      <Container>
         {!apps[0] && (
           <div className="flex h-full items-center justify-center">
             <Spinner />
           </div>
         )}
 
-        <div className="relative w-full grow overflow-y-auto px-2 pb-2">
+        <ButtonContainer>
           {apps.map((app, index) => (
             <AppButton
               key={app.name}
@@ -76,10 +83,11 @@ export const AppPicker = () => {
               buttonRefs={buttonRefs}
               app={app}
               onBrowserButtonClick={onBrowserButtonClick}
+              iconString={app?.icon ?? ''}
             />
           ))}
-        </div>
-        {URL && <UrlBar URL={URL} />}
+        </ButtonContainer>
+        {URL && <UrlBar />}
         {/*
       <UpdateBar />
       <SupportMessage /> */}
@@ -88,14 +96,23 @@ export const AppPicker = () => {
   );
 };
 
-const OuterContainer = styled.div``;
+const OuterContainer = styled.div`
+  max-height: 100vh;
+  border-radius: 10px;
+  padding: 4px;
+  background-color: ${colors.background};
+`;
 
 const Container = styled.div`
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   flex: 1;
-  height: 100vh;
-  align-items: center;
   background: ${colors.background};
   color: ${colors.text};
+`;
+
+const ButtonContainer = styled.div`
+  overflow-y: auto;
+  padding: 0 10px;
 `;
