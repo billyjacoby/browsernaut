@@ -82,7 +82,7 @@ export const AboutPane = (): JSX.Element => {
         <h1 className="mb-2 text-4xl tracking-wider text-gray-900 dark:text-gray-50">
           Browsernaut
         </h1>
-        <p className="mb-8 text-xl">Another browser prompter for macOS</p>
+        <p className="mb-8 text-xl">Browser picker built for macOS</p>
         <p className="mb-2 opacity-70">Version {version || 'loading.'}</p>
         <Button
           onClick={checkForUpdate}
