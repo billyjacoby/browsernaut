@@ -13,11 +13,18 @@ export PUBLISH_DATE=$(date -u -Iseconds | sed s/+00:00/Z/ | sed s/,/./)
 
 echo "Updating updates file"
 
-# #? Update the version
+#? Update the version
 sed -i "" "s/$LATEST_VERSION/$VERSION/g" "./updates.json"
-# #? Update the signature 
+#? Update the signature 
 sed -i "" "s/\"signature\":.*/\"signature\": \"$UPDATE_SIG\",/" "./updates.json"
-#? Update the pubplish date 
+#? Update the publish date 
 sed -i "" "s/\"pub_date\":.*/\"pub_date\": \"$PUBLISH_DATE\",/" "./updates.json"
+
+## HOMEBREW TAP UPDATES
+#? Update homebrew tap
+sed -i "" "s/$LATEST_VERSION/$VERSION/g" "./homebrew-browsernaut/Casks/browsernaut.rb"
+#? Commit and push changes
+cd "./homebrew-browsernaut" && git add . && git commit -m "chore: update version to \"$LATEST_VERSION\""
+
 
 echo "Complete!"
