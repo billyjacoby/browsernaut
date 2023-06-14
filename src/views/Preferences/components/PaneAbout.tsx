@@ -79,7 +79,7 @@ export const AboutPane = (): JSX.Element => {
     <Pane className="space-y-8" pane="about">
       <div className="text-center">
         {/* <img alt="Logo" className="inline-block w-40" src={icon} /> */}
-        <h1 className="mb-2 text-4xl tracking-wider text-gray-900 dark:text-gray-50">
+        <h1 className="mb-2 text-4xl tracking-wider  text-gray-50">
           Browsernaut
         </h1>
         <p className="mb-8 text-xl">Browser picker built for macOS</p>

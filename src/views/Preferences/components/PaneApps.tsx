@@ -50,9 +50,9 @@ const SortableItem = ({
         BG_GRADIENT,
         'flex',
         'mb-4',
-        'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
+        'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:bg-black',
         snapshot.isDragging && BG_GRADIENT_ACTIVE,
-        'focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100'
+        'focus-visible:ring-2 focus-visible:ring-gray-100'
       )}
     >
       <div

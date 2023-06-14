@@ -20,11 +20,9 @@ const TabButton = ({ tab, children }: TabButtonProps) => {
     >
       <button
         className={clsx(
-          prefsTab === tab
-            ? 'bg-zinc-800'
-            : 'bg-black/0 hover:bg-black/5 dark:bg-white/0 dark:hover:bg-white/5',
+          prefsTab === tab ? 'bg-zinc-800' : ' bg-white/0 hover:bg-white/5',
           'hover:border-green-500',
-          'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 dark:focus-visible:bg-black',
+          'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:bg-black',
           'rounded px-4 py-2'
         )}
         onClick={() => updatePrefsTab(tab)}
@@ -42,12 +40,7 @@ interface HeaderBarProps {
 
 export const TabBar = ({ className }: HeaderBarProps): JSX.Element => {
   return (
-    <div
-      className={clsx(
-        'border-b border-gray-400 bg-black/5 pb-4 dark:border-black dark:bg-black/30',
-        className
-      )}
-    >
+    <div className={clsx('border-b  pb-4 border-black bg-black/30', className)}>
       <div className="flex items-center justify-center space-x-12">
         <TabButton tab="general">General</TabButton>
         <TabButton tab="apps">Apps</TabButton>

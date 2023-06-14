@@ -12,7 +12,7 @@ export const DraggableTitleBar = ({
       data-tauri-drag-region
       backgroundColor={backgroundColor}
       height={height}
-      className="border-gray-400 bg-black/5 pb-4 dark:border-black dark:bg-black/30"
+      className="border-black bg-black/30"
     />
   );
 };
