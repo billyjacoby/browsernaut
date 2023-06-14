@@ -29,4 +29,6 @@ dist-ssr
 
 
 packages/
+homebrew-browsernaut/
+homebrew-browsernaut
 .env

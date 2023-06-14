@@ -64,23 +64,21 @@ button {
   transform: translateX(-50%);
 }
 
-@media (prefers-color-scheme: dark) {
-  .container {
-    border-radius: 7px;
-    padding: 10px;
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
+.container {
+  border-radius: 7px;
+  padding: 10px;
+  color: #f6f6f6;
+  background-color: #2f2f2f;
+}
 
-  a:hover {
-    color: #24c8db;
-  }
+a:hover {
+  color: #24c8db;
+}
 
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
+input,
+button {
+  color: #ffffff;
+  background-color: #0f0f0f98;
 }
 
 .scrollbar-hide::-webkit-scrollbar {

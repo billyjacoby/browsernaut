@@ -23,12 +23,12 @@ const Button: React.FC<React.ComponentPropsWithoutRef<'button'>> = ({
         'leading-none',
         'inline-flex items-center',
         'shadow-sm',
-        'bg-white dark:bg-[#56555C]',
+        'bg-[#56555C]',
         'border',
-        'border-b-[#C1BFBF] dark:border-b-[#56555C]',
-        'border-l-[#D4D2D2] dark:border-l-[#56555C]',
-        'border-r-[#D4D2D2] dark:border-r-[#56555C]',
-        'border-t-[#DAD8D8] dark:border-t-[#6E6D73]',
+        'border-b-[#56555C]',
+        'border-l-[#56555C]',
+        'border-r-[#56555C]',
+        'border-t-[#6E6D73]',
         'hover:border-green-400'
       )}
       disabled={disabled}

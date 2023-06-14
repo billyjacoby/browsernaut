@@ -16,7 +16,7 @@ export const PreferencesView = () => {
   }, []);
   return (
     <Container>
-      <div className="flex h-screen w-screen flex-col text-gray-800 dark:text-gray-300">
+      <div className="flex h-screen w-screen flex-col text-gray-300">
         <DraggableTitleBar height={36} />
         <TabBar />
         <div className="flex flex-col overflow-hidden p-8 flex-shrink">
