@@ -40,7 +40,7 @@ interface HeaderBarProps {
 
 export const TabBar = ({ className }: HeaderBarProps): JSX.Element => {
   return (
-    <div className={clsx('border-b  pb-4 border-black bg-black/30', className)}>
+    <div className={clsx('border-b pb-4 border-black bg-black/30', className)}>
       <div className="flex items-center justify-center space-x-12">
         <TabButton tab="general">General</TabButton>
         <TabButton tab="apps">Apps</TabButton>

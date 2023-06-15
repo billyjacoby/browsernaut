@@ -3,49 +3,26 @@ import Button from '@components/Button';
 import { Pane } from '@components/Pane';
 
 import { confirm, message } from '@tauri-apps/api/dialog';
-import { invoke } from '@tauri-apps/api';
 import React from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
-import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
-import { getCurrent } from '@tauri-apps/api/window';
+import { PURPLE_RGB, GREEN_RGB, PINK, colors } from '@config/CONSTANTS';
+import { useDefaultBrowserCheck } from '@utils/hooks/useDefaultBrowserCheck';
+import styled from 'styled-components';
 
-export const GeneralPane = (): JSX.Element => {
+export const GeneralPane = ({
+  setIsModalOpen,
+}: {
+  setIsModalOpen: () => void;
+}): JSX.Element => {
   const installedApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
   const resetAppData = useAppDataStore((state) => state.resetAppData);
   const prefsTab = useAppDataStore((state) => state.prefsTab);
 
-  const [isDefaultBrowser, setIsDefaultBrowser] = React.useState<
-    null | boolean
-  >(null);
-  const [isDefaultBrowserLoading, setIsDefaultBrowserLoading] =
-    React.useState(false);
+  const { isDefaultBrowser, checkForDefaultBrowser, setDefaultBrowser } =
+    useDefaultBrowserCheck();
 
   const numberOfInstalledApps = installedApps.length;
-
-  const intervalRef = React.useRef<NodeJS.Timer | null>(null);
-  const intervalChecksRef = React.useRef<number>(0);
-
-  const checkForDefaultBrowser = async () => {
-    const _isDefaultBrowser = await invoke<boolean>('is_default_browser');
-    if (_isDefaultBrowser) {
-      setIsDefaultBrowserLoading(false);
-    }
-    setIsDefaultBrowser(_isDefaultBrowser);
-  };
-
-  const setDefaultBrowser = async () => {
-    // Check if default once first:
-    checkForDefaultBrowser();
-    const result = await invoke<boolean>('make_default_browser');
-    if (result) {
-      setIsDefaultBrowserLoading(true);
-    } else {
-      message(
-        'Could not set default browser. Open the settings app to proceed.'
-      );
-    }
-  };
 
   const onResetClick = async () => {
     const result = await confirm(
@@ -56,34 +33,6 @@ export const GeneralPane = (): JSX.Element => {
       message('App data reset!');
     }
   };
-
-  React.useEffect(() => {
-    if (isDefaultBrowserLoading) {
-      // check for default browser every 2 seconds for 15 seconds
-      if (isDefaultBrowser) {
-        clearInterval(intervalRef.current || 0);
-        setIsDefaultBrowserLoading(false);
-      } else {
-        intervalRef.current = setInterval(() => {
-          if (intervalChecksRef.current >= 10 || isDefaultBrowser) {
-            if (intervalRef.current) {
-              clearInterval(intervalRef.current);
-            }
-          } else {
-            intervalChecksRef.current += 1;
-            checkForDefaultBrowser();
-          }
-        }, 2000);
-      }
-    } else {
-      if (intervalRef.current) {
-        // Setting browser takes focus away from app
-        getCurrent().setFocus();
-        intervalChecksRef.current = 0;
-        clearInterval(intervalRef.current);
-      }
-    }
-  }, [isDefaultBrowser, isDefaultBrowserLoading]);
 
   React.useEffect(() => {
     checkForDefaultBrowser();
@@ -149,6 +98,9 @@ export const GeneralPane = (): JSX.Element => {
           </p>
         </Right>
       </Row>
+      <Footer>
+        <Link onClick={setIsModalOpen}>Show welcome message</Link>
+      </Footer>
     </Pane>
   );
 };
@@ -177,3 +129,14 @@ interface RightProps {
 const Right = ({ children }: RightProps): JSX.Element => (
   <div className="col-span-7">{children}</div>
 );
+
+const Footer = styled.div`
+  align-self: center;
+`;
+
+const Link = styled.a`
+  :hover {
+    color: ${colors.green};
+    cursor: pointer;
+  }
+`;

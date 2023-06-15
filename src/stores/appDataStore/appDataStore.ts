@@ -24,6 +24,8 @@ export interface AppDataStore {
   prefsTab: PrefsTab;
   URL?: string;
   installedApps: InstalledApp[];
+  hasSeenWelcomeMessage: boolean;
+  clearWelcomeMessage: () => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
   updateHotCode: (name: string, hotCode: string | null) => void;
@@ -37,6 +39,7 @@ const resetAppData: Partial<AppDataStore> = {
   prefsTab: 'general',
   URL: undefined,
   installedApps: [],
+  hasSeenWelcomeMessage: false,
 };
 
 export const useAppDataStore = create<AppDataStore>(
@@ -45,6 +48,8 @@ export const useAppDataStore = create<AppDataStore>(
       prefsTab: 'general',
       URL: undefined,
       installedApps: [],
+      hasSeenWelcomeMessage: false,
+      clearWelcomeMessage: () => set({ hasSeenWelcomeMessage: true }),
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
       getInstalledApps: () => _getInstalledApps(set, get),
       updateHotCode: (name, hotCode) => _updateHotCode(set, get, name, hotCode),
