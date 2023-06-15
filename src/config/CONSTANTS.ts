@@ -20,6 +20,8 @@ export const colors = ((light?: boolean) => {
   const theme = {
     background: '#1d1d1d',
     text: '#d1d1d1',
+    border: '#000',
+    green: GREEN_HEX,
   };
   return theme;
 })();

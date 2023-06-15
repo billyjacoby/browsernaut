@@ -3,6 +3,7 @@ import { getCurrent } from '@tauri-apps/api/window';
 import { PreferencesView, MenuView, AppPicker } from '@views/index';
 import { Store } from 'tauri-plugin-store-api';
 import { useAppDataStore } from '@stores/appDataStore';
+import { invoke } from '@tauri-apps/api';
 
 // https://google.com
 
@@ -17,6 +18,9 @@ function App() {
   const store = new Store('.settings.dat');
 
   const updateUrl = useAppDataStore((state) => state.updateURL);
+  const hasSeenWelcomeMessage = useAppDataStore(
+    (state) => state.hasSeenWelcomeMessage
+  );
 
   const storedInstalledApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
@@ -36,8 +40,15 @@ function App() {
     }
   }, [getInstalledApps, storedInstalledApps]);
 
+  React.useEffect(() => {
+    if (!hasSeenWelcomeMessage) {
+      // SHow the Prefs view with the welcome modal
+      invoke('open_preferences_window');
+    }
+  }, [hasSeenWelcomeMessage]);
+
   if (currentWindow === WindowLabelEnum.PREFS) {
-    return <PreferencesView />;
+    return <PreferencesView newUser={!hasSeenWelcomeMessage} />;
   }
   if (currentWindow === WindowLabelEnum.PICKER) {
     return <AppPicker />;

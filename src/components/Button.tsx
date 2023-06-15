@@ -5,7 +5,7 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   className?: string;
 }
 
-const Button: React.FC<React.ComponentPropsWithoutRef<'button'>> = ({
+const Button = ({
   className,
   disabled,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- type is hardcoded
