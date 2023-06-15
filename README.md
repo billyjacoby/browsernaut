@@ -28,6 +28,10 @@ While Electron is a popular choice for building desktop applications using web t
 
 Head over to our release to download the latest version of Browsernaut. Once installed the app will check for updates on restart and automatically download and install the most up to date version.
 
+Browsernaut can also be installed via homebrew. With homebrew installed you can install by adding the tap and installing the cask:
+
+`brew tap billyjacoby/browsernaut && brew install browsernaut`
+
 ## Getting Started
 
 To get started with Browsernaut development, follow these steps:
