@@ -4,6 +4,7 @@ import { PreferencesView, MenuView, AppPicker } from '@views/index';
 import { Store } from 'tauri-plugin-store-api';
 import { useAppDataStore } from '@stores/appDataStore';
 import { invoke } from '@tauri-apps/api';
+import { useIsDarkMode } from '@utils/hooks/useIsDarkMode';
 
 // https://google.com
 
@@ -16,6 +17,7 @@ export enum WindowLabelEnum {
 function App() {
   const currentWindow: WindowLabelEnum = getCurrent().label as WindowLabelEnum;
   const store = new Store('.settings.dat');
+  useIsDarkMode();
 
   const updateUrl = useAppDataStore((state) => state.updateURL);
   const hasSeenWelcomeMessage = useAppDataStore(

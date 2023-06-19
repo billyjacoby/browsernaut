@@ -25,6 +25,8 @@ export interface AppDataStore {
   URL?: string;
   installedApps: InstalledApp[];
   hasSeenWelcomeMessage: boolean;
+  isDarkMode?: boolean;
+  toggleIsDarkMode: () => void;
   clearWelcomeMessage: () => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
@@ -40,6 +42,7 @@ const resetAppData: Partial<AppDataStore> = {
   URL: undefined,
   installedApps: [],
   hasSeenWelcomeMessage: false,
+  isDarkMode: undefined,
 };
 
 export const useAppDataStore = create<AppDataStore>(
@@ -49,6 +52,8 @@ export const useAppDataStore = create<AppDataStore>(
       URL: undefined,
       installedApps: [],
       hasSeenWelcomeMessage: false,
+      isDarkMode: undefined,
+      toggleIsDarkMode: () => set({ isDarkMode: !get().isDarkMode }),
       clearWelcomeMessage: () => set({ hasSeenWelcomeMessage: true }),
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
       getInstalledApps: () => _getInstalledApps(set, get),
