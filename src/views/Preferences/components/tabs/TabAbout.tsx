@@ -8,7 +8,7 @@ import { HOMEPAGE_URL, ISSUES_URL } from '@config/CONSTANTS';
 
 const BUTTON_UPDATE_STRING = 'Check for update';
 
-export const AboutPane = (): JSX.Element => {
+export const TabAbout = (): JSX.Element => {
   const openURL = useAppDataStore((state) => state.openURL);
 
   const [version, setVersion] = React.useState<null | string>(null);

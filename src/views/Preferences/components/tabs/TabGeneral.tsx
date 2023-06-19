@@ -7,7 +7,7 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
 import { useDefaultBrowserCheck } from '@utils/hooks/useDefaultBrowserCheck';
 
-export const GeneralPane = ({
+export const TabGeneral = ({
   setIsModalOpen,
 }: {
   setIsModalOpen: () => void;

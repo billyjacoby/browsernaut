@@ -3,9 +3,9 @@ import { getCurrent } from '@tauri-apps/api/window';
 import { WelcomeModal } from './components/WelcomeModal';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/Tabs';
 import { DraggableTitleBar } from '@components/DraggableTitleBar';
-import { GeneralPane } from './components/PaneGeneral';
-import { AppsPane } from './components/PaneApps';
-import { AboutPane } from './components/PaneAbout';
+import { TabGeneral } from './components/tabs/TabGeneral';
+import { TabApps } from './components/tabs/TabApps';
+import { TabAbout } from './components/tabs/TabAbout';
 import { useAppDataStore } from '@stores/appDataStore';
 
 export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
@@ -34,13 +34,13 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
             <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
           <TabsContent value="general">
-            <GeneralPane setIsModalOpen={() => setIsModalOpen(true)} />
+            <TabGeneral setIsModalOpen={() => setIsModalOpen(true)} />
           </TabsContent>
           <TabsContent value="apps">
-            <AppsPane />
+            <TabApps />
           </TabsContent>
           <TabsContent value="about">
-            <AboutPane />
+            <TabAbout />
           </TabsContent>
         </Tabs>
       </div>

@@ -105,7 +105,7 @@ const SortableItem = ({
   );
 };
 
-export function AppsPane(): JSX.Element {
+export function TabApps(): JSX.Element {
   const apps = useAppDataStore((state) => state.installedApps);
   const updateApps = useAppDataStore((state) => state.updateInstalledApps);
 
