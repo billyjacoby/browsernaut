@@ -19,49 +19,6 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-input {
-  outline: none;
-}
-
-.arrow {
-  position: relative;
-  padding: 6px 0;
-}
-
-.arrow:before {
-  content: '';
-  height: 0;
-  width: 0;
-  border-width: 0 8px 6px 8px;
-  border-style: solid;
-  border-color: transparent transparent #2f2f2f transparent;
-  position: absolute;
-  top: 0px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.container {
-  border-radius: 7px;
-  padding: 10px;
-  color: #f6f6f6;
-  background-color: #2f2f2f;
-}
-
-a:hover {
-  color: #24c8db;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/* For IE, Edge and Firefox */
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;

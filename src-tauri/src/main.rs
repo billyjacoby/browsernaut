@@ -4,7 +4,6 @@ use serde_json::json;
 use tauri::{
     ActivationPolicy, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, Wry,
 };
-use tauri_plugin_positioner::{Position, WindowExt};
 
 use enigo::{Enigo, MouseControllable};
 use swift_rs::{swift, Bool, Int, SRString};
@@ -20,8 +19,15 @@ const STORE_PATH: &str = ".settings.dat";
 fn main() {
     tauri_plugin_deep_link::prepare("de.fabianlars.deep-link-test");
 
+    let picker = CustomMenuItem::new("picker".to_string(), "Open last URL").accelerator("Cmd+O");
+    let preferences =
+        CustomMenuItem::new("preferences".to_string(), "Preferences").accelerator("Cmd+P");
     let quit = CustomMenuItem::new("quit".to_string(), "Quit").accelerator("Cmd+Q");
-    let system_tray_menu = SystemTrayMenu::new().add_item(quit);
+    let system_tray_menu = SystemTrayMenu::new()
+        .add_item(picker)
+        .add_native_item(tauri::SystemTrayMenuItem::Separator)
+        .add_item(preferences)
+        .add_item(quit);
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -56,48 +62,24 @@ fn main() {
         //? Allows for application positioning - for menu bar only
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_store::Builder::default().build())
-        .system_tray(SystemTray::new().with_menu(system_tray_menu))
+        .system_tray(
+            SystemTray::new()
+                .with_menu(system_tray_menu)
+                .with_menu_on_left_click(true),
+        )
         .on_system_tray_event(|app, event| {
             tauri_plugin_positioner::on_tray_event(app, &event);
             match event {
-                SystemTrayEvent::LeftClick {
-                    position: _,
-                    size: _,
-                    ..
-                } => {
-                    let window = app.get_window("menu_bar").unwrap();
-                    let _ = window.move_window(Position::TrayCenter);
-                    if window.is_visible().unwrap() {
-                        window.hide().unwrap();
-                    } else {
-                        window.show().unwrap();
-                        window.set_focus().unwrap();
-                    }
-                }
                 SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
                     "quit" => {
                         std::process::exit(0);
                     }
+                    "preferences" => open_preferences_window(app.app_handle()),
+                    "picker" => open_picker_window(app.app_handle()),
                     _ => {}
                 },
                 _ => {}
             }
-        })
-        .on_window_event(|event| match event.event() {
-            //? When clicking outside the menu bar window, we want to hide the menu bar window
-            //? but not other windows
-            tauri::WindowEvent::Focused(is_focused) => {
-                // DEV
-                if !is_focused {
-                    event
-                        .window()
-                        .get_window("menu_bar")
-                        .unwrap()
-                        .hide()
-                        .unwrap();
-                }
-            }
-            _ => {}
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -158,7 +140,8 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
         )
         .resizable(true)
         .transparent(true)
-        .decorations(false)
+        .maximizable(false)
+        .minimizable(false)
         .title_bar_style(tauri::TitleBarStyle::Overlay)
         .visible(false)
         .accept_first_mouse(true)
@@ -172,6 +155,7 @@ fn open_picker_window(app_handle: tauri::AppHandle) {
         .build()
         .unwrap();
     } else {
+        dbg!("Picker window already exists");
         picker_window.unwrap().show().unwrap();
     }
 }

@@ -45,7 +45,7 @@ const SortableItem = ({
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={clsx(
-        'w-full rounded-md p-0.5',
+        'w-[95%] rounded-md p-0.5 mx-auto',
         BG_GRADIENT,
         'flex',
         'mb-4',

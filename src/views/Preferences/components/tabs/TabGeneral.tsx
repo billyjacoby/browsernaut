@@ -102,8 +102,6 @@ export const TabGeneral = ({
     </div>
   );
 };
-
-//TODO: move these to styled components
 interface RowProps {
   children: React.ReactNode;
 }
@@ -117,7 +115,7 @@ interface LeftProps {
 }
 
 const Left = ({ children }: LeftProps): JSX.Element => (
-  <div className="col-span-3 text-right">{children}</div>
+  <div className="col-span-3 text-right font-semibold">{children}</div>
 );
 
 interface RightProps {

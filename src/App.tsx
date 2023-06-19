@@ -1,6 +1,6 @@
 import React from 'react';
 import { getCurrent } from '@tauri-apps/api/window';
-import { PreferencesView, MenuView, AppPicker } from '@views/index';
+import { PreferencesView, AppPicker } from '@views/index';
 import { Store } from 'tauri-plugin-store-api';
 import { useAppDataStore } from '@stores/appDataStore';
 import { invoke } from '@tauri-apps/api';
@@ -9,7 +9,6 @@ import { useIsDarkMode } from '@utils/hooks/useIsDarkMode';
 // https://google.com
 
 export enum WindowLabelEnum {
-  MAIN = 'menu_bar',
   PREFS = 'preferences_window',
   PICKER = 'picker_window',
 }
@@ -56,7 +55,8 @@ function App() {
     return <AppPicker />;
   }
 
-  return <MenuView />;
+  console.error('Unknown window label: ', currentWindow);
+  return null;
 }
 
 export default App;

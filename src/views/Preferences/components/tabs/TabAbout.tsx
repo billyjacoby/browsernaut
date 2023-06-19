@@ -37,24 +37,11 @@ export const TabAbout = (): JSX.Element => {
           return prev + '.';
         });
       }, 500);
-      const timeout = setTimeout(() => {
-        return;
-      }, 10000);
-      const shouldUpdate = await new Promise<boolean>((res) => {
-        const timeout = setTimeout(() => {
-          res(false);
-        }, 5000);
-        checkUpdate().then((result) => {
-          clearTimeout(timeout);
-          clearInterval(interval);
-          res(result.shouldUpdate);
-        });
-      });
 
-      clearTimeout(timeout);
+      const updateResult = await checkUpdate();
       clearInterval(interval);
 
-      if (shouldUpdate) {
+      if (updateResult.shouldUpdate) {
         const result = await confirm(
           'There is an update available. Would you like to update now?'
         );
@@ -75,34 +62,28 @@ export const TabAbout = (): JSX.Element => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        {/* <img alt="Logo" className="inline-block w-40" src={icon} /> */}
-        <h1 className="mb-2 text-4xl tracking-wider font-semibold">
-          Browsernaut
-        </h1>
-        <p className="mb-8 text-xl">Browser picker built for macOS</p>
-        <p className="mb-2 opacity-70">Version {version || 'loading.'}</p>
-        <Button
-          onClick={checkForUpdate}
-          disabled={isCheckingForUpdate}
-          className="mb-8"
-        >
-          {updateButtonContent}
-        </Button>
+    <div className="flex flex-col flex-1 text-center gap-1 h-full">
+      <h1 className="mb-2 text-4xl tracking-wider font-semibold">
+        Browsernaut
+      </h1>
+      <p className="mb-8 text-xl">Browser picker built for macOS</p>
+      <p className="mb-2 opacity-70">Version {version || 'loading.'}</p>
+      <Button
+        onClick={checkForUpdate}
+        disabled={isCheckingForUpdate}
+        className="mb-8 self-center"
+      >
+        {updateButtonContent}
+      </Button>
 
-        <p className="mb-8">Copyright © Billy Jacoby</p>
-        <div className="space-x-4">
-          <Button
-            variant={'link'}
-            onClick={() => openURL({ URL: HOMEPAGE_URL })}
-          >
-            Homepage
-          </Button>
-          <Button variant={'link'} onClick={() => openURL({ URL: ISSUES_URL })}>
-            Report an Issue
-          </Button>
-        </div>
+      <div className="gap-4 mt-auto mb-8">
+        <p>Copyright © Billy Jacoby</p>
+        <Button variant={'link'} onClick={() => openURL({ URL: HOMEPAGE_URL })}>
+          Homepage
+        </Button>
+        <Button variant={'link'} onClick={() => openURL({ URL: ISSUES_URL })}>
+          Report an Issue
+        </Button>
       </div>
     </div>
   );

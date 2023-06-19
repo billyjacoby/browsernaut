@@ -22,11 +22,14 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
   return (
     <>
       <DraggableTitleBar height={36} />
-      <div className="flex-col h-screen">
+      <div
+        className="flex-col flex-1 h-full"
+        style={{ height: 'calc(100vh - 36px)' }}
+      >
         <Tabs
           defaultValue={prefsTab}
           onValueChange={(tabName) => updatePrefsTab(tabName as PrefsTab)}
-          className="flex flex-col h-full m-4"
+          className="flex flex-col h-full"
         >
           <TabsList className="self-center mb-6 gap-4">
             <TabsTrigger value="general">General</TabsTrigger>
