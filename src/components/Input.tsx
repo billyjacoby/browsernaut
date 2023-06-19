@@ -8,15 +8,13 @@ const Input = ({ className, ...restProperties }: InputProps) => {
   return (
     <input
       className={clsx(
-        'min-w-0 text-center uppercase',
+        'rounded',
+        'font-medium',
+        'min-w-0 text-center',
         'focus:bg-white/70 focus:shadow-xl focus:outline-none focus:ring-1 focus:bg-black',
-        'shadow-sm bg-[#56555C]',
-        'text-white',
-        'border',
-        'border-b-[#56555C]',
-        'border-l-[#56555C]',
-        'border-r-[#56555C]',
-        'border-t-[#6E6D73]',
+        'shadow-sm bg-foreground/60',
+        'placeholder:text-background/50',
+        'text-background',
         className
       )}
       {...restProperties}

@@ -1,41 +1,56 @@
-import clsx from 'clsx';
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
-  disabled?: boolean;
-  className?: string;
+import { cn } from '@lib/utils';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
+  {
+    variants: {
+      variant: {
+        default:
+          'bg-muted text-primary-muted hover:bg-primary/90 hover:text-primary-foreground',
+        destructive:
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline:
+          'border border-input hover:bg-accent hover:text-accent-foreground',
+        secondary:
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'underline-offset-4 hover:underline text-primary text-md',
+      },
+      size: {
+        default: 'h-10 py-2 px-4',
+        sm: 'h-9 px-3 rounded-md',
+        lg: 'h-11 px-8 rounded-md',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
 }
 
-const Button = ({
-  className,
-  disabled,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- type is hardcoded
-  type,
-  ...restProperties
-}: ButtonProps) => {
-  return (
-    <button
-      className={clsx(
-        className,
-        disabled && 'opacity-40',
-        !disabled && 'active:opacity-75',
-        'px-2 py-1',
-        'rounded-lg',
-        'leading-none',
-        'inline-flex items-center',
-        'shadow-sm',
-        'bg-[#56555C]',
-        'border',
-        'border-b-[#56555C]',
-        'border-l-[#56555C]',
-        'border-r-[#56555C]',
-        'border-t-[#6E6D73]',
-        'hover:border-green-400'
-      )}
-      disabled={disabled}
-      type="button"
-      {...restProperties}
-    />
-  );
-};
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'button';
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+Button.displayName = 'Button';
 
-export default Button;
+export { Button as default, buttonVariants };
