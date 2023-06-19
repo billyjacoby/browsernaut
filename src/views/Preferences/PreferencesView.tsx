@@ -1,16 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
-import { colors } from '@config/CONSTANTS';
-import { TabBar } from './components/TabBar';
-import { AboutPane } from './components/PaneAbout';
-import { AppsPane } from './components/PaneApps';
-import { GeneralPane } from './components/PaneGeneral';
-import { DraggableTitleBar } from '@components/DraggableTitleBar';
 import { getCurrent } from '@tauri-apps/api/window';
 import { WelcomeModal } from './components/WelcomeModal';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/Tabs';
+import { DraggableTitleBar } from '@components/DraggableTitleBar';
+import { GeneralPane } from './components/PaneGeneral';
+import { AppsPane } from './components/PaneApps';
+import { AboutPane } from './components/PaneAbout';
+import { useAppDataStore } from '@stores/appDataStore';
 
 export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(!!newUser);
+
+  const prefsTab = useAppDataStore((state) => state.prefsTab);
+  const updatePrefsTab = useAppDataStore((state) => state.updatePrefsTab);
 
   React.useEffect(() => {
     //* Supposed workaround to the flashing white screen on load
@@ -19,23 +21,30 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
   }, []);
   return (
     <>
-      <Container>
-        <div className="flex h-screen w-screen flex-col text-gray-300">
-          <DraggableTitleBar height={36} />
-          <TabBar />
-          <div className="flex flex-col overflow-hidden p-8 flex-shrink">
+      <DraggableTitleBar height={36} />
+      <div className="flex-col h-screen">
+        <Tabs
+          defaultValue={prefsTab}
+          onValueChange={(tabName) => updatePrefsTab(tabName as PrefsTab)}
+          className="flex flex-col h-full m-4"
+        >
+          <TabsList className="self-center mb-6 gap-4">
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="apps">Apps</TabsTrigger>
+            <TabsTrigger value="about">About</TabsTrigger>
+          </TabsList>
+          <TabsContent value="general">
             <GeneralPane setIsModalOpen={() => setIsModalOpen(true)} />
+          </TabsContent>
+          <TabsContent value="apps">
             <AppsPane />
+          </TabsContent>
+          <TabsContent value="about">
             <AboutPane />
-          </div>
-        </div>
-      </Container>
+          </TabsContent>
+        </Tabs>
+      </div>
       <WelcomeModal isOpen={isModalOpen} close={() => setIsModalOpen(false)} />
     </>
   );
 };
-
-const Container = styled.div`
-  background: ${colors.background};
-  color: ${colors.text};
-`;

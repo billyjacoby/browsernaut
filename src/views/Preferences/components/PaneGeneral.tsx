@@ -1,13 +1,11 @@
 import { useAppDataStore } from '@stores/appDataStore';
 import Button from '@components/Button';
-import { Pane } from '@components/Pane';
 
 import { confirm, message } from '@tauri-apps/api/dialog';
 import React from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
-import { PURPLE_RGB, GREEN_RGB, PINK, colors } from '@config/CONSTANTS';
+import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
 import { useDefaultBrowserCheck } from '@utils/hooks/useDefaultBrowserCheck';
-import styled from 'styled-components';
 
 export const GeneralPane = ({
   setIsModalOpen,
@@ -39,7 +37,7 @@ export const GeneralPane = ({
   }, []);
 
   return (
-    <Pane className="space-y-8" pane="general">
+    <div className="flex flex-col space-y-8 content-center">
       <Row>
         <Left>Default browser:</Left>
         <Right>
@@ -98,10 +96,10 @@ export const GeneralPane = ({
           </p>
         </Right>
       </Row>
-      <Footer>
-        <Link onClick={setIsModalOpen}>Show welcome message</Link>
-      </Footer>
-    </Pane>
+      <Button onClick={setIsModalOpen} className="self-center" variant={'link'}>
+        Show welcome message
+      </Button>
+    </div>
   );
 };
 
@@ -119,7 +117,7 @@ interface LeftProps {
 }
 
 const Left = ({ children }: LeftProps): JSX.Element => (
-  <div className="col-span-5 text-right">{children}</div>
+  <div className="col-span-3 text-right">{children}</div>
 );
 
 interface RightProps {
@@ -127,16 +125,5 @@ interface RightProps {
 }
 
 const Right = ({ children }: RightProps): JSX.Element => (
-  <div className="col-span-7">{children}</div>
+  <div className="col-span-8">{children}</div>
 );
-
-const Footer = styled.div`
-  align-self: center;
-`;
-
-const Link = styled.a`
-  :hover {
-    color: ${colors.green};
-    cursor: pointer;
-  }
-`;

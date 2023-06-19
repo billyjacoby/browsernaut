@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import type { InstalledApp } from '@config/apps';
 import Input from '@components/Input';
 import { Spinner } from '@components/Spinner';
-import { Pane } from '@components/Pane';
 import { useAppDataStore } from '@stores/appDataStore';
 import {
   DragDropContext,
@@ -61,7 +60,7 @@ const SortableItem = ({
           'w-full',
           'rounded-md',
           'transition-all',
-          !snapshot.isDragging && 'bg-zinc-800 transition-all'
+          !snapshot.isDragging && 'bg-background/40 transition-all'
         )}
       >
         <div className="flex w-16 items-center justify-center p-4">
@@ -96,9 +95,9 @@ const SortableItem = ({
                 updateHotCode(name, event.key);
               }
             }}
-            placeholder="Key"
+            placeholder="hotkey"
             type="text"
-            value={keyCode}
+            value={keyCode.toUpperCase()}
           />
         </div>
       </div>
@@ -121,14 +120,18 @@ export function AppsPane(): JSX.Element {
   };
 
   return (
-    <Pane pane="apps">
+    <div className="flex flex-col">
       {apps.length === 0 && (
         <div className="flex h-full items-center justify-center">
           <Spinner />
         </div>
       )}
 
-      <div className="overflow-y-auto p-2 scrollbar-hide">
+      {/* //TODO: Add shadcn/ui scroll area here */}
+      <div
+        className="flex-1 overflow-y-auto"
+        style={{ maxHeight: 'calc(100vh - 180px)' }}
+      >
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
@@ -156,10 +159,10 @@ export function AppsPane(): JSX.Element {
         </DragDropContext>
       </div>
       {apps.length > 1 && (
-        <p className="mt-2 text-sm opacity-70">
+        <p className="mt-2 text-center">
           Drag and drop to sort the list of apps.
         </p>
       )}
-    </Pane>
+    </div>
   );
 }

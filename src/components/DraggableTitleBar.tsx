@@ -12,7 +12,6 @@ export const DraggableTitleBar = ({
       data-tauri-drag-region
       backgroundColor={backgroundColor}
       height={height}
-      className="border-black bg-black/30"
     />
   );
 };
@@ -20,6 +19,4 @@ export const DraggableTitleBar = ({
 const TitleBar = styled.div<{ backgroundColor?: string; height?: number }>`
   width: 100%;
   min-height: ${({ height }) => (height ? height + 'px' : '36px')};
-  ${(props) =>
-    props.backgroundColor && `background-color: ${props.backgroundColor}`};
 `;

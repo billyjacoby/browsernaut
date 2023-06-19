@@ -1,7 +1,6 @@
 import Button from '@components/Button';
 import { getVersion } from '@tauri-apps/api/app';
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { Pane } from '@components/Pane';
 import React from 'react';
 import { confirm } from '@tauri-apps/api/dialog';
 import { useAppDataStore } from '@stores/appDataStore';
@@ -76,10 +75,10 @@ export const AboutPane = (): JSX.Element => {
   };
 
   return (
-    <Pane className="space-y-8" pane="about">
+    <div className="space-y-8">
       <div className="text-center">
         {/* <img alt="Logo" className="inline-block w-40" src={icon} /> */}
-        <h1 className="mb-2 text-4xl tracking-wider  text-gray-50">
+        <h1 className="mb-2 text-4xl tracking-wider font-semibold">
           Browsernaut
         </h1>
         <p className="mb-8 text-xl">Browser picker built for macOS</p>
@@ -94,14 +93,17 @@ export const AboutPane = (): JSX.Element => {
 
         <p className="mb-8">Copyright © Billy Jacoby</p>
         <div className="space-x-4">
-          <Button onClick={() => openURL({ URL: HOMEPAGE_URL })}>
+          <Button
+            variant={'link'}
+            onClick={() => openURL({ URL: HOMEPAGE_URL })}
+          >
             Homepage
           </Button>
-          <Button onClick={() => openURL({ URL: ISSUES_URL })}>
+          <Button variant={'link'} onClick={() => openURL({ URL: ISSUES_URL })}>
             Report an Issue
           </Button>
         </div>
       </div>
-    </Pane>
+    </div>
   );
 };
