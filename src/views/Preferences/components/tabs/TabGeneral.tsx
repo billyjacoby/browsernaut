@@ -1,23 +1,37 @@
-import { useAppDataStore } from '@stores/appDataStore';
+import {
+  AppTheme,
+  availableThemes,
+  useAppDataStore,
+} from '@stores/appDataStore';
 import Button from '@components/Button';
-import { Pane } from '@components/Pane';
 
 import { confirm, message } from '@tauri-apps/api/dialog';
 import React from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
-import { PURPLE_RGB, GREEN_RGB, PINK, colors } from '@config/CONSTANTS';
+import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
 import { useDefaultBrowserCheck } from '@utils/hooks/useDefaultBrowserCheck';
-import styled from 'styled-components';
 
-export const GeneralPane = ({
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@components/ui/select';
+
+export const TabGeneral = ({
   setIsModalOpen,
 }: {
   setIsModalOpen: () => void;
 }): JSX.Element => {
   const installedApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
+
+  const appTheme = useAppDataStore((state) => state.appTheme);
+  console.log('🪵 | file: TabGeneral.tsx:27 | appTheme:', appTheme);
+  const setAppTheme = useAppDataStore((state) => state.setAppTheme);
+
   const resetAppData = useAppDataStore((state) => state.resetAppData);
-  const prefsTab = useAppDataStore((state) => state.prefsTab);
 
   const { isDefaultBrowser, checkForDefaultBrowser, setDefaultBrowser } =
     useDefaultBrowserCheck();
@@ -39,7 +53,7 @@ export const GeneralPane = ({
   }, []);
 
   return (
-    <Pane className="space-y-8" pane="general">
+    <div className="flex flex-col gap-8 content-center h-full overflow-y-auto">
       <Row>
         <Left>Default browser:</Left>
         <Right>
@@ -47,10 +61,8 @@ export const GeneralPane = ({
             <Button onClick={setDefaultBrowser}>Set As Default Browser</Button>
           ) : (
             <>
-              {prefsTab === 'general' && (
-                // TODO: maybe make this less frequent? Or at least turn-off-able
-                <ConfettiExplosion colors={[GREEN_RGB, PINK, PURPLE_RGB]} />
-              )}
+              {/* // TODO: maybe make this less frequent? Or at least turn-off-able */}
+              <ConfettiExplosion colors={[GREEN_RGB, PINK, PURPLE_RGB]} />
               🎉 Browsernaut is the default web browser
             </>
           )}
@@ -98,14 +110,32 @@ export const GeneralPane = ({
           </p>
         </Right>
       </Row>
-      <Footer>
-        <Link onClick={setIsModalOpen}>Show welcome message</Link>
-      </Footer>
-    </Pane>
+      <Row>
+        <Left>Theme Preference:</Left>
+        <Right>
+          <Select
+            value={appTheme}
+            onValueChange={(value) => setAppTheme(value as AppTheme)}
+          >
+            <SelectTrigger className="w-[180px] capitalize">
+              <SelectValue defaultValue={appTheme} />
+            </SelectTrigger>
+            <SelectContent className="capitalize">
+              {availableThemes.map((theme) => (
+                <SelectItem value={theme} key={theme}>
+                  {theme}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Right>
+      </Row>
+      <Button onClick={setIsModalOpen} className="self-center" variant={'link'}>
+        Show welcome message
+      </Button>
+    </div>
   );
 };
-
-//TODO: move these to styled components
 interface RowProps {
   children: React.ReactNode;
 }
@@ -119,7 +149,7 @@ interface LeftProps {
 }
 
 const Left = ({ children }: LeftProps): JSX.Element => (
-  <div className="col-span-5 text-right">{children}</div>
+  <div className="col-span-3 text-right font-semibold">{children}</div>
 );
 
 interface RightProps {
@@ -127,16 +157,5 @@ interface RightProps {
 }
 
 const Right = ({ children }: RightProps): JSX.Element => (
-  <div className="col-span-7">{children}</div>
+  <div className="col-span-8">{children}</div>
 );
-
-const Footer = styled.div`
-  align-self: center;
-`;
-
-const Link = styled.a`
-  :hover {
-    color: ${colors.green};
-    cursor: pointer;
-  }
-`;

@@ -32,9 +32,10 @@ export const AppButton = (props: AppButtonProps) => {
       aria-label={`${app.name} App`}
       className={clsx(
         BG_GRADIENT_ACTIVE,
-        'my-1 w-full p-0.5',
+        'mx-auto',
+        'my-1 p-0.5',
         'rounded-xl',
-        'focus:border-transparent focus:ring-0'
+        'w-[90%]'
       )}
       onClick={(event) => {
         onBrowserButtonClick(app, event.altKey, event.shiftKey);
@@ -59,15 +60,17 @@ export const AppButton = (props: AppButtonProps) => {
     >
       <div
         className={clsx(
-          'bg-zinc-800',
+          'bg-background/50',
+          'font-medium',
           'flex w-full items-center justify-between text-left px-4',
           'focus:bg-black/0 hover:bg-black/0',
+          'hover:text-background',
           'rounded-xl'
         )}
       >
         <span>{app.name}</span>
         {app.hotCode && (
-          <span className="text-sm ml-auto mr-1 text-zinc-500">
+          <span className="text-sm ml-auto mr-1">
             {app.hotCode.toUpperCase()}
           </span>
         )}

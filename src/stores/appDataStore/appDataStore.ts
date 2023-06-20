@@ -20,11 +20,16 @@ type TauriPersist = (
   options: PersistOptions<AppDataStore>
 ) => StateCreator<AppDataStore>;
 
+export const availableThemes = ['dark', 'light', 'system'] as const;
+export type AppTheme = (typeof availableThemes)[number];
+
 export interface AppDataStore {
   prefsTab: PrefsTab;
   URL?: string;
   installedApps: InstalledApp[];
   hasSeenWelcomeMessage: boolean;
+  appTheme: AppTheme;
+  setAppTheme: (T?: AppTheme) => void;
   clearWelcomeMessage: () => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
@@ -40,6 +45,7 @@ const resetAppData: Partial<AppDataStore> = {
   URL: undefined,
   installedApps: [],
   hasSeenWelcomeMessage: false,
+  appTheme: 'system',
 };
 
 export const useAppDataStore = create<AppDataStore>(
@@ -49,6 +55,9 @@ export const useAppDataStore = create<AppDataStore>(
       URL: undefined,
       installedApps: [],
       hasSeenWelcomeMessage: false,
+      appTheme: 'system',
+      setAppTheme: (appTheme?: AppTheme) =>
+        set({ appTheme: appTheme || 'system' }),
       clearWelcomeMessage: () => set({ hasSeenWelcomeMessage: true }),
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
       getInstalledApps: () => _getInstalledApps(set, get),

@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import Button from '@components/Button';
-import { colors } from '@config/CONSTANTS';
 import { useAppDataStore } from '@stores/appDataStore';
 import {
   ListenedKeyboardCodes,
@@ -47,8 +46,8 @@ export const WelcomeModal = ({
   }, [isOpen, isEscPressed, close]);
 
   return (
-    <Modal ref={modalRef}>
-      <Heading>Welcome to Browsernaut!</Heading>
+    <Modal ref={modalRef} className="bg-muted text-foreground">
+      <h1 className="text-2xl font-bold mb-2">Welcome to Browsernaut!</h1>
       <Paragraph>
         Browsernaut is an application picker for macOS that helps you to open
         links in the application of your choice.
@@ -73,7 +72,12 @@ export const WelcomeModal = ({
         browser. This allows for opening links in a variety of applications.
       </Paragraph>
       <Row>
-        <Button onClick={handleCloseClick}>Continue</Button>
+        <Button
+          className="bg-foreground text-background hover:bg-background hover:text-foreground"
+          onClick={handleCloseClick}
+        >
+          Continue
+        </Button>
       </Row>
     </Modal>
   );
@@ -86,9 +90,6 @@ const Modal = styled.dialog`
   width: 90%;
   height: 80%;
   border-radius: 8px;
-  background-color: ${colors.background};
-  color: ${colors.text};
-  border: 1px solid ${colors.border};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,13 +101,6 @@ const Modal = styled.dialog`
   &[open] {
     opacity: 1;
   }
-`;
-
-const Heading = styled.h1`
-  color: ${colors.text};
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 12px;
 `;
 
 const Paragraph = styled.p`

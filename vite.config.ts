@@ -33,6 +33,7 @@ export default defineConfig(async () => ({
       '@components': path.resolve(__dirname, './src/components'),
       '@views': path.resolve(__dirname, './src/views'),
       '@stores': path.resolve(__dirname, './src/stores'),
+      '@/*': path.resolve(__dirname, './src/*'),
     },
   },
 }));

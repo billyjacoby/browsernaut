@@ -21,7 +21,8 @@
       "@lib/*": ["./src/lib/*"],
       "@config/*": ["./src/config/*"],
       "@utils/*": ["./src/utils/*"],
-      "@stores/*": ["./src/stores/*"]
+      "@stores/*": ["./src/stores/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": [
