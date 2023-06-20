@@ -6,7 +6,6 @@ import {
   useIsKeyPressed,
 } from '@utils/hooks/useIsKeyPressed';
 import React from 'react';
-import styled from 'styled-components';
 
 export const WelcomeModal = ({
   isOpen,
@@ -46,7 +45,7 @@ export const WelcomeModal = ({
   }, [isOpen, isEscPressed, close]);
 
   return (
-    <Modal ref={modalRef} className="bg-muted text-foreground">
+    <dialog ref={modalRef} className="welcome-modal bg-muted text-foreground">
       <h1 className="text-2xl font-bold mb-2">Welcome to Browsernaut!</h1>
       <Paragraph>
         Browsernaut is an application picker for macOS that helps you to open
@@ -71,43 +70,18 @@ export const WelcomeModal = ({
         Most importantly Browsernaut is intended to be set as your default web
         browser. This allows for opening links in a variety of applications.
       </Paragraph>
-      <Row>
+      <div className="flex gap-2">
         <Button
           className="bg-foreground text-background hover:bg-background hover:text-foreground"
           onClick={handleCloseClick}
         >
           Continue
         </Button>
-      </Row>
-    </Modal>
+      </div>
+    </dialog>
   );
 };
 
-const Modal = styled.dialog`
-  padding: 24px 36px;
-  transition: all 0.3s ease-in-out;
-  opacity: 0;
-  width: 90%;
-  height: 80%;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  ::backdrop {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  &[open] {
-    opacity: 1;
-  }
-`;
-
-const Paragraph = styled.p`
-  margin-bottom: 8px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  gap: 8px;
-`;
+const Paragraph = ({ children }: { children: React.ReactNode }) => (
+  <p className="mb-2">{children}</p>
+);

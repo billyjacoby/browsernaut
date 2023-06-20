@@ -1,8 +1,31 @@
 # Browsernaut
 
-Browsernaut is a macOS application designed to open URLs in various applications beyond web browsers such as Notion, Figma, Discord, and more. It provides a seamless experience by redirecting URLs to their corresponding applications, enhancing productivity and workflow efficiency.
+<p align="center">
+  <img width="460"  src="./assets/logo.png">
+</p>
+
+An application picker to help simplify link opening
 
 Strongly inspired by [Browserosaurus](https://github.com/will-stone/browserosaurus), but built using Tauri instead of Electron in order to drastically decrease the size.
+
+## About
+
+Browsernaut is a macOS application designed to open URLs in various applications beyond web browsers such as Notion, Figma, Discord, and more. It provides a seamless experience by redirecting URLs to their corresponding applications, enhancing productivity and workflow efficiency.
+
+When you click on a link in an application that isn't your default web browser you'll be met with the App Picker:
+<p align="center">
+  <img width="250"  src="./assets/picker.png">
+</p>
+
+## Features
+
+- [x] Full support for dark and light themes
+- [x] Re-ordering applications for app picker
+- [x] Add hotkeys for favorite apps
+- [x] Modifier support
+- [x] Built in automatic updates
+- [ ] Customizable themes
+- [ ] Automatic TLD handling per app
 
 ## Tech Stack
 
@@ -13,6 +36,7 @@ Browsernaut is built using the following technologies:
 - [Vite](https://vitejs.dev): Vite is a fast and lightweight build tool for modern web applications. It offers near-instantaneous hot module replacement (HMR) and optimized production builds.
 - [TypeScript](https://www.typescriptlang.org): TypeScript is a statically-typed superset of JavaScript that adds type annotations and advanced language features to enhance code quality and maintainability.
 - [Zustand](https://github.com/pmndrs/zustand): Zustand is a minimalistic state management library for React. It allows you to manage application state with ease and simplicity.
+- [shadcn/ui](https://github.com/shadcn/ui): shadcn/ui makes it incredibly easy to build and theme most aspects of an applicaiton
 
 ## Why Tauri?
 

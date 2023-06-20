@@ -19,6 +19,26 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+.welcome-modal {
+  padding: 24px 36px;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  width: 90%;
+  height: 80%;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome-modal::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.welcome-modal[open] {
+  opacity: 1;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
