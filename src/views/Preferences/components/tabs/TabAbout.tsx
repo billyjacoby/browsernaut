@@ -5,6 +5,7 @@ import React from 'react';
 import { confirm } from '@tauri-apps/api/dialog';
 import { useAppDataStore } from '@stores/appDataStore';
 import { HOMEPAGE_URL, ISSUES_URL } from '@config/CONSTANTS';
+import { Browsernaut } from '@components/Logo';
 
 const BUTTON_UPDATE_STRING = 'Check for update';
 
@@ -63,9 +64,7 @@ export const TabAbout = (): JSX.Element => {
 
   return (
     <div className="flex flex-col flex-1 text-center gap-1 h-full">
-      <h1 className="mb-2 text-4xl tracking-wider font-semibold">
-        Browsernaut
-      </h1>
+      <Browsernaut />
       <p className="mb-8 text-xl">Browser picker built for macOS</p>
       <p className="mb-2 opacity-70">Version {version || 'loading.'}</p>
       <Button
