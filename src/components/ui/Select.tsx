@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* open issue: https://github.com/shadcn/ui/issues/120*/
 'use client';
 
 import * as React from 'react';

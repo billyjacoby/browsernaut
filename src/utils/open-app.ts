@@ -1,5 +1,3 @@
-// import { execFile } from 'child_process'
-
 import { Command } from '@tauri-apps/api/shell';
 import { AppName, apps } from '@config/apps';
 

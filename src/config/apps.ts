@@ -131,8 +131,6 @@ export const apps = typeApps({
   'zoom.us': {},
 });
 
-export type Apps = typeof apps;
-
 export type AppName = keyof typeof apps;
 
 export interface InstalledApp {

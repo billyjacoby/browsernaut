@@ -3,15 +3,13 @@
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
     "devPath": "http://localhost:1420",
-    "distDir": "../dist",
-    "withGlobalTauri": true
+    "distDir": "../dist"
   },
   "package": {
     "productName": "Browsernaut",
     "version": "../package.json"
   },
   "tauri": {
-    "macOSPrivateApi": true,
     "systemTray": {
       "iconPath": "icons/tray-icon.png",
       "iconAsTemplate": true,
@@ -22,24 +20,8 @@
         "all": true,
         "startDragging": true
       },
-      "fs": {
-        "all": true,
-        "readFile": true,
-        "writeFile": true,
-        "readDir": true,
-        "copyFile": true,
-        "createDir": true,
-        "removeDir": true,
-        "removeFile": true,
-        "renameFile": true,
-        "exists": true,
-        "scope": ["*"]
-      },
       "shell": {
-        "all": true,
-        "open": true,
         "scope": [
-          { "name": "echo", "cmd": "echo", "args": true },
           { "name": "openApp", "cmd": "open", "args": true },
           {
             "name": "defaultBrowser",
