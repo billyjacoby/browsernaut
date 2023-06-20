@@ -18,8 +18,6 @@ async function getAllInstalledAppNames(): Promise<string[]> {
 }
 
 async function getInstalledAppNames(): Promise<AppName[]> {
-  // dispatch(startedScanning());
-
   const allInstalledAppNames = await getAllInstalledAppNames();
 
   const installedApps = Object.keys(apps).filter((appName) =>
@@ -30,9 +28,3 @@ async function getInstalledAppNames(): Promise<AppName[]> {
 }
 
 export { getInstalledAppNames };
-
-// const getInstalledApps = (appNames: string[]): typeof App[] => {
-//   const installedAppNames = appNames.filter((appName) => appName in apps);
-
-//   return installedAppNames.map((app) => apps[app as AppName]);
-// };
