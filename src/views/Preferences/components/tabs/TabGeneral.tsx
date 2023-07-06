@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@components/ui/Select';
+import { Left, Right, Row } from '@components/ui/Layout';
 
 export const TabGeneral = ({
   setIsModalOpen,
@@ -136,26 +137,3 @@ export const TabGeneral = ({
     </div>
   );
 };
-interface RowProps {
-  children: React.ReactNode;
-}
-
-const Row = ({ children }: RowProps): JSX.Element => (
-  <div className="grid grid-cols-12 gap-8">{children}</div>
-);
-
-interface LeftProps {
-  children: React.ReactNode;
-}
-
-const Left = ({ children }: LeftProps): JSX.Element => (
-  <div className="col-span-3 text-right font-semibold">{children}</div>
-);
-
-interface RightProps {
-  children: React.ReactNode;
-}
-
-const Right = ({ children }: RightProps): JSX.Element => (
-  <div className="col-span-8">{children}</div>
-);

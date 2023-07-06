@@ -7,6 +7,7 @@ import { TabGeneral } from './components/tabs/TabGeneral';
 import { TabApps } from './components/tabs/TabApps';
 import { TabAbout } from './components/tabs/TabAbout';
 import { useAppDataStore } from '@stores/appDataStore';
+import { TabThemes } from './components/tabs/TabThemes';
 
 export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(!!newUser);
@@ -34,6 +35,7 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
           <TabsList className="self-center mb-6 gap-4">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="apps">Apps</TabsTrigger>
+            <TabsTrigger value="theme">Theme</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
           <TabsContent value="general">
@@ -41,6 +43,9 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
           </TabsContent>
           <TabsContent value="apps">
             <TabApps />
+          </TabsContent>
+          <TabsContent value="theme">
+            <TabThemes />
           </TabsContent>
           <TabsContent value="about">
             <TabAbout />

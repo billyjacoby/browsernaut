@@ -1,1 +1,1 @@
-declare type PrefsTab = 'general' | 'about' | 'apps';
+declare type PrefsTab = 'general' | 'about' | 'themes' | 'apps';
