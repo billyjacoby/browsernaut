@@ -1,20 +1,20 @@
 [package]
-name = "tauri-app"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "browsernaut"
+version = "1.0.1"
+description = "macOS Browser Picker"
+authors = ["billyjacoby"]
 license = ""
-repository = ""
+repository = "https://github.com/billyjacoby/browsernaut"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.2", features = [] }
+tauri-build = { version = "1.4", features = [] }
 swift-rs = { version = "1.0.5", features = ["build"] }
 
 [dependencies]
-tauri = { version = "1.2", features = ["clipboard-all", "notification-all", "system-tray", "updater", "window-all"] }
+tauri = { version = "1.4", features = ["clipboard-all", "notification-all", "system-tray", "updater", "window-all"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tauri-plugin-positioner = { version = "1.0.4", features = ["system-tray"] }
