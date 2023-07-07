@@ -15,24 +15,28 @@ export const Row = ({ children, className }: RowProps): JSX.Element => {
 
 interface LeftProps {
   children: React.ReactNode;
-  colSpan?: number;
+  className?: string;
 }
 
-export const Left = ({ children, colSpan }: LeftProps): JSX.Element => {
-  const _colSpan = (colSpan || 3).toString();
+export const Left = ({ children, className }: LeftProps): JSX.Element => {
+  let _className = 'text-right font-semibold col-span-3';
 
-  const colClass = `text-right font-semibold col-span-${_colSpan}`;
-  return <div className={colClass}>{children}</div>;
+  if (className) {
+    _className = _className + ' ' + className;
+  }
+  return <div className={_className}>{children}</div>;
 };
 
 interface RightProps {
   children: React.ReactNode;
-  colSpan?: number;
+  className?: string;
 }
 
-export const Right = ({ children, colSpan }: RightProps): JSX.Element => {
-  const _colSpan = (colSpan || 8).toString();
+export const Right = ({ children, className }: RightProps): JSX.Element => {
+  let _className = 'col-span-8';
 
-  const colClass = `col-span-${_colSpan}`;
-  return <div className={colClass}>{children}</div>;
+  if (className) {
+    _className = _className + ' ' + className;
+  }
+  return <div className={_className}>{children}</div>;
 };

@@ -29,7 +29,6 @@ export const TabGeneral = ({
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
 
   const appTheme = useAppDataStore((state) => state.appTheme);
-  console.log('🪵 | file: TabGeneral.tsx:27 | appTheme:', appTheme);
   const setAppTheme = useAppDataStore((state) => state.setAppTheme);
 
   const resetAppData = useAppDataStore((state) => state.resetAppData);

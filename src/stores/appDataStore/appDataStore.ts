@@ -9,7 +9,9 @@ import {
   updateHotCode as _updateHotCode,
   openURL as _openURL,
   updateURL as _updateURL,
+  getCurrentTheme as _getCurrentTheme,
   OpenURLActionParams,
+  ThemeVariableMap,
 } from './actions';
 
 const app_data_key = 'appData';
@@ -29,6 +31,8 @@ export interface AppDataStore {
   installedApps: InstalledApp[];
   hasSeenWelcomeMessage: boolean;
   appTheme: AppTheme;
+  themeVariableMap?: ThemeVariableMap;
+  getCurrentTheme: () => void;
   setAppTheme: (T?: AppTheme) => void;
   clearWelcomeMessage: () => void;
   updatePrefsTab: (tab: PrefsTab) => void;
@@ -56,6 +60,8 @@ export const useAppDataStore = create<AppDataStore>(
       installedApps: [],
       hasSeenWelcomeMessage: false,
       appTheme: 'system',
+      themeVariableMap: undefined,
+      getCurrentTheme: () => _getCurrentTheme(set),
       setAppTheme: (appTheme?: AppTheme) =>
         set({ appTheme: appTheme || 'system' }),
       clearWelcomeMessage: () => set({ hasSeenWelcomeMessage: true }),

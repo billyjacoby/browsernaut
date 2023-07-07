@@ -1,38 +1,29 @@
 import React from 'react';
 import { Left, Right, Row } from '@components/ui/Layout';
 import { ColorPicker } from '../ColorPicker';
-import { HSLColor } from 'react-color';
-
-const themeItems: { label: string; value: HSLColor; cssVarName: string }[] = [
-  {
-    label: 'Background',
-    value: { h: 0, s: 0, l: 100 },
-    cssVarName: '--background',
-  },
-  {
-    label: 'Foreground',
-    value: { h: 222.2, s: 47.4, l: 11.2 },
-    cssVarName: '--foreground',
-  },
-];
+import { useAppDataStore } from '@stores/appDataStore';
 
 export const TabThemes = (): JSX.Element => {
+  const themeVariableMap = useAppDataStore((state) => state.themeVariableMap);
+
   return (
     <div className="flex flex-col flex-1 text-center gap-1 h-full">
       <h1 className="text-4xl font-bold">Theme Customizer</h1>
       <p className="text-xl mb-4">Build your own Browsernaut theme:</p>
-      <div className="flex flex-row flex-1 justify-center">
-        <div className="flex flex-col gap-8">
-          {themeItems.map((color) => (
-            <Row key={color.cssVarName}>
-              <Left>
-                <Label>{color.label}: </Label>
-              </Left>
-              <Right colSpan={8}>
-                <ColorPicker color={color.value} />
-              </Right>
-            </Row>
-          ))}
+      <div className="flex flex-row flex-1 justify-center overflow-y-auto mb-24">
+        <div className="flex flex-col gap-8 ">
+          {themeVariableMap &&
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            Object.entries(themeVariableMap).map(([_key, value]) => (
+              <Row key={value.cssVarName}>
+                <Left className="col-span-6">
+                  <Label>{value.label}: </Label>
+                </Left>
+                <Right className="col-span-5">
+                  <ColorPicker color={value.value} />
+                </Right>
+              </Row>
+            ))}
         </div>
       </div>
     </div>
@@ -40,5 +31,5 @@ export const TabThemes = (): JSX.Element => {
 };
 
 const Label = ({ children }: { children: React.ReactNode }) => (
-  <p className="font-bold text-lg">{children}</p>
+  <p className="font-bold text-lg capitalize">{children}</p>
 );
