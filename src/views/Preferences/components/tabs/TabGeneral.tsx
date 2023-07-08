@@ -1,8 +1,5 @@
-import {
-  AppTheme,
-  availableThemes,
-  useAppDataStore,
-} from '@stores/appDataStore';
+import { AppTheme, availableThemes } from '@stores/themeDataSlice';
+import { useAppDataStore } from '@stores/appDataStore';
 import Button from '@components/Button';
 
 import { confirm, message } from '@tauri-apps/api/dialog';

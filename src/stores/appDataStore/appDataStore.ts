@@ -9,31 +9,28 @@ import {
   updateHotCode as _updateHotCode,
   openURL as _openURL,
   updateURL as _updateURL,
-  getCurrentTheme as _getCurrentTheme,
   OpenURLActionParams,
-  ThemeVariableMap,
 } from './actions';
+import {
+  AppTheme,
+  ThemeDataSlice,
+  useThemeDataSlice,
+} from '@stores/themeDataSlice';
 
 const app_data_key = 'appData';
 const storageKey = '.settings.dat';
 
 type TauriPersist = (
-  config: StateCreator<AppDataStore>,
-  options: PersistOptions<AppDataStore>
-) => StateCreator<AppDataStore>;
-
-export const availableThemes = ['dark', 'light', 'system'] as const;
-export type AppTheme = (typeof availableThemes)[number];
+  config: StateCreator<WholeDataStore>,
+  options: PersistOptions<WholeDataStore>
+) => StateCreator<WholeDataStore>;
 
 export interface AppDataStore {
   prefsTab: PrefsTab;
   URL?: string;
   installedApps: InstalledApp[];
   hasSeenWelcomeMessage: boolean;
-  appTheme: AppTheme;
-  themeVariableMap?: ThemeVariableMap;
-  getCurrentTheme: () => void;
-  setAppTheme: (T?: AppTheme) => void;
+
   clearWelcomeMessage: () => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
@@ -44,26 +41,23 @@ export interface AppDataStore {
   openURL: (A: OpenURLActionParams) => void;
 }
 
-const resetAppData: Partial<AppDataStore> = {
+export type WholeDataStore = AppDataStore & ThemeDataSlice;
+
+const resetAppData: Partial<WholeDataStore> = {
   prefsTab: 'general',
   URL: undefined,
   installedApps: [],
   hasSeenWelcomeMessage: false,
-  appTheme: 'system',
+  appTheme: 'system' as AppTheme,
 };
 
-export const useAppDataStore = create<AppDataStore>(
+export const useAppDataStore = create<WholeDataStore>(
   (persist as TauriPersist)(
     (set, get) => ({
       prefsTab: 'general',
       URL: undefined,
       installedApps: [],
       hasSeenWelcomeMessage: false,
-      appTheme: 'system',
-      themeVariableMap: undefined,
-      getCurrentTheme: () => _getCurrentTheme(set),
-      setAppTheme: (appTheme?: AppTheme) =>
-        set({ appTheme: appTheme || 'system' }),
       clearWelcomeMessage: () => set({ hasSeenWelcomeMessage: true }),
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
       getInstalledApps: () => _getInstalledApps(set, get),
@@ -73,13 +67,14 @@ export const useAppDataStore = create<AppDataStore>(
       updateURL: (URL: string) => _updateURL(set, URL),
       resetAppData: () => set({ ...resetAppData }),
       openURL: (args: OpenURLActionParams) => _openURL(set, get, args),
+      ...useThemeDataSlice(set, get),
     }),
     {
       name: 'unique-name',
-      storage: tauriPersistStorage<AppDataStore>({
+      storage: tauriPersistStorage<WholeDataStore>({
         appDataKey: app_data_key,
         storeLocation: storageKey,
-      }) as PersistStorage<AppDataStore>,
+      }) as PersistStorage<WholeDataStore>,
     }
   )
 );

@@ -6,7 +6,6 @@ import { getAppIcons } from '@utils/get-app-icon';
 import { openApp } from '@utils/open-app';
 import { invoke } from '@tauri-apps/api';
 import { Store } from 'tauri-plugin-store-api';
-import { HSLColor } from 'react-color';
 
 export const getInstalledApps = async (
   set: StoreApi<AppDataStore>['setState'],
@@ -128,73 +127,4 @@ export const openURL = async (
     console.warn('no URL found');
     onError?.('No URL found');
   }
-};
-
-const cssToHSLValue = (cv: string): HSLColor => {
-  const values = cv.replace('%', '').split(' ');
-  return {
-    h: parseInt(values?.[0] ?? '0', 10),
-    s: parseInt(values?.[1] ?? '0', 10),
-    l: parseInt(values?.[2] ?? '0', 10),
-  };
-};
-
-const varNameToHSLValue = (cssVar: string): HSLColor | undefined => {
-  if (typeof document !== 'undefined') {
-    const cssValue = getComputedStyle(
-      document.documentElement
-    ).getPropertyValue(cssVar);
-    if (cssValue.length) {
-      return cssToHSLValue(cssValue);
-    }
-  }
-};
-
-export type ThemeVariable = {
-  label: string;
-  cssVarName: string;
-  value: HSLColor;
-  varNotFound: boolean;
-};
-
-export const variableVals = [
-  '--background',
-  '--foreground',
-  '--muted',
-  '--muted-foreground',
-  '--popover',
-  '--popover-foreground',
-  '--card',
-  '--card-muted',
-  '--border',
-  '--input',
-  '--primary',
-  '--primary-foreground',
-  '--secondary',
-  '--secondary-foreground',
-  '--accent',
-  '--accent-foreground',
-  '--destructive',
-  '--destructive-foreground',
-  '--ring',
-  '--radius',
-] as const;
-
-export type ThemeVariableMap = {
-  [K in (typeof variableVals)[number]]: ThemeVariable;
-};
-
-export const getCurrentTheme = (set: StoreApi<AppDataStore>['setState']) => {
-  const themeVariableMap = variableVals.reduce((acc, curr) => {
-    const value = varNameToHSLValue(curr);
-    acc[curr] = {
-      label: curr.replaceAll('--', ' ').replaceAll('-', ' ').trim(),
-      cssVarName: curr,
-      value: value || { h: 0, s: 0, l: 0 },
-      varNotFound: typeof value === 'undefined',
-    };
-
-    return acc;
-  }, {} as ThemeVariableMap);
-  set({ themeVariableMap });
 };
