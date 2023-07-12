@@ -6,7 +6,8 @@ import {
   ThemeSetter,
   ThemeGetter,
   CustomTheme,
-} from './themeDataSlice';
+  AppTheme,
+} from '.';
 import { defaultCustomTheme } from './config';
 
 const cssToHSLValue = (cv: string): HSLColor => {
@@ -34,11 +35,39 @@ const CSSVarToHSLValue = (cssVar: string): HSLColor | undefined => {
   }
 };
 
-const UpdateCSSVar = (themeVar: ThemeVariable) => {
+export const setCSSVariable = (
+  themeVar: ThemeVariable,
+  querySelector: string | null
+) => {
   if (typeof document !== 'undefined') {
-    console.log('🪵 | file: actions.ts:160 | UpdateCSSVar | setting value');
     const cssString = HSLToCSSValue(themeVar.value);
-    document.documentElement.style.setProperty(themeVar.cssVarName, cssString);
+
+    if (querySelector) {
+      const styleSheets = document.styleSheets;
+      let targetRule: CSSStyleRule | null = null;
+      for (const sheet of styleSheets) {
+        for (const rule of sheet.cssRules) {
+          if (
+            rule instanceof CSSStyleRule &&
+            rule.selectorText === querySelector
+          ) {
+            targetRule = rule;
+            break;
+          }
+        }
+        if (targetRule) {
+          break;
+        }
+      }
+      if (targetRule) {
+        targetRule.style.setProperty(themeVar.cssVarName, cssString);
+      }
+    } else {
+      document.documentElement.style.setProperty(
+        themeVar.cssVarName,
+        cssString
+      );
+    }
   }
 };
 
@@ -57,11 +86,7 @@ export const getCurrentTheme = (set: ThemeSetter) => {
   set({ themeVariableMap });
 };
 
-export const setCSSVariable = (themeVar: ThemeVariable) => {
-  UpdateCSSVar(themeVar);
-};
-
-export const addCustomTHeme = (
+export const addCustomTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
   newTheme: CustomTheme
@@ -92,9 +117,52 @@ export const getActiveCustomTheme = (set: ThemeSetter, get: ThemeGetter) => {
   return activeTheme;
 };
 
-export const setCSSVariablesFromTheme = (customTheme: CustomTheme) => {
+export const setCSSVariablesFromTheme = (
+  customTheme: CustomTheme,
+  querySelector?: string
+) => {
   const { themeVariableMap } = customTheme;
   for (const [_key, value] of Object.entries(themeVariableMap)) {
-    setCSSVariable(value);
+    setCSSVariable(value, querySelector || '.custom');
   }
+};
+
+export const updateCustomTheme = (
+  set: ThemeSetter,
+  get: ThemeGetter,
+  customTheme: CustomTheme,
+  updates: ThemeVariable[]
+) => {
+  const newCustomTheme = { ...customTheme };
+  for (const update of updates) {
+    newCustomTheme.themeVariableMap[
+      update.cssVarName as keyof typeof newCustomTheme.themeVariableMap
+    ] = update;
+  }
+  if (newCustomTheme.isActive) {
+    // If it's the active theme make sure we're updating the CSS vars too
+    setCSSVariablesFromTheme(newCustomTheme);
+  }
+
+  const currentThemes = get().customThemes;
+  const newThemes = currentThemes.map((theme) => {
+    if (theme.name === newCustomTheme.name) {
+      return newCustomTheme;
+    }
+    return theme;
+  });
+
+  set({ customThemes: newThemes });
+};
+
+export const setAppTheme = (
+  set: ThemeSetter,
+  get: ThemeGetter,
+  appTheme?: AppTheme
+) => {
+  if (appTheme === 'custom') {
+    const activeCustomTheme = getActiveCustomTheme(set, get);
+    setCSSVariablesFromTheme(activeCustomTheme);
+  }
+  set({ appTheme: appTheme || 'system' });
 };

@@ -2,9 +2,50 @@ import React from 'react';
 import { Left, Row } from '@components/ui/Layout';
 import { ColorPicker } from '../ColorPicker';
 import { useAppDataStore } from '@stores/appDataStore';
+import { AppTheme, CustomTheme } from '@stores/themeDataSlice';
 
 export const TabThemes = (): JSX.Element => {
-  const themeVariableMap = useAppDataStore((state) => state.themeVariableMap);
+  const [activeTheme, setActiveTheme] = React.useState<null | CustomTheme>(
+    null
+  );
+
+  const appTheme = useAppDataStore((state) => state.appTheme);
+  const setAppTheme = useAppDataStore((state) => state.setAppTheme);
+
+  const getActiveCustomTheme = useAppDataStore(
+    (state) => state.getActiveCustomTheme
+  );
+
+  const userTheme = React.useRef<null | AppTheme>(null);
+
+  const { themeVariableMap } = getActiveCustomTheme();
+
+  const setCustomThemeTemp = () => {
+    if (!userTheme.current || appTheme === 'custom') {
+      return;
+    }
+    setAppTheme('custom');
+  };
+
+  //? The first time a color is changed we want to update the theme to ensure it's set to custom.
+  //? If we're setting it to custom then we want to change it back to the previously selected theme on unmount.
+
+  React.useEffect(() => {
+    setActiveTheme(getActiveCustomTheme());
+
+    if (appTheme !== 'custom') {
+      userTheme.current = appTheme;
+      setAppTheme('custom');
+    }
+
+    return () => {
+      if (userTheme.current) {
+        setAppTheme(userTheme.current);
+      }
+    };
+    //? This useEffect is here to only check for state on mount, and revert it on unmount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col flex-1 text-center gap-1 h-full">
@@ -20,7 +61,11 @@ export const TabThemes = (): JSX.Element => {
                   <Label>{value.label}: </Label>
                 </Left>
                 <div className="col-span-5 text-right">
-                  <ColorPicker themeVar={value} />
+                  <ColorPicker
+                    themeVar={value}
+                    beforeChange={setCustomThemeTemp}
+                    activeTheme={activeTheme}
+                  />
                 </div>
               </Row>
             ))}

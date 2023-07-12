@@ -1,4 +1,28 @@
-import { CustomTheme } from './themeDataSlice';
+import { CustomTheme } from '.';
+
+export const variableVals = [
+  '--background',
+  '--foreground',
+  '--muted',
+  '--muted-foreground',
+  '--popover',
+  '--popover-foreground',
+  '--card',
+  '--card-muted',
+  '--border',
+  '--input',
+  '--primary',
+  '--primary-foreground',
+  '--secondary',
+  '--secondary-foreground',
+  '--accent',
+  '--accent-foreground',
+  '--destructive',
+  '--destructive-foreground',
+  '--ring',
+] as const;
+
+export const availableThemes = ['dark', 'light', 'system', 'custom'] as const;
 
 export const darkTheme = {
   '--background': {

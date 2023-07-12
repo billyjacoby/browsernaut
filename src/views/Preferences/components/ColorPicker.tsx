@@ -3,20 +3,27 @@ import { BlockPicker, ColorResult } from 'react-color';
 import { hslToHex } from '@utils/hsl-to-hex';
 
 import { useAppDataStore } from '@stores/appDataStore';
-import { ThemeVariable } from '@stores/themeDataSlice';
+import { CustomTheme, ThemeVariable } from '@stores/themeDataSlice';
 
 interface ColorPickerProps {
   themeVar: ThemeVariable;
+  beforeChange: () => void;
+  //? This actually should never be null
+  activeTheme: CustomTheme | null;
 }
 
-export const ColorPicker = ({ themeVar }: ColorPickerProps) => {
+export const ColorPicker = ({
+  themeVar,
+  beforeChange,
+  activeTheme,
+}: ColorPickerProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [localColor, setLocalColor] = React.useState(themeVar.value);
 
   const wrapperRef = React.useRef<null | HTMLDivElement>(null);
   const buttonRef = React.useRef<null | HTMLButtonElement>(null);
 
-  const setCSSVariable = useAppDataStore((state) => state.setCSSVariable);
+  const updateCustomTheme = useAppDataStore((state) => state.updateCustomTheme);
 
   const hexColor = hslToHex(localColor);
 
@@ -45,10 +52,15 @@ export const ColorPicker = ({ themeVar }: ColorPickerProps) => {
   };
 
   const onColorChange = (color: ColorResult) => {
+    beforeChange();
     const { h, s, l } = color.hsl;
     const newVar = { ...themeVar, value: { h, s: s * 100, l: l * 100 } };
 
-    setCSSVariable(newVar);
+    if (!activeTheme) {
+      console.error('No active theme found.');
+    } else {
+      updateCustomTheme(activeTheme, [newVar]);
+    }
   };
 
   return (
@@ -65,13 +77,14 @@ export const ColorPicker = ({ themeVar }: ColorPickerProps) => {
             onChangeComplete={onColorChange}
             triangle="hide"
             color={localColor}
-            onChange={(color) =>
+            onChange={(color) => {
+              beforeChange();
               setLocalColor({
                 ...color.hsl,
                 s: color.hsl.s * 100,
                 l: color.hsl.l * 100,
-              })
-            }
+              });
+            }}
             styles={{
               default: {
                 card: {
