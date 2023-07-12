@@ -1,5 +1,5 @@
-import { StateCreator, create } from 'zustand';
-import { PersistOptions, PersistStorage, persist } from 'zustand/middleware';
+import { create } from 'zustand';
+import { PersistStorage, persist } from 'zustand/middleware';
 
 import { tauriPersistStorage } from '@lib/zustand-persist-tauri';
 import { InstalledApp } from '@config/apps';
@@ -9,21 +9,11 @@ import {
   updateHotCode as _updateHotCode,
   openURL as _openURL,
   updateURL as _updateURL,
-  OpenURLActionParams,
 } from './actions';
-import {
-  AppTheme,
-  ThemeDataSlice,
-  useThemeDataSlice,
-} from '@stores/themeDataSlice';
+import { useThemeDataSlice } from '@stores/themeDataSlice';
 
 const app_data_key = 'appData';
 const storageKey = '.settings.dat';
-
-type TauriPersist = (
-  config: StateCreator<WholeDataStore>,
-  options: PersistOptions<WholeDataStore>
-) => StateCreator<WholeDataStore>;
 
 export interface AppDataStore {
   prefsTab: PrefsTab;
@@ -40,8 +30,6 @@ export interface AppDataStore {
   resetAppData: () => void;
   openURL: (A: OpenURLActionParams) => void;
 }
-
-export type WholeDataStore = AppDataStore & ThemeDataSlice;
 
 const resetAppData: Partial<WholeDataStore> = {
   prefsTab: 'general',
@@ -61,7 +49,8 @@ export const useAppDataStore = create<WholeDataStore>(
       clearWelcomeMessage: () => set({ hasSeenWelcomeMessage: true }),
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
       getInstalledApps: () => _getInstalledApps(set, get),
-      updateHotCode: (name, hotCode) => _updateHotCode(set, get, name, hotCode),
+      updateHotCode: (name: string, hotCode: string | null) =>
+        _updateHotCode(set, get, name, hotCode),
       updateInstalledApps: (apps: InstalledApp[]) =>
         set({ installedApps: apps }),
       updateURL: (URL: string) => _updateURL(set, URL),

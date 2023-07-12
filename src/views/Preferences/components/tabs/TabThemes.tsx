@@ -2,7 +2,6 @@ import React from 'react';
 import { Left, Row } from '@components/ui/Layout';
 import { ColorPicker } from '../ColorPicker';
 import { useAppDataStore } from '@stores/appDataStore';
-import { AppTheme, CustomTheme } from '@stores/themeDataSlice';
 
 export const TabThemes = (): JSX.Element => {
   const [activeTheme, setActiveTheme] = React.useState<null | CustomTheme>(

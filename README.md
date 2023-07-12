@@ -24,7 +24,11 @@ When you click on a link in an application that isn't your default web browser y
 - [x] Add hotkeys for favorite apps
 - [x] Modifier support
 - [x] Built in automatic updates
-- [ ] Customizable themes
+- [ ] Customizable themes - *In Progress*
+  Todo List:
+  - [ ] Add ability to add new custom theme
+  - [ ] Allow for adding multiple themes
+  - [ ] Add ability to import themes
 - [ ] Automatic TLD handling per app
 
 ## Tech Stack

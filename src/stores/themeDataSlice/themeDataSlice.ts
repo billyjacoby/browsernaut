@@ -1,9 +1,4 @@
 import {
-  ThemeSetter,
-  ThemeGetter,
-  AppTheme,
-  CustomTheme,
-  ThemeVariable,
   getCurrentTheme as _getCurrentTheme,
   setCSSVariable as _setCSSVariable,
   addCustomTheme as _addCustomTheme,
@@ -11,7 +6,6 @@ import {
   setCSSVariablesFromTheme as _setCSSVariablesFromTheme,
   updateCustomTheme as _updateCustomTheme,
   setAppTheme as _setAppTheme,
-  ThemeVariableMap,
 } from '.';
 
 export interface ThemeDataSlice {

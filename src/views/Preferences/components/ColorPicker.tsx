@@ -3,7 +3,6 @@ import { BlockPicker, ColorResult } from 'react-color';
 import { hslToHex } from '@utils/hsl-to-hex';
 
 import { useAppDataStore } from '@stores/appDataStore';
-import { CustomTheme, ThemeVariable } from '@stores/themeDataSlice';
 
 interface ColorPickerProps {
   themeVar: ThemeVariable;

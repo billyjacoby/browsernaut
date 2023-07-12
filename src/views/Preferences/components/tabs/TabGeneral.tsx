@@ -1,4 +1,4 @@
-import { AppTheme, availableThemes } from '@stores/themeDataSlice';
+import { availableThemes } from '@stores/themeDataSlice';
 import { useAppDataStore } from '@stores/appDataStore';
 import Button from '@components/Button';
 
@@ -47,7 +47,7 @@ export const TabGeneral = ({
 
   React.useEffect(() => {
     checkForDefaultBrowser();
-  }, []);
+  }, [checkForDefaultBrowser]);
 
   return (
     <div className="flex flex-col gap-8 content-center h-full overflow-y-auto">

@@ -1,13 +1,5 @@
 import { HSLColor } from 'react-color';
-import {
-  ThemeVariable,
-  variableVals,
-  ThemeVariableMap,
-  ThemeSetter,
-  ThemeGetter,
-  CustomTheme,
-  AppTheme,
-} from '.';
+import { variableVals } from '.';
 import { defaultCustomTheme } from './config';
 
 const cssToHSLValue = (cv: string): HSLColor => {

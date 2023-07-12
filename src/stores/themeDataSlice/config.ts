@@ -1,5 +1,3 @@
-import { CustomTheme } from '.';
-
 export const variableVals = [
   '--background',
   '--foreground',
