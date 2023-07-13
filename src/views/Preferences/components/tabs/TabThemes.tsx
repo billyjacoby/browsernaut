@@ -4,20 +4,13 @@ import { ColorPicker } from '../ColorPicker';
 import { useAppDataStore } from '@stores/appDataStore';
 
 export const TabThemes = (): JSX.Element => {
-  const [activeTheme, setActiveTheme] = React.useState<null | CustomTheme>(
-    null
-  );
-
+  const activeCustomTheme = useAppDataStore((state) => state.activeCustomTheme);
   const appTheme = useAppDataStore((state) => state.appTheme);
   const setAppTheme = useAppDataStore((state) => state.setAppTheme);
 
-  const getActiveCustomTheme = useAppDataStore(
-    (state) => state.getActiveCustomTheme
-  );
-
   const userTheme = React.useRef<null | AppTheme>(null);
 
-  const { themeVariableMap } = getActiveCustomTheme();
+  const { themeVariableMap } = activeCustomTheme;
 
   const setCustomThemeTemp = () => {
     if (!userTheme.current || appTheme === 'custom') {
@@ -30,8 +23,6 @@ export const TabThemes = (): JSX.Element => {
   //? If we're setting it to custom then we want to change it back to the previously selected theme on unmount.
 
   React.useEffect(() => {
-    setActiveTheme(getActiveCustomTheme());
-
     if (appTheme !== 'custom') {
       userTheme.current = appTheme;
       setAppTheme('custom');
@@ -63,7 +54,7 @@ export const TabThemes = (): JSX.Element => {
                   <ColorPicker
                     themeVar={value}
                     beforeChange={setCustomThemeTemp}
-                    activeTheme={activeTheme}
+                    activeTheme={activeCustomTheme}
                   />
                 </div>
               </Row>

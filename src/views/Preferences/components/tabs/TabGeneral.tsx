@@ -1,4 +1,3 @@
-import { availableThemes } from '@stores/themeDataSlice';
 import { useAppDataStore } from '@stores/appDataStore';
 import Button from '@components/Button';
 
@@ -8,14 +7,8 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
 import { useDefaultBrowserCheck } from '@utils/hooks/useDefaultBrowserCheck';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@components/ui/Select';
 import { Left, Right, Row } from '@components/ui/Layout';
+import { ThemeSelect } from '../ThemeSelect';
 
 export const TabGeneral = ({
   setIsModalOpen,
@@ -24,9 +17,6 @@ export const TabGeneral = ({
 }): JSX.Element => {
   const installedApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
-
-  const appTheme = useAppDataStore((state) => state.appTheme);
-  const setAppTheme = useAppDataStore((state) => state.setAppTheme);
 
   const resetAppData = useAppDataStore((state) => state.resetAppData);
 
@@ -108,24 +98,7 @@ export const TabGeneral = ({
         </Right>
       </Row>
       <Row>
-        <Left>Theme Preference:</Left>
-        <Right>
-          <Select
-            value={appTheme}
-            onValueChange={(value) => setAppTheme(value as AppTheme)}
-          >
-            <SelectTrigger className="w-[180px] capitalize">
-              <SelectValue defaultValue={appTheme} />
-            </SelectTrigger>
-            <SelectContent className="capitalize">
-              {availableThemes.map((theme) => (
-                <SelectItem value={theme} key={theme}>
-                  {theme}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Right>
+        <ThemeSelect />
       </Row>
       <Button onClick={setIsModalOpen} className="self-center" variant={'link'}>
         Show welcome message

@@ -1,30 +1,9 @@
 import { HSLColor } from 'react-color';
-import { variableVals } from '.';
 import { defaultCustomTheme } from './config';
-
-const cssToHSLValue = (cv: string): HSLColor => {
-  const values = cv.replace('%', '').split(' ');
-  return {
-    h: parseInt(values?.[0] ?? '0', 10),
-    s: parseInt(values?.[1] ?? '0', 10),
-    l: parseInt(values?.[2] ?? '0', 10),
-  };
-};
 
 const HSLToCSSValue = (cv: HSLColor): string => {
   const { h, s, l } = cv;
   return `${h} ${s}% ${l}%`;
-};
-
-const CSSVarToHSLValue = (cssVar: string): HSLColor | undefined => {
-  if (typeof document !== 'undefined') {
-    const cssValue = getComputedStyle(
-      document.documentElement
-    ).getPropertyValue(cssVar);
-    if (cssValue.length) {
-      return cssToHSLValue(cssValue);
-    }
-  }
 };
 
 export const setCSSVariable = (
@@ -61,21 +40,6 @@ export const setCSSVariable = (
       );
     }
   }
-};
-
-export const getCurrentTheme = (set: ThemeSetter) => {
-  const themeVariableMap = variableVals.reduce((acc, curr) => {
-    const value = CSSVarToHSLValue(curr);
-    acc[curr] = {
-      label: curr.replaceAll('--', ' ').replaceAll('-', ' ').trim(),
-      cssVarName: curr,
-      value: value || { h: 0, s: 0, l: 0 },
-      varNotFound: typeof value === 'undefined',
-    };
-
-    return acc;
-  }, {} as ThemeVariableMap);
-  set({ themeVariableMap });
 };
 
 export const addCustomTheme = (
@@ -123,18 +87,18 @@ export const updateCustomTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
   customTheme: CustomTheme,
-  updates: ThemeVariable[]
+  updates?: ThemeVariable[]
 ) => {
   const newCustomTheme = { ...customTheme };
+  if (!updates) {
+    updates = Object.values(customTheme.themeVariableMap);
+  }
   for (const update of updates) {
     newCustomTheme.themeVariableMap[
       update.cssVarName as keyof typeof newCustomTheme.themeVariableMap
     ] = update;
   }
-  if (newCustomTheme.isActive) {
-    // If it's the active theme make sure we're updating the CSS vars too
-    setCSSVariablesFromTheme(newCustomTheme);
-  }
+  setCSSVariablesFromTheme(newCustomTheme);
 
   const currentThemes = get().customThemes;
   const newThemes = currentThemes.map((theme) => {

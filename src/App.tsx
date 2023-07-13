@@ -5,7 +5,6 @@ import { Store } from 'tauri-plugin-store-api';
 import { useAppDataStore } from '@stores/appDataStore';
 import { invoke } from '@tauri-apps/api';
 import { useIsDarkMode } from '@utils/hooks/useIsDarkMode';
-import { ThemeProvider } from '@components/ThemeProvider';
 
 // https://google.com
 
@@ -60,10 +59,4 @@ function App() {
   return null;
 }
 
-const ThemedApp = () => (
-  <ThemeProvider>
-    <App />
-  </ThemeProvider>
-);
-
-export default ThemedApp;
+export default App;
