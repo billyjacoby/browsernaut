@@ -990,6 +990,39 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-dialog@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@radix-ui/react-dialog@npm:1.0.4"
+  dependencies:
+    "@babel/runtime": ^7.13.10
+    "@radix-ui/primitive": 1.0.1
+    "@radix-ui/react-compose-refs": 1.0.1
+    "@radix-ui/react-context": 1.0.1
+    "@radix-ui/react-dismissable-layer": 1.0.4
+    "@radix-ui/react-focus-guards": 1.0.1
+    "@radix-ui/react-focus-scope": 1.0.3
+    "@radix-ui/react-id": 1.0.1
+    "@radix-ui/react-portal": 1.0.3
+    "@radix-ui/react-presence": 1.0.1
+    "@radix-ui/react-primitive": 1.0.3
+    "@radix-ui/react-slot": 1.0.2
+    "@radix-ui/react-use-controllable-state": 1.0.1
+    aria-hidden: ^1.1.1
+    react-remove-scroll: 2.5.5
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0
+    react-dom: ^16.8 || ^17.0 || ^18.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 01ad549a3685e221628950e6fbec306494170aa3b92cbe00732b1531c16e1cf681138cd4a79d658f4f97d4096676a40d08642090fdea1675d0b7dc78df66d962
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-direction@npm:1.0.1":
   version: 1.0.1
   resolution: "@radix-ui/react-direction@npm:1.0.1"
@@ -2327,6 +2360,7 @@ __metadata:
   resolution: "browsernaut@workspace:."
   dependencies:
     "@hello-pangea/dnd": ^16.3.0
+    "@radix-ui/react-dialog": ^1.0.4
     "@radix-ui/react-select": ^1.2.2
     "@radix-ui/react-slot": ^1.0.2
     "@radix-ui/react-tabs": ^1.0.4
@@ -2350,7 +2384,7 @@ __metadata:
     eslint-plugin-react-hooks: ^4.6.0
     eslint-plugin-unused-imports: ^2.0.0
     knip: ^2.14.3
-    lucide-react: ^0.258.0
+    lucide-react: ^0.260.0
     postcss: ^8.4.24
     react: ^18.2.0
     react-color: ^2.19.3
@@ -5433,12 +5467,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.258.0":
-  version: 0.258.0
-  resolution: "lucide-react@npm:0.258.0"
+"lucide-react@npm:^0.260.0":
+  version: 0.260.0
+  resolution: "lucide-react@npm:0.260.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: e8580e97ebfe74123eb8323af614fd520cd23e7f9f38837658e4203b3f596cfb388193953a04f65ddede03bdda7985802d7370e02172c968298b488fc9dc1b61
+  checksum: 27e1b44ed859988a939e750ddaf0d6f1a652b87cd104314c62ec7ee26b92cfc037b9d402ce8468a7c8b3883e174a85dedb18be39ec7cddd9d215b58512ff2dc7
   languageName: node
   linkType: hard
 

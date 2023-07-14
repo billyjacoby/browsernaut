@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import type { InstalledApp } from '@config/apps';
-import Input from '@components/Input';
+import { Input } from '@components/Input';
 import { Spinner } from '@components/Spinner';
 import { useAppDataStore } from '@stores/appDataStore';
 import {

@@ -10,29 +10,44 @@ import {
   SelectLabel,
   SelectItem,
 } from '@components/ui/Select';
+
 import { useAppDataStore } from '@stores/appDataStore';
 import { availableThemes } from '@stores/themeDataSlice';
+import { AddThemeSheet } from './AddThemeSheet';
 
 export const ThemeSelect = () => {
   const appTheme = useAppDataStore((state) => state.appTheme);
-  const allCustomThemes = useAppDataStore((state) => state.customThemes);
+  const setAppTheme = useAppDataStore((state) => state.setAppTheme);
 
+  const allCustomThemes = useAppDataStore((state) => state.customThemes);
   const activeCustomTheme = useAppDataStore((state) => state.activeCustomTheme);
+  const addCustomTheme = useAppDataStore((state) => state.addCustomTheme);
 
   const activeTheme = appTheme === 'custom' ? activeCustomTheme.name : appTheme;
-
-  const setAppTheme = useAppDataStore((state) => state.setAppTheme);
 
   const setActiveCustomTheme = useAppDataStore(
     (state) => state.setActiveCustomTheme
   );
+
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
   const allThemeStrings = [
     ...availableThemes,
     ...allCustomThemes.map((ct) => ct.name),
   ];
 
+  const onAddTheme = () => {
+    // Open sheet to get theme info
+    setIsSheetOpen(true);
+    // Add theme to the store
+    // Redirect to the theme customizer?
+  };
+
   const onThemeChange = (at: string) => {
+    if (at === 'add') {
+      onAddTheme();
+      return;
+    }
     if (at === 'dark' || at === 'light' || at === 'system') {
       setAppTheme(at);
     } else {
@@ -74,9 +89,19 @@ export const ThemeSelect = () => {
                 );
               }
             })}
+            <SelectGroup>
+              <SelectSeparator />
+            </SelectGroup>
+            <SelectItem value={'add'} className="cursor-pointer">
+              + Add New
+            </SelectItem>
           </SelectContent>
         </Select>
       </Right>
+      <AddThemeSheet
+        open={isSheetOpen}
+        onOpenChange={(value) => setIsSheetOpen(value)}
+      />
     </>
   );
 };

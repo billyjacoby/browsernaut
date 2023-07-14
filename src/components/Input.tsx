@@ -4,7 +4,7 @@ interface InputProps extends React.ComponentPropsWithoutRef<'input'> {
   className?: string;
 }
 
-const Input = ({ className, ...restProperties }: InputProps) => {
+export const Input = ({ className, ...restProperties }: InputProps) => {
   return (
     <input
       className={clsx(
@@ -22,4 +22,9 @@ const Input = ({ className, ...restProperties }: InputProps) => {
   );
 };
 
-export default Input;
+interface LabelProps extends React.ComponentPropsWithoutRef<'label'> {
+  className?: string;
+}
+export const Label = ({ className, ...resProperties }: LabelProps) => {
+  return <label className={clsx(className)} {...resProperties} />;
+};

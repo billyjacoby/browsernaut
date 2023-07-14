@@ -12,6 +12,7 @@ export interface ThemeDataSlice {
   appTheme: AppTheme;
   customThemes: CustomTheme[];
   activeCustomTheme: CustomTheme;
+  addCustomTheme: (N: string, CT?: CustomTheme) => void;
   setAppTheme: (T?: AppTheme) => void;
   setActiveCustomTheme: (CT: CustomTheme) => void;
   updateCustomTheme: (T: CustomTheme, U?: ThemeVariable[]) => void;
@@ -23,8 +24,8 @@ export const useThemeDataSlice = (set: ThemeSetter, get: ThemeGetter) => ({
   activeCustomTheme: defaultCustomTheme,
   setActiveCustomTheme: (activeCustomTheme: CustomTheme) =>
     set({ activeCustomTheme }),
-  addCustomTheme: (newTheme: CustomTheme) =>
-    _addCustomTheme(set, get, newTheme),
+  addCustomTheme: (themeName: string, baseTheme: CustomTheme) =>
+    _addCustomTheme(set, get, themeName, baseTheme),
   setAppTheme: (appTheme?: AppTheme) => _setAppTheme(set, get, appTheme),
   updateCustomTheme: (customTheme: CustomTheme, updates?: ThemeVariable[]) =>
     _updateCustomTheme(set, get, customTheme, updates),

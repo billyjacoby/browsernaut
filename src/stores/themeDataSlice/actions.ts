@@ -45,11 +45,34 @@ export const setCSSVariable = (
 export const addCustomTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
-  newTheme: CustomTheme
+  themeName: string,
+  baseTheme?: CustomTheme
 ) => {
-  const newThemes = get().customThemes;
-  newThemes.push(newTheme);
-  set({ customThemes: newThemes });
+  const newCustomThemes = get().customThemes.map((theme) => ({
+    ...theme,
+    isActive: false,
+  }));
+
+  let activeTheme: CustomTheme;
+
+  if (baseTheme) {
+    const newTheme: CustomTheme = {
+      ...baseTheme,
+      name: themeName,
+      isActive: true,
+    };
+    newCustomThemes.push(newTheme);
+    activeTheme = newTheme;
+  } else {
+    const newTheme: CustomTheme = {
+      ...defaultCustomTheme,
+      name: themeName,
+      isActive: true,
+    };
+    newCustomThemes.push(newTheme);
+    activeTheme = newTheme;
+  }
+  set({ customThemes: newCustomThemes, activeCustomTheme: activeTheme });
 };
 
 export const getActiveCustomTheme = (set: ThemeSetter, get: ThemeGetter) => {
