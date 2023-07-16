@@ -9,7 +9,6 @@ declare global {
 
   type CustomTheme = {
     name: string;
-    isActive: boolean;
     themeVariableMap: ThemeVariableMap;
   };
 

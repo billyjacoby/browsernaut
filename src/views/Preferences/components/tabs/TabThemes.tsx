@@ -2,11 +2,13 @@ import React from 'react';
 import { Left, Row } from '@components/ui/Layout';
 import { ColorPicker } from '../ColorPicker';
 import { useAppDataStore } from '@stores/appDataStore';
+import Button from '@components/Button';
 
 export const TabThemes = (): JSX.Element => {
   const activeCustomTheme = useAppDataStore((state) => state.activeCustomTheme);
   const appTheme = useAppDataStore((state) => state.appTheme);
   const setAppTheme = useAppDataStore((state) => state.setAppTheme);
+  const deleteCustomTheme = useAppDataStore((state) => state.deleteCustomTheme);
 
   const userTheme = React.useRef<null | AppTheme>(null);
 
@@ -17,6 +19,10 @@ export const TabThemes = (): JSX.Element => {
       return;
     }
     setAppTheme('custom');
+  };
+
+  const onDeleteThemeClick = () => {
+    deleteCustomTheme(activeCustomTheme.name);
   };
 
   //? The first time a color is changed we want to update the theme to ensure it's set to custom.
@@ -40,7 +46,18 @@ export const TabThemes = (): JSX.Element => {
   return (
     <div className="flex flex-col flex-1 text-center gap-1 h-full">
       <h1 className="text-4xl font-bold">Theme Customizer</h1>
-      <p className="text-xl mb-4">Build your own Browsernaut theme:</p>
+      <p className="text-xl mb-4">
+        Currently editing:{' '}
+        <span className="font-bold capitalize">{activeCustomTheme.name}</span>
+      </p>
+      <Button
+        className="w-1/3 mx-auto"
+        variant={'destructive'}
+        onClick={onDeleteThemeClick}
+        disabled={activeCustomTheme.name.toLowerCase() === 'default'}
+      >
+        Delete Theme
+      </Button>
       <div className="flex flex-row flex-1 justify-center overflow-y-auto mb-24">
         <div className="grid grid-cols-2">
           {themeVariableMap &&

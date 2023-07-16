@@ -50,50 +50,83 @@ export const addCustomTheme = (
 ) => {
   const newCustomThemes = get().customThemes.map((theme) => ({
     ...theme,
-    isActive: false,
   }));
 
   let activeTheme: CustomTheme;
 
   if (baseTheme) {
+    //? Necessary to deep clone the theme object as to not reference child properties of it
+    // https://stackoverflow.com/questions/12690107/clone-object-without-reference-javascript
+    const baseThemeCopy: CustomTheme = JSON.parse(JSON.stringify(baseTheme));
     const newTheme: CustomTheme = {
-      ...baseTheme,
+      ...baseThemeCopy,
       name: themeName,
-      isActive: true,
     };
     newCustomThemes.push(newTheme);
+    newCustomThemes.sort((a, b) => {
+      const aName = a.name.toUpperCase();
+      const bName = b.name.toUpperCase();
+      if (aName < bName) {
+        return -1;
+      }
+      if (aName > bName) {
+        return 1;
+      }
+      return 0;
+    });
     activeTheme = newTheme;
   } else {
     const newTheme: CustomTheme = {
       ...defaultCustomTheme,
       name: themeName,
-      isActive: true,
     };
     newCustomThemes.push(newTheme);
     activeTheme = newTheme;
   }
-  set({ customThemes: newCustomThemes, activeCustomTheme: activeTheme });
+  setActiveCustomTheme(set, activeTheme);
+  set({ customThemes: newCustomThemes });
+};
+
+export const deleteCustomTheme = (
+  set: ThemeSetter,
+  get: ThemeGetter,
+  themeName: string
+) => {
+  const { customThemes, activeCustomTheme } = get();
+  const newCustomThemes = customThemes.filter(
+    (ct) => ct.name.toLowerCase() !== themeName.toLowerCase()
+  );
+
+  if (activeCustomTheme.name.toLowerCase() === themeName.toLowerCase()) {
+    // Set the first indexed theme as the new active one;
+    const newActiveCustomTheme = newCustomThemes[0];
+    setActiveCustomTheme(set, newActiveCustomTheme);
+    set({
+      customThemes: newCustomThemes,
+    });
+    return;
+  }
+
+  set({ customThemes: newCustomThemes });
 };
 
 export const getActiveCustomTheme = (set: ThemeSetter, get: ThemeGetter) => {
-  const customThemes = get().customThemes;
+  const { customThemes, activeCustomTheme } = get();
+  let newActiveTheme = activeCustomTheme;
+
   //? If for some reason there aren't any custom themes, add the default one
   if (!customThemes.length) {
-    const defaultActiveTheme = { ...defaultCustomTheme, isActive: true };
+    const defaultActiveTheme = { ...defaultCustomTheme };
     customThemes.push(defaultActiveTheme);
-    return defaultActiveTheme;
+    set({ customThemes });
   }
 
-  let activeTheme = customThemes.find((th) => th.isActive);
-  //? if there is no active theme default to the first one.
-  if (!activeTheme) {
-    activeTheme = { ...customThemes[0], isActive: true };
+  if (!newActiveTheme) {
+    newActiveTheme = customThemes[0];
   }
-  //? If there is an active theme, resort the array so that theme is first and ensure the rest are inActive
-  const newThemes = customThemes.filter((th) => th.name !== activeTheme?.name);
-  newThemes.unshift(activeTheme);
-  set({ customThemes: newThemes });
-  return activeTheme;
+
+  set({ activeCustomTheme: newActiveTheme });
+  return newActiveTheme;
 };
 
 export const setCSSVariablesFromTheme = (
@@ -144,4 +177,12 @@ export const setAppTheme = (
     setCSSVariablesFromTheme(activeCustomTheme);
   }
   set({ appTheme: appTheme || 'system' });
+};
+
+export const setActiveCustomTheme = (
+  set: ThemeSetter,
+  customTheme: CustomTheme
+) => {
+  setCSSVariablesFromTheme(customTheme);
+  set({ activeCustomTheme: customTheme });
 };

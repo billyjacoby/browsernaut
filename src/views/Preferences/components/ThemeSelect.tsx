@@ -21,7 +21,6 @@ export const ThemeSelect = () => {
 
   const allCustomThemes = useAppDataStore((state) => state.customThemes);
   const activeCustomTheme = useAppDataStore((state) => state.activeCustomTheme);
-  const addCustomTheme = useAppDataStore((state) => state.addCustomTheme);
 
   const activeTheme = appTheme === 'custom' ? activeCustomTheme.name : appTheme;
 
@@ -51,7 +50,9 @@ export const ThemeSelect = () => {
     if (at === 'dark' || at === 'light' || at === 'system') {
       setAppTheme(at);
     } else {
-      let customTheme = allCustomThemes.find((ct) => ct.name === at);
+      let customTheme = allCustomThemes.find(
+        (ct) => ct.name.toLowerCase() === at.toLowerCase()
+      );
       if (!customTheme) {
         console.error('No custom theme found named: ', at);
         customTheme = activeCustomTheme;

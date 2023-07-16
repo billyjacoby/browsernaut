@@ -20,6 +20,7 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
     getCurrent().show();
     getCurrent().setFocus();
   }, []);
+
   return (
     <>
       <DraggableTitleBar height={36} />
@@ -28,7 +29,7 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
         style={{ height: 'calc(100vh - 36px)' }}
       >
         <Tabs
-          defaultValue={prefsTab}
+          value={prefsTab}
           onValueChange={(tabName) => updatePrefsTab(tabName as PrefsTab)}
           className="flex flex-col h-full"
         >
@@ -52,7 +53,12 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
           </TabsContent>
         </Tabs>
       </div>
-      <WelcomeModal isOpen={isModalOpen} close={() => setIsModalOpen(false)} />
+      {isModalOpen && (
+        <WelcomeModal
+          isOpen={isModalOpen}
+          close={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
 };
