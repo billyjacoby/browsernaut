@@ -74,13 +74,13 @@ export const ThemeSelect = () => {
             {allThemeStrings.map((theme) => {
               if (theme === 'custom') {
                 return (
-                  <>
+                  <React.Fragment key={theme}>
                     <SelectSeparator />
                     <SelectGroup>
-                      <SelectLabel key={theme}>Custom Themes:</SelectLabel>
+                      <SelectLabel>Custom Themes:</SelectLabel>
                       <SelectSeparator />
                     </SelectGroup>
-                  </>
+                  </React.Fragment>
                 );
               } else {
                 return (

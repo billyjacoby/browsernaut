@@ -7,6 +7,8 @@ declare global {
     [K in (typeof variableVals)[number]]: ThemeVariable;
   };
 
+  type ThemeVariableKey = keyof ThemeVariableMap;
+
   type CustomTheme = {
     name: string;
     themeVariableMap: ThemeVariableMap;
@@ -16,9 +18,11 @@ declare global {
 
   type ThemeVariable = {
     label: string;
-    cssVarName: string;
+    cssVarName: ThemeVariableKey;
     value: HSLColor;
     varNotFound: boolean;
+    inherits?: ThemeVariableKey[];
+    inheritedFrom?: ThemeVariableKey;
   };
 
   type ThemeSetter = StoreApi<ThemeDataSlice>['setState'];

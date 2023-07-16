@@ -1,5 +1,5 @@
 import React from 'react';
-import { BlockPicker, ColorResult } from 'react-color';
+import { SketchPicker, ColorResult } from 'react-color';
 import { hslToHex } from '@utils/hsl-to-hex';
 
 import { useAppDataStore } from '@stores/appDataStore';
@@ -71,11 +71,15 @@ export const ColorPicker = ({
         ref={buttonRef}
       />
       {isOpen && (
-        <div ref={wrapperRef} className="absolute z-10 left-2.5 top-9">
-          <BlockPicker
+        <div ref={wrapperRef} className="absolute z-10 right-2.5 top-9">
+          <SketchPicker
             onChangeComplete={onColorChange}
-            triangle="hide"
             color={localColor}
+            styles={{
+              default: {
+                picker: { color: 'black' },
+              },
+            }}
             onChange={(color) => {
               beforeChange();
               setLocalColor({
@@ -83,18 +87,6 @@ export const ColorPicker = ({
                 s: color.hsl.s * 100,
                 l: color.hsl.l * 100,
               });
-            }}
-            styles={{
-              default: {
-                card: {
-                  borderWidth: 3,
-                  borderColor: 'var(--muted-foreground)',
-                  borderRadius: '6px',
-                },
-                triangle: {
-                  width: 2,
-                },
-              },
             }}
           />
         </div>

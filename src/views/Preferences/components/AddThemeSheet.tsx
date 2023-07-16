@@ -32,7 +32,7 @@ export const AddThemeSheet = ({
   const updatePrefsTab = useAppDataStore((state) => state.updatePrefsTab);
 
   const [baseTheme, setBaseTheme] = React.useState<string>(
-    allCustomThemes[0].name
+    allCustomThemes[0]?.name
   );
   const [themeName, setThemeName] = React.useState<string>('');
   const [isNameError, setIsNameError] = React.useState(false);

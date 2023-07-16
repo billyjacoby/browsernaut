@@ -1,9 +1,37 @@
 import { HSLColor } from 'react-color';
-import { defaultCustomTheme } from './config';
+import { variableVals, defaultLightTheme, defaultDarkTheme } from './config';
 
 const HSLToCSSValue = (cv: HSLColor): string => {
   const { h, s, l } = cv;
   return `${h} ${s}% ${l}%`;
+};
+
+const CSSToHSLValue = (css: string): HSLColor => {
+  const values = css.replaceAll('%', '').split(' ');
+
+  return {
+    h: parseFloat(values[0]),
+    s: parseFloat(values[1]),
+    l: parseFloat(values[2]),
+  };
+};
+
+export const getCurrentCSSTheme = (): CustomTheme => {
+  const currentTheme: CustomTheme = JSON.parse(
+    JSON.stringify(defaultLightTheme)
+  );
+  currentTheme.name = 'current';
+  if (document && document?.documentElement) {
+    for (const value of variableVals) {
+      const cssVal = getComputedStyle(
+        document.documentElement
+      ).getPropertyValue(value);
+      if (currentTheme?.themeVariableMap[value]?.value) {
+        currentTheme.themeVariableMap[value].value = CSSToHSLValue(cssVal);
+      }
+    }
+  }
+  return currentTheme;
 };
 
 export const setCSSVariable = (
@@ -77,7 +105,7 @@ export const addCustomTheme = (
     activeTheme = newTheme;
   } else {
     const newTheme: CustomTheme = {
-      ...defaultCustomTheme,
+      ...defaultLightTheme,
       name: themeName,
     };
     newCustomThemes.push(newTheme);
@@ -116,9 +144,7 @@ export const getActiveCustomTheme = (set: ThemeSetter, get: ThemeGetter) => {
 
   //? If for some reason there aren't any custom themes, add the default one
   if (!customThemes.length) {
-    const defaultActiveTheme = { ...defaultCustomTheme };
-    customThemes.push(defaultActiveTheme);
-    set({ customThemes });
+    set({ customThemes: [defaultDarkTheme, defaultLightTheme] });
   }
 
   if (!newActiveTheme) {
@@ -145,24 +171,74 @@ export const updateCustomTheme = (
   customTheme: CustomTheme,
   updates?: ThemeVariable[]
 ) => {
-  const newCustomTheme = { ...customTheme };
+  //? If we're updating the default theme we actually want to clone it to another theme instead
+  const newCustomTheme: CustomTheme = JSON.parse(JSON.stringify(customTheme));
+  if (newCustomTheme.name === 'default dark') {
+    newCustomTheme.name = 'default dark - edited';
+  }
+  if (newCustomTheme.name === 'default light') {
+    newCustomTheme.name = 'default light - edited';
+  }
   if (!updates) {
     updates = Object.values(customTheme.themeVariableMap);
   }
   for (const update of updates) {
+    const currentValue = {
+      ...newCustomTheme.themeVariableMap[
+        update.cssVarName as keyof typeof newCustomTheme.themeVariableMap
+      ],
+    };
+
+    //? If the update inherits it's value from another (inheritedFrom) then we want to wipe
+    //? both the values inheritedFrom and remove from the parents inherits array
+
+    if (currentValue.inheritedFrom) {
+      const parent =
+        newCustomTheme.themeVariableMap[currentValue.inheritedFrom];
+
+      if (parent.inherits?.length) {
+        newCustomTheme.themeVariableMap[currentValue.inheritedFrom].inherits =
+          parent.inherits.filter(
+            (varName) => varName !== currentValue.inheritedFrom
+          );
+      }
+      delete currentValue.inheritedFrom;
+    } else {
+      //? If it's not inherited then we want to check if anything inherits and update accordingly
+      if (currentValue?.inherits?.length) {
+        // Update the inherited properties too
+        for (const inherited of currentValue.inherits) {
+          const curInheritedValue = {
+            ...newCustomTheme.themeVariableMap[inherited],
+          };
+          newCustomTheme.themeVariableMap[inherited] = {
+            ...curInheritedValue,
+            value: update.value,
+          };
+        }
+      }
+    }
+
     newCustomTheme.themeVariableMap[
       update.cssVarName as keyof typeof newCustomTheme.themeVariableMap
     ] = update;
   }
   setCSSVariablesFromTheme(newCustomTheme);
 
+  setActiveCustomTheme(set, newCustomTheme);
+
   const currentThemes = get().customThemes;
+  let shouldAppendTheme = true;
   const newThemes = currentThemes.map((theme) => {
     if (theme.name === newCustomTheme.name) {
+      shouldAppendTheme = false;
       return newCustomTheme;
     }
     return theme;
   });
+  if (shouldAppendTheme) {
+    newThemes.push(newCustomTheme);
+  }
 
   set({ customThemes: newThemes });
 };
@@ -185,4 +261,29 @@ export const setActiveCustomTheme = (
 ) => {
   setCSSVariablesFromTheme(customTheme);
   set({ activeCustomTheme: customTheme });
+};
+
+export const renameCustomTheme = (
+  set: ThemeSetter,
+  get: ThemeGetter,
+  customTheme: CustomTheme,
+  newName: string
+) => {
+  const { activeCustomTheme, customThemes } = get();
+  const newCustomTheme: CustomTheme = JSON.parse(JSON.stringify(customTheme));
+  newCustomTheme.name = newName;
+
+  const newCustomThemes = customThemes.map((theme) => {
+    if (theme.name === customTheme.name) {
+      return newCustomTheme;
+    } else {
+      return theme;
+    }
+  });
+
+  set({ customThemes: newCustomThemes });
+
+  if (activeCustomTheme.name === customTheme.name) {
+    setActiveCustomTheme(set, newCustomTheme);
+  }
 };

@@ -3,16 +3,41 @@ import { Left, Row } from '@components/ui/Layout';
 import { ColorPicker } from '../ColorPicker';
 import { useAppDataStore } from '@stores/appDataStore';
 import Button from '@components/Button';
+import { Input } from '@components/Input';
+import { confirm } from '@tauri-apps/api/dialog';
 
 export const TabThemes = (): JSX.Element => {
   const activeCustomTheme = useAppDataStore((state) => state.activeCustomTheme);
+  const allCustomThemes = useAppDataStore((state) => state.customThemes);
   const appTheme = useAppDataStore((state) => state.appTheme);
   const setAppTheme = useAppDataStore((state) => state.setAppTheme);
   const deleteCustomTheme = useAppDataStore((state) => state.deleteCustomTheme);
+  const renameCustomTheme = useAppDataStore((state) => state.renameCustomTheme);
+  const resetThemeState = useAppDataStore((state) => state.resetThemeState);
+
+  const themeNameSet = new Set(
+    allCustomThemes.map((theme) => theme.name.toLowerCase())
+  );
+
+  const [editedThemeName, setEditedThemeName] = React.useState(
+    activeCustomTheme.name
+  );
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [inputError, setInputError] = React.useState(false);
+  const isRenameDisabled =
+    activeCustomTheme.name === 'default dark' ||
+    activeCustomTheme.name === 'default light';
 
   const userTheme = React.useRef<null | AppTheme>(null);
 
   const { themeVariableMap } = activeCustomTheme;
+
+  const validateThemeName = (name: string) => {
+    if (!themeNameSet.has(name.toLowerCase())) {
+      return true;
+    }
+    return false;
+  };
 
   const setCustomThemeTemp = () => {
     if (!userTheme.current || appTheme === 'custom') {
@@ -21,8 +46,41 @@ export const TabThemes = (): JSX.Element => {
     setAppTheme('custom');
   };
 
-  const onDeleteThemeClick = () => {
-    deleteCustomTheme(activeCustomTheme.name);
+  const onDeleteThemeClick = async () => {
+    const shouldDelete = await confirm(
+      'Are you sure you want to delete this theme?',
+      { type: 'warning', title: 'Delete Theme' }
+    );
+    if (shouldDelete) {
+      deleteCustomTheme(activeCustomTheme.name);
+    }
+  };
+
+  const onResetThemeDataClick = async () => {
+    const shouldReset = await confirm(
+      'Are you sure you want to reset all theme data to the default?',
+      { type: 'warning', title: 'Reset Theme Data' }
+    );
+    if (shouldReset) {
+      resetThemeState();
+    }
+  };
+
+  const handleInputChange = (e: string) => {
+    if (validateThemeName(e)) {
+      setInputError(false);
+    } else {
+      setInputError(true);
+    }
+    setEditedThemeName(e);
+  };
+
+  const handleThemeRename = () => {
+    if (validateThemeName(editedThemeName)) {
+      //
+      renameCustomTheme(activeCustomTheme, editedThemeName);
+    }
+    setIsEditing(false);
   };
 
   //? The first time a color is changed we want to update the theme to ensure it's set to custom.
@@ -35,6 +93,7 @@ export const TabThemes = (): JSX.Element => {
     }
 
     return () => {
+      setIsEditing(false);
       if (userTheme.current) {
         setAppTheme(userTheme.current);
       }
@@ -46,22 +105,50 @@ export const TabThemes = (): JSX.Element => {
   return (
     <div className="flex flex-col flex-1 text-center gap-1 h-full">
       <h1 className="text-4xl font-bold">Theme Customizer</h1>
-      <p className="text-xl mb-4">
+      <p className="text-xl -mb-2">
         Currently editing:{' '}
-        <span className="font-bold capitalize">{activeCustomTheme.name}</span>
+        {isEditing ? (
+          <Input
+            error={inputError}
+            type="text"
+            value={editedThemeName}
+            onChange={(e) => handleInputChange(e.target.value)}
+          />
+        ) : (
+          <span className="font-bold capitalize">{activeCustomTheme.name}</span>
+        )}
       </p>
-      <Button
-        className="w-1/3 mx-auto"
-        variant={'destructive'}
-        onClick={onDeleteThemeClick}
-        disabled={activeCustomTheme.name.toLowerCase() === 'default'}
-      >
-        Delete Theme
-      </Button>
+      {isEditing ? (
+        <div>
+          <Button
+            variant={'link'}
+            disabled={!editedThemeName.length}
+            onClick={handleThemeRename}
+          >
+            Save
+          </Button>
+          <Button
+            variant={'link'}
+            onClick={() => {
+              setEditedThemeName(activeCustomTheme.name);
+              setIsEditing(false);
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant={'link'}
+          disabled={isRenameDisabled}
+          onClick={() => setIsEditing((prev) => !prev)}
+        >
+          Rename
+        </Button>
+      )}
       <div className="flex flex-row flex-1 justify-center overflow-y-auto mb-24">
         <div className="grid grid-cols-2">
           {themeVariableMap &&
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             Object.entries(themeVariableMap).map(([_key, value]) => (
               <Row key={value.cssVarName} className="col-span-1 p-3 m-1 gap-0">
                 <Left className="col-span-6">
@@ -76,6 +163,23 @@ export const TabThemes = (): JSX.Element => {
                 </div>
               </Row>
             ))}
+          <div className="col-span-2">
+            <Button
+              className="col-span-1 text-destructive"
+              variant={'link'}
+              onClick={onDeleteThemeClick}
+              disabled={activeCustomTheme.name.toLowerCase() === 'default'}
+            >
+              Delete Theme
+            </Button>
+            <Button
+              className="text-destructive col-span-1"
+              variant={'link'}
+              onClick={onResetThemeDataClick}
+            >
+              Reset Theme Data
+            </Button>
+          </div>
         </div>
       </div>
     </div>
