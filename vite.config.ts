@@ -22,6 +22,8 @@ export default defineConfig(async () => ({
     target: process.env.TAURI_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
     // don't minify for debug builds
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
+    //? Can't minify CSS or else theme support breaks
+    cssMinify: false,
     // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_DEBUG,
   },
