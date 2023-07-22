@@ -1,5 +1,5 @@
-import { StateCreator, create } from 'zustand';
-import { PersistOptions, PersistStorage, persist } from 'zustand/middleware';
+import { create } from 'zustand';
+import { PersistStorage, persist } from 'zustand/middleware';
 
 import { tauriPersistStorage } from '@lib/zustand-persist-tauri';
 import { InstalledApp } from '@config/apps';
@@ -9,27 +9,18 @@ import {
   updateHotCode as _updateHotCode,
   openURL as _openURL,
   updateURL as _updateURL,
-  OpenURLActionParams,
 } from './actions';
+import { useThemeDataSlice } from '@stores/themeDataSlice';
 
 const app_data_key = 'appData';
 const storageKey = '.settings.dat';
-
-type TauriPersist = (
-  config: StateCreator<AppDataStore>,
-  options: PersistOptions<AppDataStore>
-) => StateCreator<AppDataStore>;
-
-export const availableThemes = ['dark', 'light', 'system'] as const;
-export type AppTheme = (typeof availableThemes)[number];
 
 export interface AppDataStore {
   prefsTab: PrefsTab;
   URL?: string;
   installedApps: InstalledApp[];
   hasSeenWelcomeMessage: boolean;
-  appTheme: AppTheme;
-  setAppTheme: (T?: AppTheme) => void;
+
   clearWelcomeMessage: () => void;
   updatePrefsTab: (tab: PrefsTab) => void;
   updateInstalledApps: (apps: InstalledApp[]) => void;
@@ -40,40 +31,39 @@ export interface AppDataStore {
   openURL: (A: OpenURLActionParams) => void;
 }
 
-const resetAppData: Partial<AppDataStore> = {
+const resetAppData: Partial<WholeDataStore> = {
   prefsTab: 'general',
   URL: undefined,
   installedApps: [],
   hasSeenWelcomeMessage: false,
-  appTheme: 'system',
+  appTheme: 'system' as AppTheme,
 };
 
-export const useAppDataStore = create<AppDataStore>(
+export const useAppDataStore = create<WholeDataStore>(
   (persist as TauriPersist)(
     (set, get) => ({
       prefsTab: 'general',
       URL: undefined,
       installedApps: [],
       hasSeenWelcomeMessage: false,
-      appTheme: 'system',
-      setAppTheme: (appTheme?: AppTheme) =>
-        set({ appTheme: appTheme || 'system' }),
       clearWelcomeMessage: () => set({ hasSeenWelcomeMessage: true }),
       updatePrefsTab: (tab: PrefsTab) => set(() => ({ prefsTab: tab })),
       getInstalledApps: () => _getInstalledApps(set, get),
-      updateHotCode: (name, hotCode) => _updateHotCode(set, get, name, hotCode),
+      updateHotCode: (name: string, hotCode: string | null) =>
+        _updateHotCode(set, get, name, hotCode),
       updateInstalledApps: (apps: InstalledApp[]) =>
         set({ installedApps: apps }),
       updateURL: (URL: string) => _updateURL(set, URL),
       resetAppData: () => set({ ...resetAppData }),
       openURL: (args: OpenURLActionParams) => _openURL(set, get, args),
+      ...useThemeDataSlice(set, get),
     }),
     {
       name: 'unique-name',
-      storage: tauriPersistStorage<AppDataStore>({
+      storage: tauriPersistStorage<WholeDataStore>({
         appDataKey: app_data_key,
         storeLocation: storageKey,
-      }) as PersistStorage<AppDataStore>,
+      }) as PersistStorage<WholeDataStore>,
     }
   )
 );

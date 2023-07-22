@@ -7,6 +7,7 @@ import { TabGeneral } from './components/tabs/TabGeneral';
 import { TabApps } from './components/tabs/TabApps';
 import { TabAbout } from './components/tabs/TabAbout';
 import { useAppDataStore } from '@stores/appDataStore';
+import { TabThemes } from './components/tabs/TabThemes';
 
 export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(!!newUser);
@@ -19,6 +20,7 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
     getCurrent().show();
     getCurrent().setFocus();
   }, []);
+
   return (
     <>
       <DraggableTitleBar height={36} />
@@ -27,13 +29,14 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
         style={{ height: 'calc(100vh - 36px)' }}
       >
         <Tabs
-          defaultValue={prefsTab}
+          value={prefsTab}
           onValueChange={(tabName) => updatePrefsTab(tabName as PrefsTab)}
           className="flex flex-col h-full"
         >
           <TabsList className="self-center mb-6 gap-4">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="apps">Apps</TabsTrigger>
+            <TabsTrigger value="theme">Theme</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
           <TabsContent value="general">
@@ -42,12 +45,20 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
           <TabsContent value="apps">
             <TabApps />
           </TabsContent>
+          <TabsContent value="theme">
+            <TabThemes />
+          </TabsContent>
           <TabsContent value="about">
             <TabAbout />
           </TabsContent>
         </Tabs>
       </div>
-      <WelcomeModal isOpen={isModalOpen} close={() => setIsModalOpen(false)} />
+      {isModalOpen && (
+        <WelcomeModal
+          isOpen={isModalOpen}
+          close={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
 };

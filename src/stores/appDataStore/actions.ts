@@ -83,15 +83,6 @@ export const updateURL = async (
   set({ URL });
 };
 
-export interface OpenURLActionParams {
-  app?: InstalledApp;
-  URL?: string;
-  shiftPressed?: boolean;
-  altPressed?: boolean;
-  onSuccess?: () => void;
-  onError?: (message?: string) => void;
-}
-
 export const openURL = async (
   set: StoreApi<AppDataStore>['setState'],
   get: StoreApi<AppDataStore>['getState'],

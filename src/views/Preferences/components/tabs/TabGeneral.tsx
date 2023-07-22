@@ -1,8 +1,4 @@
-import {
-  AppTheme,
-  availableThemes,
-  useAppDataStore,
-} from '@stores/appDataStore';
+import { useAppDataStore } from '@stores/appDataStore';
 import Button from '@components/Button';
 
 import { confirm, message } from '@tauri-apps/api/dialog';
@@ -11,13 +7,8 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
 import { useDefaultBrowserCheck } from '@utils/hooks/useDefaultBrowserCheck';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@components/ui/Select';
+import { Left, Right, Row } from '@components/ui/Layout';
+import { ThemeSelect } from '../ThemeSelect';
 
 export const TabGeneral = ({
   setIsModalOpen,
@@ -26,10 +17,6 @@ export const TabGeneral = ({
 }): JSX.Element => {
   const installedApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
-
-  const appTheme = useAppDataStore((state) => state.appTheme);
-  console.log('🪵 | file: TabGeneral.tsx:27 | appTheme:', appTheme);
-  const setAppTheme = useAppDataStore((state) => state.setAppTheme);
 
   const resetAppData = useAppDataStore((state) => state.resetAppData);
 
@@ -50,7 +37,7 @@ export const TabGeneral = ({
 
   React.useEffect(() => {
     checkForDefaultBrowser();
-  }, []);
+  }, [checkForDefaultBrowser]);
 
   return (
     <div className="flex flex-col gap-8 content-center h-full overflow-y-auto">
@@ -111,24 +98,7 @@ export const TabGeneral = ({
         </Right>
       </Row>
       <Row>
-        <Left>Theme Preference:</Left>
-        <Right>
-          <Select
-            value={appTheme}
-            onValueChange={(value) => setAppTheme(value as AppTheme)}
-          >
-            <SelectTrigger className="w-[180px] capitalize">
-              <SelectValue defaultValue={appTheme} />
-            </SelectTrigger>
-            <SelectContent className="capitalize">
-              {availableThemes.map((theme) => (
-                <SelectItem value={theme} key={theme}>
-                  {theme}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Right>
+        <ThemeSelect />
       </Row>
       <Button onClick={setIsModalOpen} className="self-center" variant={'link'}>
         Show welcome message
@@ -136,26 +106,3 @@ export const TabGeneral = ({
     </div>
   );
 };
-interface RowProps {
-  children: React.ReactNode;
-}
-
-const Row = ({ children }: RowProps): JSX.Element => (
-  <div className="grid grid-cols-12 gap-8">{children}</div>
-);
-
-interface LeftProps {
-  children: React.ReactNode;
-}
-
-const Left = ({ children }: LeftProps): JSX.Element => (
-  <div className="col-span-3 text-right font-semibold">{children}</div>
-);
-
-interface RightProps {
-  children: React.ReactNode;
-}
-
-const Right = ({ children }: RightProps): JSX.Element => (
-  <div className="col-span-8">{children}</div>
-);
