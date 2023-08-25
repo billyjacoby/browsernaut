@@ -10,7 +10,7 @@ export const useDefaultBrowserCheck = () => {
   const [isDefaultBrowserLoading, setIsDefaultBrowserLoading] =
     React.useState(false);
 
-  const intervalRef = React.useRef<NodeJS.Timer | null>(null);
+  const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const intervalChecksRef = React.useRef<number>(0);
 
   const checkForDefaultBrowser = async () => {
