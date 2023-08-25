@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "release": "release-it --verbose",
-    "gh:upload": "dotenv release-it --no-increment --no-git --github.release --github.update --github.assets=[./src-tauri/target/release/bundle/dmg/Browsernaut_*_x64.dmg, ./src-tauri/target/release/bundle/macos/Browsernaut.app.tar.gz] "
+    "gh:upload": "dotenv release-it --no-increment --no-git --github.release --github.update --github.assets=[./src-tauri/target/universal-apple-darwin/release/bundle/dmg/Browsernaut_*_universal.dmg, ./src-tauri/target/universal-apple-darwin/release/bundle/macos/Browsernaut.app.tar.gz] "
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.3.0",
@@ -73,8 +73,8 @@
       "web": true,
       "autoGenerate": true,
       "assets": [
-        "./src-tauri/target/release/bundle/dmg/Browsernaut_${version}_x64.dmg",
-        "./src-tauri/target/release/bundle/macos/Browsernaut.app.tar.gz"
+        "./src-tauri/target/universal-apple-darwin/release/bundle/dmg/Browsernaut_${version}_x64.dmg",
+        "./src-tauri/target/universal-apple-darwin/release/bundle/macos/Browsernaut.app.tar.gz"
       ]
     }
   },
