@@ -6,10 +6,10 @@
 echo "Building release..."
 yarn build:release
 
-export UPDATE_SIG_FILE="./src-tauri/target/release/bundle/macos/Browsernaut.app.tar.gz.sig"
+export UPDATE_SIG_FILE="./src-tauri/target/universal-apple-darwin/release/bundle/macos/Browsernaut.app.tar.gz.sig"
 export UPDATE_SIG=$(cat $UPDATE_SIG_FILE)
 
-export SHA_SUM=($(shasum -a 256 ./src-tauri/target/release/bundle/dmg/Browsernaut_${VERSION}_x64.dmg))
+export SHA_SUM=($(shasum -a 256 ./src-tauri/target/universal-apple-darwin/release/bundle/dmg/Browsernaut_${VERSION}_universal.dmg))
 export PUBLISH_DATE=$(date -u -Iseconds | sed s/+00:00/Z/ | sed s/,/./)
 
 echo "Updating updates file"
