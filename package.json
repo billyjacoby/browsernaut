@@ -4,6 +4,7 @@
   "version": "1.1.1",
   "type": "module",
   "scripts": {
+    "app:version": "echo $npm_package_version",
     "dev": "vite",
     "build": "tsc && vite build",
     "build:debug": "dotenv -- yarn tauri build --debug --target universal-apple-darwin",
