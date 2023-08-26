@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "release": "release-it --verbose",
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit",
     "gh:upload": "dotenv release-it --no-increment --no-git --github.release --github.update --github.assets=[./src-tauri/target/universal-apple-darwin/release/bundle/dmg/Browsernaut_*_universal.dmg, ./src-tauri/target/universal-apple-darwin/release/bundle/macos/Browsernaut.app.tar.gz] "
   },
   "dependencies": {
@@ -33,7 +35,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
-    "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store",
+    "tauri-plugin-store-api": "tauri-apps/tauri-plugin-store",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

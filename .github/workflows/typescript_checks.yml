@@ -1,0 +1,48 @@
+name: Type check & Lint
+
+on: [pull_request] # we want the workflow to trigger on commits to PRs only
+
+jobs: # each workflow consists of 1+ jobs; by default, all jobs run in parallel
+  lint: # job name
+    runs-on: ubuntu-latest # host's operating system
+    steps: # each job consists of 1+ steps
+      - name: Checkout commit # download the code from triggering commit
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Run lint
+        run: yarn lint
+
+  typescript-check: # job name
+    runs-on: ubuntu-latest # host's operating system
+    steps: # each job consists of 1+ steps
+      - name: Checkout commit # download the code from triggering commit
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Run tsc --noEmit
+        run: yarn type-check
