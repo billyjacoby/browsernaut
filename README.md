@@ -1,5 +1,7 @@
 # Browsernaut
 
+[![Type check & Lint](https://github.com/billyjacoby/browsernaut/actions/workflows/typescript_checks.yml/badge.svg)](https://github.com/billyjacoby/browsernaut/actions/workflows/typescript_checks.yml)
+
 <p align="center">
   <img width="460"  src="./assets/logo.png">
 </p>

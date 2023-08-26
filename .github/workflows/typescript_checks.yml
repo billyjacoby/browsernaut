@@ -1,4 +1,4 @@
-name: CI
+name: Type check & Lint
 
 on: [pull_request] # we want the workflow to trigger on commits to PRs only
 
