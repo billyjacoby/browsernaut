@@ -27,7 +27,7 @@ sed -i "" "s/$LATEST_VERSION/$VERSION/g" "./homebrew-browsernaut/Casks/browserna
 #? Update homebrew sha 
 sed -i "" "s/sha256.*/sha256 \"$SHA_SUM\"/" "./homebrew-browsernaut/Casks/browsernaut.rb"
 #? Commit and push changes
-cd "./homebrew-browsernaut" && git add . && git commit -m "chore: update version to \"$LATEST_VERSION\""
+cd "./homebrew-browsernaut" && git add . && git commit -m "chore: update version to \"$LATEST_VERSION\"" && git push
 
 
 echo "Complete!"

@@ -1,0 +1,3 @@
+[submodule "homebrew-browsernaut"]
+	path = homebrew-browsernaut
+	url = https://github.com/billyjacoby/homebrew-browsernaut.git
