@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "release": "release-it --verbose",
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit",
     "gh:upload": "dotenv release-it --no-increment --no-git --github.release --github.update --github.assets=[./src-tauri/target/universal-apple-darwin/release/bundle/dmg/Browsernaut_*_universal.dmg, ./src-tauri/target/universal-apple-darwin/release/bundle/macos/Browsernaut.app.tar.gz] "
   },
   "dependencies": {
