@@ -1528,7 +1528,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tauri-apps/api@npm:^1.2.0, @tauri-apps/api@npm:^1.4.0":
+"@tauri-apps/api@npm:1.4.0, @tauri-apps/api@npm:^1.4.0":
   version: 1.4.0
   resolution: "@tauri-apps/api@npm:1.4.0"
   checksum: 0c24b72d6bdb1180aafc6a19bdaad1501810f880f1a52f0fbe1b1b2b04fe0b6148deba7a3769a03b877e4ddf3008348b6e1c6cb725f17effb78c9a0a0e099dc5
@@ -2424,7 +2424,7 @@ __metadata:
     tailwind-merge: ^1.14.0
     tailwindcss: ^3.3.3
     tailwindcss-animate: ^1.0.6
-    tauri-plugin-store-api: "https://github.com/tauri-apps/tauri-plugin-store"
+    tauri-plugin-store-api: tauri-apps/tauri-plugin-store
     typescript: ^5.1.6
     vite: ^4.4.9
     zustand: ^4.4.1
@@ -8033,12 +8033,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tauri-plugin-store-api@https://github.com/tauri-apps/tauri-plugin-store":
+tauri-plugin-store-api@tauri-apps/tauri-plugin-store:
   version: 0.0.0
-  resolution: "tauri-plugin-store-api@git+ssh://git@github.com/tauri-apps/tauri-plugin-store.git#commit=1467ba770623ab1d41d825841c3d9435d9eaa0f1"
+  resolution: "tauri-plugin-store-api@https://github.com/tauri-apps/tauri-plugin-store.git#commit=a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa"
   dependencies:
-    "@tauri-apps/api": ^1.2.0
-  checksum: 8235c2b659d3ab1419522170f9073ccaccb120db3f9acc1758a70f91334d298741d6063a63b7603d56b1a408409bf2e35358c705832d93c1b8fab0ae69cdbd56
+    "@tauri-apps/api": 1.4.0
+  checksum: 938a84984060a536cc8a00bdcb077be1ab5eda3b9bb9220506075bed199f354567e8bfd67e33e257ed6884d9cd8cf32fbb5038023980d6f7936bc54fc0506b45
   languageName: node
   linkType: hard
 
