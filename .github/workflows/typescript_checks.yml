@@ -45,4 +45,4 @@ jobs: # each workflow consists of 1+ jobs; by default, all jobs run in parallel
         run: yarn install --immutable
 
       - name: Run tsc --noEmit
-        run: yarn ts-check
+        run: yarn type-check
