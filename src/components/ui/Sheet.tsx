@@ -15,7 +15,9 @@ const SheetClose = SheetPrimitive.Close;
 const SheetPortal = ({
   className,
   ...props
-}: SheetPrimitive.DialogPortalProps) => (
+}: SheetPrimitive.DialogPortalProps & { className?: string }) => (
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
   <SheetPrimitive.Portal className={cn(className)} {...props} />
 );
 SheetPortal.displayName = SheetPrimitive.Portal.displayName;
