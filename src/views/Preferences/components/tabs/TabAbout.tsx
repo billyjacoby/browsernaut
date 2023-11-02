@@ -29,24 +29,20 @@ export const TabAbout = (): JSX.Element => {
     setIsCheckingForUpdate(true);
     setUpdateButtonContent('Checking for update.');
 
+    const resetTimeout = setTimeout(() => {
+      setIsCheckingForUpdate(false);
+      setUpdateButtonContent(BUTTON_UPDATE_STRING);
+    }, 6000);
+
     try {
-      const interval = setInterval(() => {
-        setUpdateButtonContent((prev) => {
-          if (prev.endsWith('...')) {
-            return prev.replace('...', '.');
-          }
-          return prev + '.';
-        });
-      }, 500);
-
       const updateResult = await checkUpdate();
-      clearInterval(interval);
-
       if (updateResult.shouldUpdate) {
         const result = await confirm(
           'There is an update available. Would you like to update now?'
         );
-
+        //? This isn't working as expected, the promise seems to never resolve if the user clicks no.
+        clearTimeout(resetTimeout);
+        setUpdateButtonContent('Update available!');
         if (result) {
           await installUpdate();
           return;
@@ -74,7 +70,6 @@ export const TabAbout = (): JSX.Element => {
       >
         {updateButtonContent}
       </Button>
-
       <div className="gap-4 mt-auto mb-8">
         <p>Copyright © Billy Jacoby</p>
         <Button variant={'link'} onClick={() => openURL({ URL: HOMEPAGE_URL })}>
