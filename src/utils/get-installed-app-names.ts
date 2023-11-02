@@ -12,7 +12,15 @@ async function getAllInstalledAppNames(): Promise<string[]> {
     return appName;
   });
 
-  const results = await Promise.all(appNamePromises);
+  const allResults = await Promise.allSettled(appNamePromises);
+  const fulfilledResults = allResults.filter(
+    (res) => res.status === 'fulfilled'
+  ) as PromiseFulfilledResult<string>[];
+  const results = fulfilledResults.map(({ value }) => value);
+  console.log(
+    '🪵 | file: get-installed-app-names.ts:20 | getAllInstalledAppNames | results:',
+    results
+  );
 
   return results;
 }
