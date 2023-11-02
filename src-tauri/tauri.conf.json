@@ -35,6 +35,7 @@
             "name": "findApps",
             "cmd": "find",
             "args": [
+              "~/Applications",
               "/Applications",
               "-iname",
               "*.app",
