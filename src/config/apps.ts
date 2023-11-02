@@ -77,6 +77,7 @@ export const apps = typeApps({
     privateArg: '--private-window',
   },
   Iridium: {},
+  Island: {},
   Lagrange: {},
   LibreWolf: {
     privateArg: '--private-window',
@@ -93,6 +94,9 @@ export const apps = typeApps({
   },
   Min: {},
   Miro: {},
+  'Mullvad Browser': {
+    privateArg: '--private-window',
+  },
   'NAVER Whale': {},
   Notion: {},
   Opera: {},
@@ -100,9 +104,11 @@ export const apps = typeApps({
   'Opera CD': {},
   'Opera Crypto': {},
   'Opera Dev': {},
+  'Opera Developer': {},
   'Opera GX': {},
   'Opera Neon': {},
   Orion: {},
+  'Orion RC': {},
   Pocket: {
     convertUrl: (url) => `pocket://add?url=${url}`,
   },
@@ -119,6 +125,9 @@ export const apps = typeApps({
   Spotify: {},
   'Tor Browser': {},
   Twitter: {},
+  Ulaa: {
+    privateArg: '--incognito',
+  },
   Vivaldi: {},
   'Vivaldi Snapshot': {},
   Waterfox: {},
