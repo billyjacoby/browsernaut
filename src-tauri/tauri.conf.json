@@ -30,20 +30,6 @@
               "read",
               "~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure"
             ]
-          },
-          {
-            "name": "findApps",
-            "cmd": "find",
-            "args": [
-              "~/Applications",
-              "/Applications",
-              "-iname",
-              "*.app",
-              "-prune",
-              "-not",
-              "-path",
-              "\"*/.*\""
-            ]
           }
         ]
       },
