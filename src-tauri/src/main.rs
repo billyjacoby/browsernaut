@@ -1,12 +1,13 @@
-use std::{env, path::PathBuf};
+mod apps;
 
+use apps::get_apps;
+use enigo::{Enigo, MouseControllable};
 use serde_json::json;
+use std::{env, path::PathBuf};
+use swift_rs::{swift, Bool, Int, SRString};
 use tauri::{
     ActivationPolicy, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, Wry,
 };
-
-use enigo::{Enigo, MouseControllable};
-use swift_rs::{swift, Bool, Int, SRString};
 use tauri_plugin_store::{with_store, StoreCollection};
 
 swift!(fn get_default_browser() -> SRString);
@@ -35,7 +36,8 @@ fn main() {
             make_default_browser,
             retrieve_app_icon,
             open_picker_window,
-            open_preferences_window
+            open_preferences_window,
+            get_apps
         ])
         .setup(|app| {
             //? Allows application to receive and parse the URI passed in when opened.
