@@ -13,6 +13,7 @@ interface ColorPickerProps {
 
 export const ColorPicker = ({
   themeVar,
+
   beforeChange,
   activeTheme,
 }: ColorPickerProps) => {
@@ -72,6 +73,8 @@ export const ColorPicker = ({
       />
       {isOpen && (
         <div ref={wrapperRef} className="absolute z-10 right-2.5 top-9">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment -- React type error*/}
+          {/* @ts-expect-error */}
           <SketchPicker
             onChangeComplete={onColorChange}
             color={localColor}
