@@ -27,7 +27,7 @@ export function openApp(
     .flat();
 
   try {
-    new Command('openApp', openArguments).execute();
+    new Command('open-app', openArguments).execute();
   } catch (e) {
     console.error('error opening app: ', e);
   }

@@ -19,6 +19,7 @@ function App() {
   useIsDarkMode();
 
   const updateUrl = useAppDataStore((state) => state.updateURL);
+  console.log('🪵 | App | updateUrl:', updateUrl);
   const hasSeenWelcomeMessage = useAppDataStore(
     (state) => state.hasSeenWelcomeMessage
   );

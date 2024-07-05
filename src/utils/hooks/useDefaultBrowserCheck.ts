@@ -48,7 +48,7 @@ export const useDefaultBrowserCheck = () => {
             }
           } else {
             intervalChecksRef.current += 1;
-            checkForDefaultBrowser();
+            // checkForDefaultBrowser();
           }
         }, 2000);
       }
