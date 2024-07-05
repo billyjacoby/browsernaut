@@ -17,7 +17,7 @@ import { useCloseOnUnfocus } from '@utils/hooks/useCloseOnUnfocus';
 export const AppPicker = () => {
   const pickerWindow = getCurrent();
 
-  useCloseOnUnfocus(getCurrent());
+  // useCloseOnUnfocus(getCurrent());
   const apps = useAppDataStore((state) => state.installedApps);
   const openURL = useAppDataStore((state) => state.openURL);
 
