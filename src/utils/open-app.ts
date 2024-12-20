@@ -1,5 +1,5 @@
-import { Command } from '@tauri-apps/api/shell';
-import { AppName, apps } from '@config/apps';
+import { AppName, apps } from "@config/apps";
+import { Command } from "@tauri-apps/api/shell";
 
 export function openApp(
   appName: AppName,
@@ -10,14 +10,14 @@ export function openApp(
   const selectedApp = apps[appName];
 
   const convertedUrl =
-    'convertUrl' in selectedApp ? selectedApp.convertUrl(url) : url;
+    "convertUrl" in selectedApp ? selectedApp.convertUrl(url) : url;
 
   const openArguments: string[] = [
-    '-a',
+    "-a",
     appName,
-    isAlt ? '--background' : [],
-    isShift && 'privateArg' in selectedApp
-      ? ['--new', '--args', selectedApp.privateArg]
+    isAlt ? "--background" : [],
+    isShift && "privateArg" in selectedApp
+      ? ["--new", "--args", selectedApp.privateArg]
       : [],
     // In order for private/incognito mode to work the URL needs to be passed
     // in last, _after_ the respective app.privateArg flag
@@ -27,8 +27,8 @@ export function openApp(
     .flat();
 
   try {
-    new Command('openApp', openArguments).execute();
+    new Command("open-app", openArguments).execute();
   } catch (e) {
-    console.error('error opening app: ', e);
+    console.error("error opening app: ", e);
   }
 }

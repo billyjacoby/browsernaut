@@ -21,10 +21,11 @@
         "startDragging": true
       },
       "shell": {
+        "all": true,
         "scope": [
-          { "name": "openApp", "cmd": "open", "args": true },
+          { "name": "open-app", "cmd": "open", "args": true },
           {
-            "name": "defaultBrowser",
+            "name": "default-browser",
             "cmd": "defaults",
             "args": [
               "read",
@@ -65,7 +66,7 @@
       "endpoints": [
         "https://raw.githubusercontent.com/billyjacoby/browsernaut/main/updates.json"
       ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg1ODJGMzM3MDNERUNFRDAKUldUUXp0NEROL09DaGVLdUo1WHErVzkyeEV6K0NzQTUzd1pYMGwxOVl2OXIxT1JIQlo2ZWdkUjAK"
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZEREExNUIyRDRFOTgyODYKUldTR2d1blVzaFhhL1RrWmJhZG1vckpvYTdNNkt4MVFhVE5pZTRkN1pqejRwSWZKL2NxNDB3Z3AK"
     },
     "windows": [
       {

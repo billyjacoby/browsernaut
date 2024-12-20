@@ -1,4 +1,4 @@
-export const Spinner = (): JSX.Element => {
+export const Spinner = () => {
   return (
     <svg
       aria-busy="true"

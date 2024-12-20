@@ -1,5 +1,5 @@
-import { HSLColor } from 'react-color';
-import { variableVals, defaultLightTheme, defaultDarkTheme } from './config';
+import { HSLColor } from "react-color";
+import { defaultDarkTheme, defaultLightTheme, variableVals } from "./config";
 
 const HSLToCSSValue = (cv: HSLColor): string => {
   const { h, s, l } = cv;
@@ -7,7 +7,7 @@ const HSLToCSSValue = (cv: HSLColor): string => {
 };
 
 const CSSToHSLValue = (css: string): HSLColor => {
-  const values = css.replaceAll('%', '').split(' ');
+  const values = css.replaceAll("%", "").split(" ");
 
   return {
     h: parseFloat(values[0]),
@@ -20,7 +20,7 @@ export const getCurrentCSSTheme = (): CustomTheme => {
   const currentTheme: CustomTheme = JSON.parse(
     JSON.stringify(defaultLightTheme)
   );
-  currentTheme.name = 'current';
+  currentTheme.name = "current";
   if (document && document?.documentElement) {
     for (const value of variableVals) {
       const cssVal = getComputedStyle(
@@ -38,7 +38,7 @@ export const setCSSVariable = (
   themeVar: ThemeVariable,
   querySelector: string | null
 ) => {
-  if (typeof document !== 'undefined') {
+  if (typeof document !== "undefined") {
     const cssString = HSLToCSSValue(themeVar.value);
 
     if (querySelector) {
@@ -161,7 +161,7 @@ export const setCSSVariablesFromTheme = (
 ) => {
   const { themeVariableMap } = customTheme;
   for (const [_key, value] of Object.entries(themeVariableMap)) {
-    setCSSVariable(value, querySelector || '.custom');
+    setCSSVariable(value, querySelector || ".custom");
   }
 };
 
@@ -173,11 +173,11 @@ export const updateCustomTheme = (
 ) => {
   //? If we're updating the default theme we actually want to clone it to another theme instead
   const newCustomTheme: CustomTheme = JSON.parse(JSON.stringify(customTheme));
-  if (newCustomTheme.name === 'default dark') {
-    newCustomTheme.name = 'default dark - edited';
+  if (newCustomTheme.name === "default dark") {
+    newCustomTheme.name = "default dark - edited";
   }
-  if (newCustomTheme.name === 'default light') {
-    newCustomTheme.name = 'default light - edited';
+  if (newCustomTheme.name === "default light") {
+    newCustomTheme.name = "default light - edited";
   }
   if (!updates) {
     updates = Object.values(customTheme.themeVariableMap);
@@ -248,11 +248,11 @@ export const setAppTheme = (
   get: ThemeGetter,
   appTheme?: AppTheme
 ) => {
-  if (appTheme === 'custom') {
+  if (appTheme === "custom") {
     const activeCustomTheme = getActiveCustomTheme(set, get);
     setCSSVariablesFromTheme(activeCustomTheme);
   }
-  set({ appTheme: appTheme || 'system' });
+  set({ appTheme: appTheme || "system" });
 };
 
 export const setActiveCustomTheme = (
