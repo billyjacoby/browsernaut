@@ -10,7 +10,6 @@
   "rules": {
     "no-duplicate-imports": "error",
     "no-template-curly-in-string": "error",
-    "react/boolean-prop-naming": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/no-unescaped-entities": "warn",
     "react-hooks/rules-of-hooks": "error",

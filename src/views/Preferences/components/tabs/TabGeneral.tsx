@@ -49,7 +49,6 @@ export const TabGeneral = ({
           ) : (
             <>
               {/* // TODO: maybe make this less frequent? Or at least turn-off-able */}
-              {/* @ts-expect-error - ConfettiExplosion is not typed properly */}
               <ConfettiExplosion colors={[GREEN_RGB, PINK, PURPLE_RGB]} />
               🎉 Browsernaut is the default web browser
             </>
