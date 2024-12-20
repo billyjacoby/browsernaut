@@ -1532,7 +1532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tauri-apps/api@npm:1.6.0, @tauri-apps/api@npm:^1.5.3":
+"@tauri-apps/api@npm:1.6.0, @tauri-apps/api@npm:^1.6.0":
   version: 1.6.0
   resolution: "@tauri-apps/api@npm:1.6.0"
   checksum: 98015a9391587baac9970aaa52d47fe7dd9a552d4332e4e9702a83f2da0e4aa88493d5d97929dc1cfda436038a8bd61070651ec2b82da5ab761edcca277038e6
@@ -1609,7 +1609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tauri-apps/cli@npm:^1.5.9":
+"@tauri-apps/cli@npm:^1.6.3":
   version: 1.6.3
   resolution: "@tauri-apps/cli@npm:1.6.3"
   dependencies:
@@ -2344,8 +2344,8 @@ __metadata:
     "@radix-ui/react-select": "npm:^2.1.4"
     "@radix-ui/react-slot": "npm:^1.1.1"
     "@radix-ui/react-tabs": "npm:^1.1.2"
-    "@tauri-apps/api": "npm:^1.5.3"
-    "@tauri-apps/cli": "npm:^1.5.9"
+    "@tauri-apps/api": "npm:^1.6.0"
+    "@tauri-apps/cli": "npm:^1.6.3"
     "@types/node": "npm:^22.10.2"
     "@types/react": "npm:19.0.2"
     "@types/react-color": "npm:^3.0.13"
