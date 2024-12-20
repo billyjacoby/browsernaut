@@ -1,11 +1,11 @@
 {
-  "version": "v1.2.0",
+  "version": "v1.3.0",
   "notes": "Test version",
-  "pub_date": "2024-02-01T02:34:41Z",
+  "pub_date": "2024-12-20T01:56:12Z",
   "platforms": {
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUUXp0NEROL09DaFZpcEh0MnBrV3BFMDNFd29YMzhYdTJIS0loR1I2T0ZRSUFpbUo5SkJxek9XYWkwMTFEM2lhVzR6aWRxYWJNQU5Uek03MWFHYTNTam1JSTVCWk9TZUFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzA2NzU0ODgxCWZpbGU6QnJvd3Nlcm5hdXQuYXBwLnRhci5negpHZTQvZkhqczdkamFHeHUvOXBuaVFXanZncjlOOWVFZTJmRlVXc05lZ2lvZUh3Y1lkY0t5d2ZhL0Z0SVpVTDFoV1pJNzc4TUt4R3VlZERPVURvT1lCUT09Cg==",
-      "url": "https://github.com/billyjacoby/browsernaut/releases/download/v1.2.0/Browsernaut.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTR2d1blVzaFhhL1F6YVBNQkhjcytFdHBrcU95TkpDSzhSdWsrS3ZoKzlNYUpGQytFcUhGaWl5aHZwL0VTb3FDWlk1dUV2YTdqRFMyUlllaVcrNVF0S044b3Zlc1VPWnc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM0NjU5NzcyCWZpbGU6QnJvd3Nlcm5hdXQuYXBwLnRhci5negpKdmFxU2pLZXMzTkMyQXZHbTNHbGk1VGlXK3g5dVNZd0V0eUV1RkQyVHpRN1gzQUZjREhiSGVsMXcwK3ZpT2dhMjVNUktLMDJtZ3p5OWlQaFp1NFJEQT09Cg==",
+      "url": "https://github.com/billyjacoby/browsernaut/releases/download/v1.3.0/Browsernaut.app.tar.gz"
     }
   }
 }
