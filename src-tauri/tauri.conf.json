@@ -21,10 +21,11 @@
         "startDragging": true
       },
       "shell": {
+        "all": true,
         "scope": [
-          { "name": "openApp", "cmd": "open", "args": true },
+          { "name": "open-app", "cmd": "open", "args": true },
           {
-            "name": "defaultBrowser",
+            "name": "default-browser",
             "cmd": "defaults",
             "args": [
               "read",

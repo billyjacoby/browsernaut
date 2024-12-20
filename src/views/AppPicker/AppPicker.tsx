@@ -1,16 +1,16 @@
-import { Spinner } from '@components/Spinner';
-import { DraggableTitleBar } from '@components/DraggableTitleBar';
-import { getCurrent } from '@tauri-apps/api/window';
-import React from 'react';
-import { InstalledApp } from '@config/apps';
-import UrlBar from './components/UrlBar';
+import { DraggableTitleBar } from "@components/DraggableTitleBar";
+import { Spinner } from "@components/Spinner";
+import { InstalledApp } from "@config/apps";
+import { useAppDataStore } from "@stores/appDataStore";
+import { getCurrent } from "@tauri-apps/api/window";
+import { useCloseOnUnfocus } from "@utils/hooks/useCloseOnUnfocus";
 import {
   ListenedKeyboardCodes,
   useIsKeyPressed,
-} from '@utils/hooks/useIsKeyPressed';
-import { AppButton } from './components/AppButton';
-import { useAppDataStore } from '@stores/appDataStore';
-import { useCloseOnUnfocus } from '@utils/hooks/useCloseOnUnfocus';
+} from "@utils/hooks/useIsKeyPressed";
+import React from "react";
+import { AppButton } from "./components/AppButton";
+import UrlBar from "./components/UrlBar";
 
 // https://billyjacoby.com
 
@@ -47,6 +47,7 @@ export const AppPicker = () => {
     shiftPressed?: boolean,
     altPressed?: boolean
   ) => {
+    console.log(app);
     openURL({
       app,
       shiftPressed,
@@ -67,7 +68,7 @@ export const AppPicker = () => {
       <DraggableTitleBar height={24} />
       <div
         className="flex flex-col flex-1 overflow-y-auto"
-        style={{ maxHeight: 'calc(100vh - 25px)' }}
+        style={{ maxHeight: "calc(100vh - 25px)" }}
       >
         {!apps[0] && (
           <div className="flex h-full items-center justify-center">
@@ -83,7 +84,7 @@ export const AppPicker = () => {
               buttonRefs={buttonRefs}
               app={app}
               onBrowserButtonClick={onBrowserButtonClick}
-              iconString={app?.icon ?? ''}
+              iconString={app?.icon ?? ""}
             />
           ))}
         </div>

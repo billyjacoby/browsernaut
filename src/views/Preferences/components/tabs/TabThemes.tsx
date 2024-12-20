@@ -1,12 +1,12 @@
-import React from 'react';
-import { Left, Row } from '@components/ui/Layout';
-import { ColorPicker } from '../ColorPicker';
-import { useAppDataStore } from '@stores/appDataStore';
-import Button from '@components/Button';
-import { Input } from '@components/Input';
-import { confirm } from '@tauri-apps/api/dialog';
+import Button from "@components/Button";
+import { Input } from "@components/Input";
+import { Left, Row } from "@components/ui/Layout";
+import { useAppDataStore } from "@stores/appDataStore";
+import { confirm } from "@tauri-apps/api/dialog";
+import React from "react";
+import { ColorPicker } from "../ColorPicker";
 
-export const TabThemes = (): JSX.Element => {
+export const TabThemes = () => {
   const activeCustomTheme = useAppDataStore((state) => state.activeCustomTheme);
   const allCustomThemes = useAppDataStore((state) => state.customThemes);
   const appTheme = useAppDataStore((state) => state.appTheme);
@@ -25,8 +25,8 @@ export const TabThemes = (): JSX.Element => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [inputError, setInputError] = React.useState(false);
   const isRenameDisabled =
-    activeCustomTheme.name === 'default dark' ||
-    activeCustomTheme.name === 'default light';
+    activeCustomTheme.name === "default dark" ||
+    activeCustomTheme.name === "default light";
 
   const userTheme = React.useRef<null | AppTheme>(null);
 
@@ -40,16 +40,16 @@ export const TabThemes = (): JSX.Element => {
   };
 
   const setCustomThemeTemp = () => {
-    if (!userTheme.current || appTheme === 'custom') {
+    if (!userTheme.current || appTheme === "custom") {
       return;
     }
-    setAppTheme('custom');
+    setAppTheme("custom");
   };
 
   const onDeleteThemeClick = async () => {
     const shouldDelete = await confirm(
-      'Are you sure you want to delete this theme?',
-      { type: 'warning', title: 'Delete Theme' }
+      "Are you sure you want to delete this theme?",
+      { type: "warning", title: "Delete Theme" }
     );
     if (shouldDelete) {
       deleteCustomTheme(activeCustomTheme.name);
@@ -58,8 +58,8 @@ export const TabThemes = (): JSX.Element => {
 
   const onResetThemeDataClick = async () => {
     const shouldReset = await confirm(
-      'Are you sure you want to reset all theme data to the default?',
-      { type: 'warning', title: 'Reset Theme Data' }
+      "Are you sure you want to reset all theme data to the default?",
+      { type: "warning", title: "Reset Theme Data" }
     );
     if (shouldReset) {
       resetThemeState();
@@ -87,9 +87,9 @@ export const TabThemes = (): JSX.Element => {
   //? If we're setting it to custom then we want to change it back to the previously selected theme on unmount.
 
   React.useEffect(() => {
-    if (appTheme !== 'custom') {
+    if (appTheme !== "custom") {
       userTheme.current = appTheme;
-      setAppTheme('custom');
+      setAppTheme("custom");
     }
 
     return () => {
@@ -106,7 +106,7 @@ export const TabThemes = (): JSX.Element => {
     <div className="flex flex-col flex-1 text-center gap-1 h-full">
       <h1 className="text-4xl font-bold">Theme Customizer</h1>
       <p className="text-xl -mb-2">
-        Currently editing:{' '}
+        Currently editing:{" "}
         {isEditing ? (
           <Input
             error={inputError}
@@ -121,14 +121,14 @@ export const TabThemes = (): JSX.Element => {
       {isEditing ? (
         <div>
           <Button
-            variant={'link'}
+            variant={"link"}
             disabled={!editedThemeName.length}
             onClick={handleThemeRename}
           >
             Save
           </Button>
           <Button
-            variant={'link'}
+            variant={"link"}
             onClick={() => {
               setEditedThemeName(activeCustomTheme.name);
               setIsEditing(false);
@@ -139,7 +139,7 @@ export const TabThemes = (): JSX.Element => {
         </div>
       ) : (
         <Button
-          variant={'link'}
+          variant={"link"}
           disabled={isRenameDisabled}
           onClick={() => setIsEditing((prev) => !prev)}
         >
@@ -166,15 +166,15 @@ export const TabThemes = (): JSX.Element => {
           <div className="col-span-2">
             <Button
               className="col-span-1 text-destructive"
-              variant={'link'}
+              variant={"link"}
               onClick={onDeleteThemeClick}
-              disabled={activeCustomTheme.name.toLowerCase() === 'default'}
+              disabled={activeCustomTheme.name.toLowerCase() === "default"}
             >
               Delete Theme
             </Button>
             <Button
               className="text-destructive col-span-1"
-              variant={'link'}
+              variant={"link"}
               onClick={onResetThemeDataClick}
             >
               Reset Theme Data

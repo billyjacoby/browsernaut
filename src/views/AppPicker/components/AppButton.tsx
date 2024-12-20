@@ -1,6 +1,6 @@
-import { BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
-import { InstalledApp } from '@config/apps';
-import clsx from 'clsx';
+import { BG_GRADIENT_ACTIVE } from "@config/CONSTANTS";
+import { InstalledApp } from "@config/apps";
+import clsx from "clsx";
 
 interface AppButtonProps {
   app: InstalledApp;
@@ -32,26 +32,26 @@ export const AppButton = (props: AppButtonProps) => {
       aria-label={`${app.name} App`}
       className={clsx(
         BG_GRADIENT_ACTIVE,
-        'mx-auto',
-        'my-1 p-0.5',
-        'rounded-xl',
-        'w-[90%]'
+        "mx-auto",
+        "my-1 p-0.5",
+        "rounded-xl",
+        "w-[90%]"
       )}
       onClick={(event) => {
         onBrowserButtonClick(app, event.altKey, event.shiftKey);
       }}
       onKeyDown={(event) => {
-        if (event.code === 'ArrowDown') {
+        if (event.code === "ArrowDown") {
           event.preventDefault();
           event.stopPropagation();
           buttonRefs.current?.[index + 1].focus();
-        } else if (event.code === 'ArrowUp') {
+        } else if (event.code === "ArrowUp") {
           event.preventDefault();
           event.stopPropagation();
           if (index !== 0) {
             buttonRefs.current?.[index - 1].focus();
           }
-        } else if (event.code === 'Enter') {
+        } else if (event.code === "Enter") {
           event.preventDefault();
           buttonRefs.current[index].click();
         }
@@ -60,12 +60,12 @@ export const AppButton = (props: AppButtonProps) => {
     >
       <div
         className={clsx(
-          'bg-background/50',
-          'font-medium',
-          'flex w-full items-center justify-between text-left px-4',
-          'focus:bg-black/0 hover:bg-black/0',
-          'hover:text-background',
-          'rounded-xl'
+          "bg-background/50",
+          "font-medium",
+          "flex w-full items-center justify-between text-left px-4",
+          "focus:bg-black/0 hover:bg-black/0",
+          "hover:text-background",
+          "rounded-xl"
         )}
       >
         <span>{app.name}</span>

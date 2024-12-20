@@ -1,24 +1,24 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-import type { InstalledApp } from '@config/apps';
-import { Input } from '@components/Input';
-import { Spinner } from '@components/Spinner';
-import { useAppDataStore } from '@stores/appDataStore';
+import { Input } from "@components/Input";
+import { Spinner } from "@components/Spinner";
+import type { InstalledApp } from "@config/apps";
+import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from "@config/CONSTANTS";
 import {
   DragDropContext,
-  Droppable,
   Draggable,
   DraggableProvided,
   DraggableStateSnapshot,
+  Droppable,
   DropResult,
-} from '@hello-pangea/dnd';
-import { BG_GRADIENT, BG_GRADIENT_ACTIVE } from '@config/CONSTANTS';
+} from "@hello-pangea/dnd";
+import { useAppDataStore } from "@stores/appDataStore";
 
 // https://getfrontrunner.com
 
 interface SortableItemProps {
-  id: InstalledApp['name'];
-  name: InstalledApp['name'];
+  id: InstalledApp["name"];
+  name: InstalledApp["name"];
   provided: DraggableProvided;
   snapshot: DraggableStateSnapshot;
   index: number;
@@ -30,7 +30,7 @@ interface SortableItemProps {
 const SortableItem = ({
   id,
   name,
-  keyCode = '',
+  keyCode = "",
   index,
   provided,
   snapshot,
@@ -39,27 +39,27 @@ const SortableItem = ({
   const updateHotCode = useAppDataStore((state) => state.updateHotCode);
   return (
     <div
-      style={{ transition: 'all' }}
+      style={{ transition: "all" }}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={clsx(
-        'w-[95%] rounded-md p-0.5 mx-auto',
+        "w-[95%] rounded-md p-0.5 mx-auto",
         BG_GRADIENT,
-        'flex',
-        'mb-4',
-        'focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:bg-black',
+        "flex",
+        "mb-4",
+        "focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:bg-black",
         snapshot.isDragging && BG_GRADIENT_ACTIVE,
-        'focus-visible:ring-2 focus-visible:ring-gray-100'
+        "focus-visible:ring-2 focus-visible:ring-gray-100"
       )}
     >
       <div
         className={clsx(
-          'flex',
-          'w-full',
-          'rounded-md',
-          'transition-all',
-          !snapshot.isDragging && 'bg-background/40 transition-all'
+          "flex",
+          "w-full",
+          "rounded-md",
+          "transition-all",
+          !snapshot.isDragging && "bg-background/40 transition-all"
         )}
       >
         <div className="flex w-16 items-center justify-center p-4">
@@ -86,8 +86,8 @@ const SortableItem = ({
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onKeyDown={(event) => {
               if (
-                event.key.toLowerCase() === 'backspace' ||
-                event.key.toLowerCase() === 'delete'
+                event.key.toLowerCase() === "backspace" ||
+                event.key.toLowerCase() === "delete"
               ) {
                 updateHotCode(name, null);
               } else {
@@ -104,7 +104,7 @@ const SortableItem = ({
   );
 };
 
-export function TabApps(): JSX.Element {
+export function TabApps() {
   const apps = useAppDataStore((state) => state.installedApps);
   const updateApps = useAppDataStore((state) => state.updateInstalledApps);
 
@@ -129,7 +129,7 @@ export function TabApps(): JSX.Element {
       {/* //TODO: Add shadcn/ui scroll area here */}
       <div
         className="flex-1 overflow-y-auto"
-        style={{ maxHeight: 'calc(100vh - 180px)' }}
+        style={{ maxHeight: "calc(100vh - 180px)" }}
       >
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
@@ -142,11 +142,11 @@ export function TabApps(): JSX.Element {
                         key={name}
                         id={name}
                         index={index}
-                        keyCode={hotCode || ''}
+                        keyCode={hotCode || ""}
                         name={name}
                         provided={provided}
                         snapshot={snapshot}
-                        iconString={icon ?? ''}
+                        iconString={icon ?? ""}
                       />
                     )}
                   </Draggable>

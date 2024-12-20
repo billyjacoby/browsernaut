@@ -1,8 +1,8 @@
-import React from 'react';
-import { SketchPicker, ColorResult } from 'react-color';
-import { hslToHex } from '@utils/hsl-to-hex';
+import { hslToHex } from "@utils/hsl-to-hex";
+import React from "react";
+import { ColorResult, SketchPicker } from "react-color";
 
-import { useAppDataStore } from '@stores/appDataStore';
+import { useAppDataStore } from "@stores/appDataStore";
 
 interface ColorPickerProps {
   themeVar: ThemeVariable;
@@ -40,10 +40,10 @@ export const ColorPicker = ({
         }
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
@@ -57,7 +57,7 @@ export const ColorPicker = ({
     const newVar = { ...themeVar, value: { h, s: s * 100, l: l * 100 } };
 
     if (!activeTheme) {
-      console.error('No active theme found.');
+      console.error("No active theme found.");
     } else {
       updateCustomTheme(activeTheme, [newVar]);
     }
@@ -73,14 +73,12 @@ export const ColorPicker = ({
       />
       {isOpen && (
         <div ref={wrapperRef} className="absolute z-10 right-2.5 top-9">
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment -- React type error*/}
-          {/* @ts-expect-error */}
           <SketchPicker
             onChangeComplete={onColorChange}
             color={localColor}
             styles={{
               default: {
-                picker: { color: 'black' },
+                picker: { color: "black" },
               },
             }}
             onChange={(color) => {

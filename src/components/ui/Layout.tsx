@@ -3,11 +3,11 @@ interface RowProps {
   className?: string;
 }
 
-export const Row = ({ children, className }: RowProps): JSX.Element => {
-  let _className = 'grid grid-cols-12 gap-8';
+export const Row = ({ children, className }: RowProps) => {
+  let _className = "grid grid-cols-12 gap-8";
 
   if (className) {
-    _className = _className + ' ' + className;
+    _className = _className + " " + className;
   }
 
   return <div className={_className}>{children}</div>;
@@ -18,11 +18,11 @@ interface LeftProps {
   className?: string;
 }
 
-export const Left = ({ children, className }: LeftProps): JSX.Element => {
-  let _className = 'text-right font-semibold col-span-3';
+export const Left = ({ children, className }: LeftProps) => {
+  let _className = "text-right font-semibold col-span-3";
 
   if (className) {
-    _className = _className + ' ' + className;
+    _className = _className + " " + className;
   }
   return <div className={_className}>{children}</div>;
 };
@@ -32,11 +32,11 @@ interface RightProps {
   className?: string;
 }
 
-export const Right = ({ children, className }: RightProps): JSX.Element => {
-  let _className = 'col-span-8';
+export const Right = ({ children, className }: RightProps) => {
+  let _className = "col-span-8";
 
   if (className) {
-    _className = _className + ' ' + className;
+    _className = _className + " " + className;
   }
   return <div className={_className}>{children}</div>;
 };

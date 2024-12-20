@@ -1,15 +1,15 @@
-import Button from '@components/Button';
-import { getVersion } from '@tauri-apps/api/app';
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import React from 'react';
-import { confirm } from '@tauri-apps/api/dialog';
-import { useAppDataStore } from '@stores/appDataStore';
-import { HOMEPAGE_URL, ISSUES_URL } from '@config/CONSTANTS';
-import { Browsernaut } from '@components/Logo';
+import Button from "@components/Button";
+import { Browsernaut } from "@components/Logo";
+import { HOMEPAGE_URL, ISSUES_URL } from "@config/CONSTANTS";
+import { useAppDataStore } from "@stores/appDataStore";
+import { getVersion } from "@tauri-apps/api/app";
+import { confirm } from "@tauri-apps/api/dialog";
+import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
+import React from "react";
 
-const BUTTON_UPDATE_STRING = 'Check for update';
+const BUTTON_UPDATE_STRING = "Check for update";
 
-export const TabAbout = (): JSX.Element => {
+export const TabAbout = () => {
   const openURL = useAppDataStore((state) => state.openURL);
 
   const [version, setVersion] = React.useState<null | string>(null);
@@ -27,7 +27,7 @@ export const TabAbout = (): JSX.Element => {
 
   const checkForUpdate = async () => {
     setIsCheckingForUpdate(true);
-    setUpdateButtonContent('Checking for update.');
+    setUpdateButtonContent("Checking for update.");
 
     const resetTimeout = setTimeout(() => {
       setIsCheckingForUpdate(false);
@@ -38,11 +38,11 @@ export const TabAbout = (): JSX.Element => {
       const updateResult = await checkUpdate();
       if (updateResult.shouldUpdate) {
         const result = await confirm(
-          'There is an update available. Would you like to update now?'
+          "There is an update available. Would you like to update now?"
         );
         //? This isn't working as expected, the promise seems to never resolve if the user clicks no.
         clearTimeout(resetTimeout);
-        setUpdateButtonContent('Update available!');
+        setUpdateButtonContent("Update available!");
         if (result) {
           await installUpdate();
           return;
@@ -54,7 +54,7 @@ export const TabAbout = (): JSX.Element => {
       }
     } finally {
       setIsCheckingForUpdate(false);
-      setUpdateButtonContent('Up to date!');
+      setUpdateButtonContent("Up to date!");
     }
   };
 
@@ -62,7 +62,7 @@ export const TabAbout = (): JSX.Element => {
     <div className="flex flex-col flex-1 text-center gap-1 h-full">
       <Browsernaut />
       <p className="mb-8 text-xl">Browser picker built for macOS</p>
-      <p className="mb-2 opacity-70">Version {version || 'loading.'}</p>
+      <p className="mb-2 opacity-70">Version {version || "loading."}</p>
       <Button
         onClick={checkForUpdate}
         disabled={isCheckingForUpdate}
@@ -72,10 +72,10 @@ export const TabAbout = (): JSX.Element => {
       </Button>
       <div className="gap-4 mt-auto mb-8">
         <p>Copyright © Billy Jacoby</p>
-        <Button variant={'link'} onClick={() => openURL({ URL: HOMEPAGE_URL })}>
+        <Button variant={"link"} onClick={() => openURL({ URL: HOMEPAGE_URL })}>
           Homepage
         </Button>
-        <Button variant={'link'} onClick={() => openURL({ URL: ISSUES_URL })}>
+        <Button variant={"link"} onClick={() => openURL({ URL: ISSUES_URL })}>
           Report an Issue
         </Button>
       </div>

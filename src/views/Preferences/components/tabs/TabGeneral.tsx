@@ -1,20 +1,20 @@
-import { useAppDataStore } from '@stores/appDataStore';
-import Button from '@components/Button';
+import Button from "@components/Button";
+import { useAppDataStore } from "@stores/appDataStore";
 
-import { confirm, message } from '@tauri-apps/api/dialog';
-import React from 'react';
-import ConfettiExplosion from 'react-confetti-explosion';
-import { PURPLE_RGB, GREEN_RGB, PINK } from '@config/CONSTANTS';
-import { useDefaultBrowserCheck } from '@utils/hooks/useDefaultBrowserCheck';
+import { GREEN_RGB, PINK, PURPLE_RGB } from "@config/CONSTANTS";
+import { confirm, message } from "@tauri-apps/api/dialog";
+import { useDefaultBrowserCheck } from "@utils/hooks/useDefaultBrowserCheck";
+import React from "react";
+import ConfettiExplosion from "react-confetti-explosion";
 
-import { Left, Right, Row } from '@components/ui/Layout';
-import { ThemeSelect } from '../ThemeSelect';
+import { Left, Right, Row } from "@components/ui/Layout";
+import { ThemeSelect } from "../ThemeSelect";
 
 export const TabGeneral = ({
   setIsModalOpen,
 }: {
   setIsModalOpen: () => void;
-}): JSX.Element => {
+}) => {
   const installedApps = useAppDataStore((state) => state.installedApps);
   const getInstalledApps = useAppDataStore((state) => state.getInstalledApps);
 
@@ -27,11 +27,11 @@ export const TabGeneral = ({
 
   const onResetClick = async () => {
     const result = await confirm(
-      'Are you sure you wish to reset all of your preferences'
+      "Are you sure you wish to reset all of your preferences"
     );
     if (result) {
       resetAppData();
-      message('App data reset!');
+      message("App data reset!");
     }
   };
 
@@ -49,6 +49,7 @@ export const TabGeneral = ({
           ) : (
             <>
               {/* // TODO: maybe make this less frequent? Or at least turn-off-able */}
+              {/* @ts-expect-error - ConfettiExplosion is not typed properly */}
               <ConfettiExplosion colors={[GREEN_RGB, PINK, PURPLE_RGB]} />
               🎉 Browsernaut is the default web browser
             </>
@@ -100,7 +101,7 @@ export const TabGeneral = ({
       <Row>
         <ThemeSelect />
       </Row>
-      <Button onClick={setIsModalOpen} className="self-center" variant={'link'}>
+      <Button onClick={setIsModalOpen} className="self-center" variant={"link"}>
         Show welcome message
       </Button>
     </div>
