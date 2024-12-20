@@ -17,7 +17,7 @@ echo "Updating updates file"
 #? Update the version
 sed -i "" "s/$LATEST_VERSION/$VERSION/g" "./updates.json"
 #? Update the signature 
-sed -i "" "s/\"signature\":.*/\"signature\": \"$UPDATE_SIG\",/" "./updates.json"
+sed -i "" "s/\"signature\":.*/\"signature\": \"$UPDATE_SIG\",/g" "./updates.json"
 #? Update the publish date 
 sed -i "" "s/\"pub_date\":.*/\"pub_date\": \"$PUBLISH_DATE\",/" "./updates.json"
 
