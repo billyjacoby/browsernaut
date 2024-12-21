@@ -1,3 +1,3 @@
-export * from './themeDataSlice';
-export * from './config';
-export * from './actions';
+export * from "./actions";
+export * from "./config";
+export * from "./themeDataSlice";

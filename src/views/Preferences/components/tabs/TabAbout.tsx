@@ -1,3 +1,5 @@
+import React from "react";
+
 import Button from "@components/Button";
 import { Browsernaut } from "@components/Logo";
 import { HOMEPAGE_URL, ISSUES_URL } from "@config/CONSTANTS";
@@ -5,7 +7,6 @@ import { useAppDataStore } from "@stores/appDataStore";
 import { getVersion } from "@tauri-apps/api/app";
 import { confirm } from "@tauri-apps/api/dialog";
 import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
-import React from "react";
 
 const BUTTON_UPDATE_STRING = "Check for update";
 
@@ -38,7 +39,7 @@ export const TabAbout = () => {
       const updateResult = await checkUpdate();
       if (updateResult.shouldUpdate) {
         const result = await confirm(
-          "There is an update available. Would you like to update now?"
+          "There is an update available. Would you like to update now?",
         );
         //? This isn't working as expected, the promise seems to never resolve if the user clicks no.
         clearTimeout(resetTimeout);
@@ -59,23 +60,23 @@ export const TabAbout = () => {
   };
 
   return (
-    <div className="flex flex-col flex-1 text-center gap-1 h-full">
+    <div className="flex h-full flex-1 flex-col gap-1 text-center">
       <Browsernaut />
       <p className="mb-8 text-xl">Browser picker built for macOS</p>
       <p className="mb-2 opacity-70">Version {version || "loading."}</p>
       <Button
-        onClick={checkForUpdate}
-        disabled={isCheckingForUpdate}
         className="mb-8 self-center"
+        disabled={isCheckingForUpdate}
+        onClick={checkForUpdate}
       >
         {updateButtonContent}
       </Button>
-      <div className="gap-4 mt-auto mb-8">
+      <div className="mb-8 mt-auto gap-4">
         <p>Copyright © Billy Jacoby</p>
-        <Button variant={"link"} onClick={() => openURL({ URL: HOMEPAGE_URL })}>
+        <Button onClick={() => openURL({ URL: HOMEPAGE_URL })} variant={"link"}>
           Homepage
         </Button>
-        <Button variant={"link"} onClick={() => openURL({ URL: ISSUES_URL })}>
+        <Button onClick={() => openURL({ URL: ISSUES_URL })} variant={"link"}>
           Report an Issue
         </Button>
       </div>

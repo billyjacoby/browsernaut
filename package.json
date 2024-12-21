@@ -7,8 +7,8 @@
     "app:version": "echo $npm_package_version",
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:debug": "dotenv -- yarn tauri build --debug --target universal-apple-darwin",
-    "build:release": "dotenv -- yarn tauri build --target universal-apple-darwin",
+    "build:debug": "dotenv -- pnpm tauri build --debug --target universal-apple-darwin",
+    "build:release": "dotenv -- pnpm tauri build --target universal-apple-darwin",
     "sign": "dotenv ./bin/apple.sh",
     "preview": "vite preview",
     "tauri": "tauri",
@@ -40,6 +40,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@billyjacoby/eslint-config": "^8.57.1",
     "@tauri-apps/cli": "^1.6.3",
     "@types/node": "^22.10.2",
     "@types/react": "19.0.2",
@@ -52,6 +53,7 @@
     "dotenv": "^16.4.7",
     "dotenv-cli": "^7.4.4",
     "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-unused-imports": "^4.1.4",
@@ -63,12 +65,12 @@
   },
   "release-it": {
     "hooks": {
-      "after:bump": "yarn auto-changelog -p && VERSION=${version} LATEST_VERSION=${latestVersion} ./bin/post-bump.sh"
+      "after:bump": "pnpm auto-changelog -p && VERSION=${version} LATEST_VERSION=${latestVersion} ./bin/post-bump.sh"
     },
     "git": {
       "pushBranch": "release-v${version}",
       "commitMessage": "chore: release v${version}",
-      "changelog": "yarn auto-changelog -p && git add CHANGELOG.md",
+      "changelog": "pnpm auto-changelog -p && git add CHANGELOG.md",
       "tagName": "v${version}"
     },
     "github": {
@@ -82,6 +84,5 @@
         "./src-tauri/target/universal-apple-darwin/release/bundle/macos/Browsernaut.app.tar.gz"
       ]
     }
-  },
-  "packageManager": "yarn@4.0.1"
+  }
 }

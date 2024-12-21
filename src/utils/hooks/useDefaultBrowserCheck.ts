@@ -1,20 +1,21 @@
-import { invoke } from '@tauri-apps/api';
-import { message } from '@tauri-apps/api/dialog';
-import { getCurrent } from '@tauri-apps/api/window';
-import React from 'react';
+import React from "react";
+
+import { invoke } from "@tauri-apps/api";
+import { message } from "@tauri-apps/api/dialog";
+import { getCurrent } from "@tauri-apps/api/window";
 
 export const useDefaultBrowserCheck = () => {
   const [isDefaultBrowser, setIsDefaultBrowser] = React.useState<
-    null | boolean
+    boolean | null
   >(null);
   const [isDefaultBrowserLoading, setIsDefaultBrowserLoading] =
     React.useState(false);
 
-  const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = React.useRef<null | ReturnType<typeof setTimeout>>(null);
   const intervalChecksRef = React.useRef<number>(0);
 
   const checkForDefaultBrowser = async () => {
-    const _isDefaultBrowser = await invoke<boolean>('is_default_browser');
+    const _isDefaultBrowser = await invoke<boolean>("is_default_browser");
     if (_isDefaultBrowser) {
       setIsDefaultBrowserLoading(false);
     }
@@ -24,12 +25,12 @@ export const useDefaultBrowserCheck = () => {
   const setDefaultBrowser = async () => {
     // Check if default once first:
     checkForDefaultBrowser();
-    const result = await invoke<boolean>('make_default_browser');
+    const result = await invoke<boolean>("make_default_browser");
     if (result) {
       setIsDefaultBrowserLoading(true);
     } else {
       message(
-        'Could not set default browser. Open the settings app to proceed.'
+        "Could not set default browser. Open the settings app to proceed.",
       );
     }
   };
@@ -62,5 +63,5 @@ export const useDefaultBrowserCheck = () => {
     }
   }, [isDefaultBrowser, isDefaultBrowserLoading]);
 
-  return { isDefaultBrowser, checkForDefaultBrowser, setDefaultBrowser };
+  return { checkForDefaultBrowser, isDefaultBrowser, setDefaultBrowser };
 };

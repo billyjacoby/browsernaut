@@ -1,5 +1,3 @@
-import clsx from "clsx";
-
 import { Input } from "@components/Input";
 import { Spinner } from "@components/Spinner";
 import type { InstalledApp } from "@config/apps";
@@ -13,44 +11,45 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 import { useAppDataStore } from "@stores/appDataStore";
+import clsx from "clsx";
 
 // https://getfrontrunner.com
 
 interface SortableItemProps {
+  icon?: string;
+  iconString?: string;
   id: InstalledApp["name"];
+  index: number;
+  keyCode?: string;
   name: InstalledApp["name"];
   provided: DraggableProvided;
   snapshot: DraggableStateSnapshot;
-  index: number;
-  icon?: string;
-  keyCode?: string;
-  iconString?: string;
 }
 
 const SortableItem = ({
+  iconString,
   id,
-  name,
-  keyCode = "",
   index,
+  keyCode = "",
+  name,
   provided,
   snapshot,
-  iconString,
 }: SortableItemProps) => {
   const updateHotCode = useAppDataStore((state) => state.updateHotCode);
   return (
     <div
-      style={{ transition: "all" }}
       ref={provided.innerRef}
+      style={{ transition: "all" }}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={clsx(
-        "w-[95%] rounded-md p-0.5 mx-auto",
+        "mx-auto w-[95%] rounded-md p-0.5",
         BG_GRADIENT,
         "flex",
         "mb-4",
-        "focus-visible:bg-white/70 focus-visible:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-500 focus-visible:bg-black",
+        "focus-visible:bg-black focus-visible:shadow-xl focus-visible:outline-none",
         snapshot.isDragging && BG_GRADIENT_ACTIVE,
-        "focus-visible:ring-2 focus-visible:ring-gray-100"
+        "focus-visible:ring-2 focus-visible:ring-gray-100",
       )}
     >
       <div
@@ -59,13 +58,13 @@ const SortableItem = ({
           "w-full",
           "rounded-md",
           "transition-all",
-          !snapshot.isDragging && "bg-background/40 transition-all"
+          !snapshot.isDragging && "bg-background/40 transition-all",
         )}
       >
         <div className="flex w-16 items-center justify-center p-4">
           {index + 1}
         </div>
-        <div className="flex h-14 w-14 mr-4 my-auto align-middle">
+        <div className="my-auto mr-4 flex size-14 align-middle">
           <img src={iconString} />
         </div>
         <div className="flex grow items-center">
@@ -135,18 +134,18 @@ export function TabApps() {
           <Droppable droppableId="droppable">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {apps.map(({ name, hotCode, icon }, index) => (
-                  <Draggable key={name} draggableId={name} index={index}>
-                    {(provided, snapshot) => (
+                {apps.map(({ hotCode, icon, name }, index) => (
+                  <Draggable draggableId={name} index={index} key={name}>
+                    {(p, snapshot) => (
                       <SortableItem
-                        key={name}
+                        iconString={icon ?? ""}
                         id={name}
                         index={index}
+                        key={name}
                         keyCode={hotCode || ""}
                         name={name}
-                        provided={provided}
+                        provided={p}
                         snapshot={snapshot}
-                        iconString={icon ?? ""}
                       />
                     )}
                   </Draggable>

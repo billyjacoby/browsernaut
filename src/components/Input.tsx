@@ -1,27 +1,29 @@
-import clsx from 'clsx';
+import React from "react";
 
-interface InputProps extends React.ComponentPropsWithoutRef<'input'> {
+import clsx from "clsx";
+
+interface InputProps extends React.ComponentPropsWithoutRef<"input"> {
   className?: string;
   error?: boolean;
 }
 
 export const Input = ({ className, error, ...restProperties }: InputProps) => {
   const defaultClassNames = clsx(
-    'rounded',
-    'font-medium',
-    'min-w-0 text-center',
-    'focus:bg-white/70 focus:shadow-xl focus:outline-none focus:ring-1 focus:bg-black',
-    'shadow-sm bg-foreground/60',
-    'placeholder:text-background/50',
-    'text-background',
-    className
+    "rounded",
+    "font-medium",
+    "min-w-0 text-center",
+    "focus:bg-black focus:shadow-xl focus:outline-none focus:ring-1",
+    "bg-foreground/60 shadow-sm",
+    "placeholder:text-background/50",
+    "text-background",
+    className,
   );
   if (error) {
     return (
       <input
         className={clsx(
           defaultClassNames,
-          'outline outline-destructive outline-offset-0 text-destructive'
+          "text-destructive outline outline-offset-0 outline-destructive",
         )}
         {...restProperties}
       />
@@ -34,7 +36,7 @@ export const Input = ({ className, error, ...restProperties }: InputProps) => {
   );
 };
 
-interface LabelProps extends React.ComponentPropsWithoutRef<'label'> {
+interface LabelProps extends React.ComponentPropsWithoutRef<"label"> {
   className?: string;
 }
 export const Label = ({ className, ...resProperties }: LabelProps) => {

@@ -1,26 +1,27 @@
-import React from 'react';
-import { getCurrent } from '@tauri-apps/api/window';
-import { PreferencesView, AppPicker } from '@views/index';
-import { Store } from 'tauri-plugin-store-api';
-import { useAppDataStore } from '@stores/appDataStore';
-import { invoke } from '@tauri-apps/api';
-import { useIsDarkMode } from '@utils/hooks/useIsDarkMode';
+import React from "react";
+
+import { useAppDataStore } from "@stores/appDataStore";
+import { invoke } from "@tauri-apps/api";
+import { getCurrent } from "@tauri-apps/api/window";
+import { useIsDarkMode } from "@utils/hooks/useIsDarkMode";
+import { AppPicker, PreferencesView } from "@views/index";
+import { Store } from "tauri-plugin-store-api";
 
 // https://google.com
 
 export enum WindowLabelEnum {
-  PREFS = 'preferences_window',
-  PICKER = 'picker_window',
+  PICKER = "picker_window",
+  PREFS = "preferences_window",
 }
 
 function App() {
   const currentWindow: WindowLabelEnum = getCurrent().label as WindowLabelEnum;
-  const store = new Store('.settings.dat');
+  const store = new Store(".settings.dat");
   useIsDarkMode();
 
   const updateUrl = useAppDataStore((state) => state.updateURL);
   const hasSeenWelcomeMessage = useAppDataStore(
-    (state) => state.hasSeenWelcomeMessage
+    (state) => state.hasSeenWelcomeMessage,
   );
 
   const storedInstalledApps = useAppDataStore((state) => state.installedApps);
@@ -28,7 +29,7 @@ function App() {
 
   React.useEffect(() => {
     (async () => {
-      const storedURL: string | null = await store.get('URL');
+      const storedURL: null | string = await store.get("URL");
       if (storedURL) {
         updateUrl(storedURL);
       }
@@ -44,7 +45,7 @@ function App() {
   React.useEffect(() => {
     if (!hasSeenWelcomeMessage) {
       // SHow the Prefs view with the welcome modal
-      invoke('open_preferences_window');
+      invoke("open_preferences_window");
     }
   }, [hasSeenWelcomeMessage]);
 
@@ -55,7 +56,7 @@ function App() {
     return <AppPicker />;
   }
 
-  console.error('Unknown window label: ', currentWindow);
+  console.error("Unknown window label: ", currentWindow);
   return null;
 }
 

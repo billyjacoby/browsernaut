@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
 // TODO: update with vim bindings and other arrow keys
 export enum ListenedKeyboardCodes {
-  enter = 'Enter',
-  down = 'ArrowDown',
-  up = 'ArrowUp',
-  left = 'ArrowLeft',
-  right = 'ArrowRight',
-  space = 'Space',
-  escape = 'Escape',
+  down = "ArrowDown",
+  enter = "Enter",
+  escape = "Escape",
+  left = "ArrowLeft",
+  right = "ArrowRight",
+  space = "Space",
+  up = "ArrowUp",
 }
 
 export const useIsKeyPressed = (targetKey: ListenedKeyboardCodes) => {
@@ -32,12 +32,12 @@ export const useIsKeyPressed = (targetKey: ListenedKeyboardCodes) => {
 
   // Add event listeners
   React.useEffect(() => {
-    window.addEventListener('keydown', downHandler);
-    window.addEventListener('keyup', upHandler);
+    window.addEventListener("keydown", downHandler);
+    window.addEventListener("keyup", upHandler);
     // Remove event listeners on cleanup
     return () => {
-      window.removeEventListener('keydown', downHandler);
-      window.removeEventListener('keyup', upHandler);
+      window.removeEventListener("keydown", downHandler);
+      window.removeEventListener("keyup", upHandler);
     };
   }, []); // Empty array ensures that effect is only run on mount and unmount
   return keyPressed;

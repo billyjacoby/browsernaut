@@ -4,7 +4,7 @@
 ##? updates.json file with the tar.gz.sig provided. Have to figure out how to target the previous version number here though
 
 echo "Building release..."
-yarn build:release
+pnpm build:release
 
 export UPDATE_SIG_FILE="./src-tauri/target/universal-apple-darwin/release/bundle/macos/Browsernaut.app.tar.gz.sig"
 export UPDATE_SIG=$(cat $UPDATE_SIG_FILE)

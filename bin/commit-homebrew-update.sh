@@ -3,7 +3,7 @@
 #? The intention with this file is to eventually automate the update of the Homebrew tap 
 #? but this can't happen until app builds are able to be completed in a GH action
 
-VERSION=$(yarn app:version)
+VERSION=$(pnpm app:version)
 echo "$VERSION"
 
 export SHA_SUM=($(shasum -a 256 ./src-tauri/target/universal-apple-darwin/release/bundle/dmg/Browsernaut_${VERSION}_universal.dmg))

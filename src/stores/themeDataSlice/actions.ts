@@ -1,8 +1,16 @@
 import { HSLColor } from "react-color";
+
 import { defaultDarkTheme, defaultLightTheme, variableVals } from "./config";
+import {
+  AppTheme,
+  CustomTheme,
+  ThemeGetter,
+  ThemeSetter,
+  ThemeVariable,
+} from "./types";
 
 const HSLToCSSValue = (cv: HSLColor): string => {
-  const { h, s, l } = cv;
+  const { h, l, s } = cv;
   return `${h} ${s}% ${l}%`;
 };
 
@@ -11,20 +19,20 @@ const CSSToHSLValue = (css: string): HSLColor => {
 
   return {
     h: parseFloat(values[0]),
-    s: parseFloat(values[1]),
     l: parseFloat(values[2]),
+    s: parseFloat(values[1]),
   };
 };
 
 export const getCurrentCSSTheme = (): CustomTheme => {
   const currentTheme: CustomTheme = JSON.parse(
-    JSON.stringify(defaultLightTheme)
+    JSON.stringify(defaultLightTheme),
   );
   currentTheme.name = "current";
   if (document && document?.documentElement) {
     for (const value of variableVals) {
       const cssVal = getComputedStyle(
-        document.documentElement
+        document.documentElement,
       ).getPropertyValue(value);
       if (currentTheme?.themeVariableMap[value]?.value) {
         currentTheme.themeVariableMap[value].value = CSSToHSLValue(cssVal);
@@ -36,7 +44,7 @@ export const getCurrentCSSTheme = (): CustomTheme => {
 
 export const setCSSVariable = (
   themeVar: ThemeVariable,
-  querySelector: string | null
+  querySelector: null | string,
 ) => {
   if (typeof document !== "undefined") {
     const cssString = HSLToCSSValue(themeVar.value);
@@ -64,7 +72,7 @@ export const setCSSVariable = (
     } else {
       document.documentElement.style.setProperty(
         themeVar.cssVarName,
-        cssString
+        cssString,
       );
     }
   }
@@ -74,7 +82,7 @@ export const addCustomTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
   themeName: string,
-  baseTheme?: CustomTheme
+  baseTheme?: CustomTheme,
 ) => {
   const newCustomThemes = get().customThemes.map((theme) => ({
     ...theme,
@@ -118,11 +126,11 @@ export const addCustomTheme = (
 export const deleteCustomTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
-  themeName: string
+  themeName: string,
 ) => {
-  const { customThemes, activeCustomTheme } = get();
+  const { activeCustomTheme, customThemes } = get();
   const newCustomThemes = customThemes.filter(
-    (ct) => ct.name.toLowerCase() !== themeName.toLowerCase()
+    (ct) => ct.name.toLowerCase() !== themeName.toLowerCase(),
   );
 
   if (activeCustomTheme.name.toLowerCase() === themeName.toLowerCase()) {
@@ -139,7 +147,7 @@ export const deleteCustomTheme = (
 };
 
 export const getActiveCustomTheme = (set: ThemeSetter, get: ThemeGetter) => {
-  const { customThemes, activeCustomTheme } = get();
+  const { activeCustomTheme, customThemes } = get();
   let newActiveTheme = activeCustomTheme;
 
   //? If for some reason there aren't any custom themes, add the default one
@@ -157,7 +165,7 @@ export const getActiveCustomTheme = (set: ThemeSetter, get: ThemeGetter) => {
 
 export const setCSSVariablesFromTheme = (
   customTheme: CustomTheme,
-  querySelector?: string
+  querySelector?: string,
 ) => {
   const { themeVariableMap } = customTheme;
   for (const [_key, value] of Object.entries(themeVariableMap)) {
@@ -169,7 +177,7 @@ export const updateCustomTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
   customTheme: CustomTheme,
-  updates?: ThemeVariable[]
+  updates?: ThemeVariable[],
 ) => {
   //? If we're updating the default theme we actually want to clone it to another theme instead
   const newCustomTheme: CustomTheme = JSON.parse(JSON.stringify(customTheme));
@@ -199,7 +207,7 @@ export const updateCustomTheme = (
       if (parent.inherits?.length) {
         newCustomTheme.themeVariableMap[currentValue.inheritedFrom].inherits =
           parent.inherits.filter(
-            (varName) => varName !== currentValue.inheritedFrom
+            (varName) => varName !== currentValue.inheritedFrom,
           );
       }
       delete currentValue.inheritedFrom;
@@ -246,7 +254,7 @@ export const updateCustomTheme = (
 export const setAppTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
-  appTheme?: AppTheme
+  appTheme?: AppTheme,
 ) => {
   if (appTheme === "custom") {
     const activeCustomTheme = getActiveCustomTheme(set, get);
@@ -257,7 +265,7 @@ export const setAppTheme = (
 
 export const setActiveCustomTheme = (
   set: ThemeSetter,
-  customTheme: CustomTheme
+  customTheme: CustomTheme,
 ) => {
   setCSSVariablesFromTheme(customTheme);
   set({ activeCustomTheme: customTheme });
@@ -267,7 +275,7 @@ export const renameCustomTheme = (
   set: ThemeSetter,
   get: ThemeGetter,
   customTheme: CustomTheme,
-  newName: string
+  newName: string,
 ) => {
   const { activeCustomTheme, customThemes } = get();
   const newCustomTheme: CustomTheme = JSON.parse(JSON.stringify(customTheme));

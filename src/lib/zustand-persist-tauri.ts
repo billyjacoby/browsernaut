@@ -1,13 +1,13 @@
+import { Store } from "tauri-plugin-store-api";
 import {
   createJSONStorage,
-  StateStorage,
   PersistStorage,
-} from 'zustand/middleware';
-import { Store } from 'tauri-plugin-store-api';
+  StateStorage,
+} from "zustand/middleware";
 
 export const tauriPersistStorage = <T>({
   appDataKey,
-  storeLocation = 'settings.dat',
+  storeLocation = "settings.dat",
 }: {
   appDataKey: string;
   storeLocation: string;
@@ -47,14 +47,14 @@ export const tauriPersistStorage = <T>({
   };
 
   const storage: StateStorage = {
-    getItem: async (name: string): Promise<string | null> => {
+    getItem: async (name: string): Promise<null | string> => {
       return get(name) || null;
-    },
-    setItem: async (name: string, value: string): Promise<void> => {
-      await set(name, value);
     },
     removeItem: async (name: string): Promise<void> => {
       await del(name);
+    },
+    setItem: async (name: string, value: string): Promise<void> => {
+      await set(name, value);
     },
   };
   return createJSONStorage(() => storage);

@@ -1,1 +1,1 @@
-export { AppPicker } from './AppPicker';
+export { AppPicker } from "./AppPicker";

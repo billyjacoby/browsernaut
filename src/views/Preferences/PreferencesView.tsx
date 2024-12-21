@@ -1,13 +1,17 @@
-import React from 'react';
-import { getCurrent } from '@tauri-apps/api/window';
-import { WelcomeModal } from './components/WelcomeModal';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/Tabs';
-import { DraggableTitleBar } from '@components/DraggableTitleBar';
-import { TabGeneral } from './components/tabs/TabGeneral';
-import { TabApps } from './components/tabs/TabApps';
-import { TabAbout } from './components/tabs/TabAbout';
-import { useAppDataStore } from '@stores/appDataStore';
-import { TabThemes } from './components/tabs/TabThemes';
+import React from "react";
+
+import { DraggableTitleBar } from "@components/DraggableTitleBar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/Tabs";
+import { useAppDataStore } from "@stores/appDataStore";
+import { getCurrent } from "@tauri-apps/api/window";
+
+import { PrefsTab } from "@/types";
+
+import { TabAbout } from "./components/tabs/TabAbout";
+import { TabApps } from "./components/tabs/TabApps";
+import { TabGeneral } from "./components/tabs/TabGeneral";
+import { TabThemes } from "./components/tabs/TabThemes";
+import { WelcomeModal } from "./components/WelcomeModal";
 
 export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(!!newUser);
@@ -25,15 +29,15 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
     <>
       <DraggableTitleBar height={36} />
       <div
-        className="flex-col flex-1 h-full"
-        style={{ height: 'calc(100vh - 36px)' }}
+        className="h-full flex-1 flex-col"
+        style={{ height: "calc(100vh - 36px)" }}
       >
         <Tabs
-          value={prefsTab}
+          className="flex h-full flex-col"
           onValueChange={(tabName) => updatePrefsTab(tabName as PrefsTab)}
-          className="flex flex-col h-full"
+          value={prefsTab}
         >
-          <TabsList className="self-center mb-6 gap-4">
+          <TabsList className="mb-6 gap-4 self-center">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="apps">Apps</TabsTrigger>
             <TabsTrigger value="theme">Theme</TabsTrigger>
@@ -55,8 +59,8 @@ export const PreferencesView = ({ newUser }: { newUser?: boolean }) => {
       </div>
       {isModalOpen && (
         <WelcomeModal
-          isOpen={isModalOpen}
           close={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}
         />
       )}
     </>
