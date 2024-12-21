@@ -1,6 +1,6 @@
 interface App {
-  privateArg?: string;
   convertUrl?: (url: string) => string;
+  privateArg?: string;
 }
 
 const typeApps = <T extends Record<string, App>>(apps: T) => apps;
@@ -8,142 +8,142 @@ const typeApps = <T extends Record<string, App>>(apps: T) => apps;
 export const apps = typeApps({
   Arc: {},
   Blisk: {},
-  'Brave Browser': {
-    privateArg: '--incognito',
+  "Brave Browser": {
+    privateArg: "--incognito",
   },
-  'Brave Browser Beta': {
-    privateArg: '--incognito',
+  "Brave Browser Beta": {
+    privateArg: "--incognito",
   },
-  'Brave Browser Nightly': {
-    privateArg: '--incognito',
+  "Brave Browser Nightly": {
+    privateArg: "--incognito",
   },
-  'Brave Dev': {
-    privateArg: '--incognito',
+  "Brave Dev": {
+    privateArg: "--incognito",
   },
   Chromium: {
-    privateArg: '--incognito',
+    privateArg: "--incognito",
   },
   Discord: {
     convertUrl: (url) =>
       url.replace(
         /^https?:\/\/(?:(?:ptb|canary)\.)?discord\.com\//u,
-        'discord://-/'
+        "discord://-/",
       ),
   },
-  'Discord Canary': {
+  "Discord Canary": {
     convertUrl: (url) =>
       url.replace(
         /^https?:\/\/(?:(?:ptb|canary)\.)?discord\.com\//u,
-        'discord://-/'
+        "discord://-/",
       ),
   },
-  'Discord PTB': {
+  "Discord PTB": {
     convertUrl: (url) =>
       url.replace(
         /^https?:\/\/(?:(?:ptb|canary)\.)?discord\.com\//u,
-        'discord://-/'
+        "discord://-/",
       ),
   },
   Dissenter: {},
   DuckDuckGo: {},
   Epic: {},
   Figma: {},
-  'Figma Beta': {},
+  "Figma Beta": {},
   Finicky: {},
   Firefox: {
-    privateArg: '--private-window',
+    privateArg: "--private-window",
   },
-  'Firefox Developer Edition': {
-    privateArg: '--private-window',
+  "Firefox Developer Edition": {
+    privateArg: "--private-window",
   },
-  'Firefox Nightly': {
-    privateArg: '--private-window',
+  "Firefox Nightly": {
+    privateArg: "--private-window",
   },
   Framer: {},
   FreeTube: {},
-  'Google Chrome': {
-    privateArg: '--incognito',
+  "Google Chrome": {
+    privateArg: "--incognito",
   },
-  'Google Chrome Beta': {
-    privateArg: '--incognito',
+  "Google Chrome Beta": {
+    privateArg: "--incognito",
   },
-  'Google Chrome Canary': {
-    privateArg: '--incognito',
+  "Google Chrome Canary": {
+    privateArg: "--incognito",
   },
-  'Google Chrome Dev': {
-    privateArg: '--incognito',
+  "Google Chrome Dev": {
+    privateArg: "--incognito",
   },
   IceCat: {
-    privateArg: '--private-window',
+    privateArg: "--private-window",
   },
   Iridium: {},
   Island: {},
   Lagrange: {},
   LibreWolf: {
-    privateArg: '--private-window',
+    privateArg: "--private-window",
   },
   Linear: {},
   Maxthon: {},
-  'Microsoft Edge': {},
-  'Microsoft Edge Beta': {},
-  'Microsoft Edge Canary': {},
-  'Microsoft Edge Dev': {},
-  'Microsoft Teams': {
+  "Microsoft Edge": {},
+  "Microsoft Edge Beta": {},
+  "Microsoft Edge Canary": {},
+  "Microsoft Edge Dev": {},
+  "Microsoft Teams": {
     convertUrl: (url) =>
-      url.replace('https://teams.microsoft.com/', 'msteams:/'),
+      url.replace("https://teams.microsoft.com/", "msteams:/"),
   },
   Min: {},
   Miro: {},
-  'Mullvad Browser': {
-    privateArg: '--private-window',
+  "Mullvad Browser": {
+    privateArg: "--private-window",
   },
-  'NAVER Whale': {},
+  "NAVER Whale": {},
   Notion: {},
   Opera: {},
-  'Opera Beta': {},
-  'Opera CD': {},
-  'Opera Crypto': {},
-  'Opera Dev': {},
-  'Opera Developer': {},
-  'Opera GX': {},
-  'Opera Neon': {},
+  "Opera Beta": {},
+  "Opera CD": {},
+  "Opera Crypto": {},
+  "Opera Dev": {},
+  "Opera Developer": {},
+  "Opera GX": {},
+  "Opera Neon": {},
   Orion: {},
-  'Orion RC': {},
+  "Orion RC": {},
   Pocket: {
     convertUrl: (url) => `pocket://add?url=${url}`,
   },
   Polypane: {},
   qutebrowser: {},
   Safari: {},
-  'Safari Technology Preview': {},
+  "Safari Technology Preview": {},
   Sidekick: {
-    privateArg: '--incognito',
+    privateArg: "--incognito",
   },
   SigmaOS: {},
   Sizzy: {},
   Slack: {},
   Spotify: {},
-  'Tor Browser': {},
+  "Tor Browser": {},
   Twitter: {},
   Ulaa: {
-    privateArg: '--incognito',
+    privateArg: "--incognito",
   },
   Vivaldi: {},
-  'Vivaldi Snapshot': {},
+  "Vivaldi Snapshot": {},
   Waterfox: {},
   Wavebox: {
-    privateArg: '--incognito',
+    privateArg: "--incognito",
   },
   Whist: {},
   Yandex: {},
   Yattee: {},
-  'zoom.us': {},
+  "zoom.us": {},
 });
 
 export type AppName = keyof typeof apps;
 
 export interface InstalledApp {
-  name: AppName;
-  hotCode: string | null;
+  hotCode: null | string;
   icon?: string;
+  name: AppName;
 }

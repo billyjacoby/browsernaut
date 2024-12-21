@@ -1,54 +1,59 @@
 import {
-  setCSSVariable as _setCSSVariable,
+  AppTheme,
+  CustomTheme,
+  ThemeGetter,
+  ThemeSetter,
+  ThemeVariable,
+} from "./types";
+
+import {
   addCustomTheme as _addCustomTheme,
-  getActiveCustomTheme as _getActiveCustomTheme,
-  setCSSVariablesFromTheme as _setCSSVariablesFromTheme,
-  updateCustomTheme as _updateCustomTheme,
-  setAppTheme as _setAppTheme,
   deleteCustomTheme as _deleteCustomTheme,
-  setActiveCustomTheme as _setActiveCustomTheme,
   getCurrentCSSTheme as _getCurrentCSSTheme,
   renameCustomTheme as _renameCustomTheme,
+  setActiveCustomTheme as _setActiveCustomTheme,
+  setAppTheme as _setAppTheme,
+  updateCustomTheme as _updateCustomTheme,
   defaultDarkTheme,
   defaultLightTheme,
-} from '.';
+} from ".";
 
 export interface ThemeDataSlice {
-  appTheme: AppTheme;
-  customThemes: CustomTheme[];
   activeCustomTheme: CustomTheme;
   addCustomTheme: (N: string, CT?: CustomTheme) => void;
-  setAppTheme: (T?: AppTheme) => void;
+  appTheme: AppTheme;
+  customThemes: CustomTheme[];
   deleteCustomTheme: (T: string) => void;
-  setActiveCustomTheme: (CT: CustomTheme) => void;
-  updateCustomTheme: (T: CustomTheme, U?: ThemeVariable[]) => void;
+  getCurrentCSSTheme: () => CustomTheme;
   renameCustomTheme: (T: CustomTheme, S: string) => void;
   resetThemeState: () => void;
-  getCurrentCSSTheme: () => CustomTheme;
+  setActiveCustomTheme: (CT: CustomTheme) => void;
+  setAppTheme: (T?: AppTheme) => void;
+  updateCustomTheme: (T: CustomTheme, U?: ThemeVariable[]) => void;
 }
 
 export const useThemeDataSlice = (set: ThemeSetter, get: ThemeGetter) => ({
-  appTheme: 'system' as AppTheme,
-  customThemes: [],
   activeCustomTheme: defaultLightTheme,
-  renameCustomTheme: (customTheme: CustomTheme, newName: string) =>
-    _renameCustomTheme(set, get, customTheme, newName),
-  setActiveCustomTheme: (activeCustomTheme: CustomTheme) =>
-    _setActiveCustomTheme(set, activeCustomTheme),
   addCustomTheme: (themeName: string, baseTheme?: CustomTheme) =>
     _addCustomTheme(set, get, themeName, baseTheme),
+  appTheme: "system" as AppTheme,
+  customThemes: [],
   deleteCustomTheme: (themeName: string) =>
     _deleteCustomTheme(set, get, themeName),
+  getCurrentCSSTheme: () => _getCurrentCSSTheme(),
+  renameCustomTheme: (customTheme: CustomTheme, newName: string) =>
+    _renameCustomTheme(set, get, customTheme, newName),
+  resetThemeState: () =>
+    set({
+      activeCustomTheme: defaultDarkTheme,
+      appTheme: "system",
+      customThemes: [defaultDarkTheme, defaultLightTheme],
+    }),
+  setActiveCustomTheme: (activeCustomTheme: CustomTheme) =>
+    _setActiveCustomTheme(set, activeCustomTheme),
   setAppTheme: (appTheme?: AppTheme) => _setAppTheme(set, get, appTheme),
   updateCustomTheme: (customTheme: CustomTheme, updates?: ThemeVariable[]) =>
     _updateCustomTheme(set, get, customTheme, updates),
-  resetThemeState: () =>
-    set({
-      appTheme: 'system',
-      customThemes: [defaultDarkTheme, defaultLightTheme],
-      activeCustomTheme: defaultDarkTheme,
-    }),
-  getCurrentCSSTheme: () => _getCurrentCSSTheme(),
 });
 
 //! Gives me a "Cannot access uninitialized variable error when trying to use this"

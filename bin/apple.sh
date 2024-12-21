@@ -19,7 +19,7 @@ profile_dev="src-tauri/entitlements/dev/embedded.provisionprofile";
 cp_dir="src-tauri/target/release/bundle/macOS/Browsernaut.app/Contents/";
 cp_dir_dev="src-tauri/target/release/bundle/macOS/Browsernaut-dev.app/Contents/";
 
-yarn run build:release;
+pnpm run build:release;
 cp -r "${app_path}" "${app_path_dev}"
 cp "${profile}" "${cp_dir}";
 cp "${profile_dev}" "${cp_dir_dev}";

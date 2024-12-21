@@ -5,7 +5,7 @@ export function openApp(
   appName: AppName,
   url: string,
   isAlt?: boolean,
-  isShift?: boolean
+  isShift?: boolean,
 ): void {
   const selectedApp = apps[appName];
 

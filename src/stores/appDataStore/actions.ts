@@ -1,29 +1,31 @@
-import { StoreApi } from 'zustand';
-import { InstalledApp } from '@config/apps';
-import { getInstalledAppNames } from '@utils/get-installed-app-names';
-import { AppDataStore } from './appDataStore';
-import { getAppIcons } from '@utils/get-app-icon';
-import { openApp } from '@utils/open-app';
-import { invoke } from '@tauri-apps/api';
-import { Store } from 'tauri-plugin-store-api';
+import { InstalledApp } from "@config/apps";
+import { invoke } from "@tauri-apps/api";
+import { getAppIcons } from "@utils/get-app-icon";
+import { getInstalledAppNames } from "@utils/get-installed-app-names";
+import { openApp } from "@utils/open-app";
+import { Store } from "tauri-plugin-store-api";
+import { StoreApi } from "zustand";
+
+import { AppDataStore } from "./appDataStore";
+import { OpenURLActionParams } from "./types";
 
 export const getInstalledApps = async (
-  set: StoreApi<AppDataStore>['setState'],
-  get: StoreApi<AppDataStore>['getState']
+  set: StoreApi<AppDataStore>["setState"],
+  get: StoreApi<AppDataStore>["getState"],
 ) => {
   const currentInstalledApps = get().installedApps;
 
   const currentInstalledAppNames = currentInstalledApps.map(
-    (item) => item.name
+    (item) => item.name,
   );
 
   const installedAppNames = await getInstalledAppNames();
 
   const installedNotStored = installedAppNames.filter(
-    (appName) => !currentInstalledAppNames.includes(appName)
+    (appName) => !currentInstalledAppNames.includes(appName),
   );
   const storedNotInstalled = currentInstalledAppNames.filter(
-    (appName) => !installedAppNames.includes(appName)
+    (appName) => !installedAppNames.includes(appName),
   );
 
   const newInstalledApps = [...currentInstalledApps];
@@ -31,7 +33,7 @@ export const getInstalledApps = async (
     //TODO: enhancement - add new apps at top of list
     // Add newly found apps here
     for (const appName of installedNotStored) {
-      newInstalledApps.push({ name: appName, hotCode: null });
+      newInstalledApps.push({ hotCode: null, name: appName });
     }
   }
 
@@ -44,7 +46,7 @@ export const getInstalledApps = async (
 
   const appIcons = await getAppIcons(
     newInstalledApps.map((app) => app.name),
-    256
+    256,
   );
 
   const newApps: InstalledApp[] = newInstalledApps.map((app, index) => ({
@@ -55,10 +57,10 @@ export const getInstalledApps = async (
 };
 
 export const updateHotCode = (
-  set: StoreApi<AppDataStore>['setState'],
-  get: StoreApi<AppDataStore>['getState'],
+  set: StoreApi<AppDataStore>["setState"],
+  get: StoreApi<AppDataStore>["getState"],
   name: string,
-  hotCode: string | null
+  hotCode: null | string,
 ) => {
   const apps = get().installedApps;
   const appIndex = apps.findIndex((a) => a.name === name);
@@ -73,27 +75,27 @@ export const updateHotCode = (
 };
 
 export const updateURL = async (
-  set: StoreApi<AppDataStore>['setState'],
-  URL: string
+  set: StoreApi<AppDataStore>["setState"],
+  URL: string,
 ) => {
-  const store = new Store('.settings.dat');
+  const store = new Store(".settings.dat");
 
-  await store.set('URL', URL);
+  await store.set("URL", URL);
   await store.save();
   set({ URL });
 };
 
 export const openURL = async (
-  set: StoreApi<AppDataStore>['setState'],
-  get: StoreApi<AppDataStore>['getState'],
+  set: StoreApi<AppDataStore>["setState"],
+  get: StoreApi<AppDataStore>["getState"],
   {
-    URL,
-    app,
-    shiftPressed,
     altPressed,
-    onSuccess,
+    app,
     onError,
-  }: OpenURLActionParams
+    onSuccess,
+    shiftPressed,
+    URL,
+  }: OpenURLActionParams,
 ) => {
   // eslint-disable-next-line prefer-const
   const localURL = get().URL;
@@ -107,7 +109,7 @@ export const openURL = async (
 
   if (!app) {
     //? Allows for passing in arbitrary URLs
-    invoke('open_picker_window');
+    invoke("open_picker_window");
     return;
   }
 
@@ -115,7 +117,7 @@ export const openURL = async (
     openApp(app.name, URL, altPressed, shiftPressed);
     onSuccess?.();
   } else {
-    console.warn('no URL found');
-    onError?.('No URL found');
+    console.warn("no URL found");
+    onError?.("No URL found");
   }
 };

@@ -1,27 +1,28 @@
-import { hslToHex } from "@utils/hsl-to-hex";
 import React from "react";
-import { ColorResult, SketchPicker } from "react-color";
 
 import { useAppDataStore } from "@stores/appDataStore";
+import { CustomTheme, ThemeVariable } from "@stores/themeDataSlice/types";
+import { hslToHex } from "@utils/hsl-to-hex";
+import { ColorResult, SketchPicker } from "react-color";
 
 interface ColorPickerProps {
-  themeVar: ThemeVariable;
-  beforeChange: () => void;
   //? This actually should never be null
   activeTheme: CustomTheme | null;
+  beforeChange: () => void;
+  themeVar: ThemeVariable;
 }
 
 export const ColorPicker = ({
-  themeVar,
+  activeTheme,
 
   beforeChange,
-  activeTheme,
+  themeVar,
 }: ColorPickerProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [localColor, setLocalColor] = React.useState(themeVar.value);
 
-  const wrapperRef = React.useRef<null | HTMLDivElement>(null);
-  const buttonRef = React.useRef<null | HTMLButtonElement>(null);
+  const wrapperRef = React.useRef<HTMLDivElement | null>(null);
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
 
   const updateCustomTheme = useAppDataStore((state) => state.updateCustomTheme);
 
@@ -53,8 +54,8 @@ export const ColorPicker = ({
 
   const onColorChange = (color: ColorResult) => {
     beforeChange();
-    const { h, s, l } = color.hsl;
-    const newVar = { ...themeVar, value: { h, s: s * 100, l: l * 100 } };
+    const { h, l, s } = color.hsl;
+    const newVar = { ...themeVar, value: { h, l: l * 100, s: s * 100 } };
 
     if (!activeTheme) {
       console.error("No active theme found.");
@@ -66,28 +67,28 @@ export const ColorPicker = ({
   return (
     <div className="relative">
       <button
-        className="h-8 w-8 rounded-sm border border-muted-foreground"
-        style={{ background: hexColor }}
+        className="size-8 rounded-sm border border-muted-foreground"
         onClick={onSwatchClick}
         ref={buttonRef}
+        style={{ background: hexColor }}
       />
       {isOpen && (
-        <div ref={wrapperRef} className="absolute z-10 right-2.5 top-9">
+        <div className="absolute right-2.5 top-9 z-10" ref={wrapperRef}>
           <SketchPicker
-            onChangeComplete={onColorChange}
             color={localColor}
-            styles={{
-              default: {
-                picker: { color: "black" },
-              },
-            }}
             onChange={(color) => {
               beforeChange();
               setLocalColor({
                 ...color.hsl,
-                s: color.hsl.s * 100,
                 l: color.hsl.l * 100,
+                s: color.hsl.s * 100,
               });
+            }}
+            onChangeComplete={onColorChange}
+            styles={{
+              default: {
+                picker: { color: "black" },
+              },
             }}
           />
         </div>

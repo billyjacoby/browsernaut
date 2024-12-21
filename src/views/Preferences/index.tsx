@@ -1,1 +1,1 @@
-export { PreferencesView } from './PreferencesView';
+export { PreferencesView } from "./PreferencesView";

@@ -12,18 +12,21 @@ jobs: # each workflow consists of 1+ jobs; by default, all jobs run in parallel
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20.x'
+
+      - name: Enable corepack
+        run: corepack enable
 
       - uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Run lint
-        run: yarn lint
+        run: pnpm lint
 
   typescript-check: # job name
     runs-on: ubuntu-latest # host's operating system
@@ -34,15 +37,18 @@ jobs: # each workflow consists of 1+ jobs; by default, all jobs run in parallel
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20.x'
+
+      - name: Enable corepack
+        run: corepack enable
 
       - uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Run tsc --noEmit
-        run: yarn type-check
+        run: pnpm type-check

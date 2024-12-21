@@ -1,5 +1,6 @@
-import React from 'react';
-import { WebviewWindow } from '@tauri-apps/api/window';
+import React from "react";
+
+import { WebviewWindow } from "@tauri-apps/api/window";
 
 export const useCloseOnUnfocus = (currentWindow: WebviewWindow) => {
   React.useEffect(() => {
@@ -9,7 +10,7 @@ export const useCloseOnUnfocus = (currentWindow: WebviewWindow) => {
           if (!focused) {
             currentWindow.close();
           }
-        }
+        },
       );
       return unlisten;
     })();

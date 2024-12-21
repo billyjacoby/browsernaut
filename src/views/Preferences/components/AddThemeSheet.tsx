@@ -1,40 +1,41 @@
-import React from 'react';
-import { Input, Label } from '@components/Input';
+import React from "react";
+
+import Button from "@components/Button";
+import { Input, Label } from "@components/Input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@components/ui/Select';
+} from "@components/ui/Select";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from '@components/ui/Sheet';
-import { useAppDataStore } from '@stores/appDataStore';
-import Button from '@components/Button';
+} from "@components/ui/Sheet";
+import { useAppDataStore } from "@stores/appDataStore";
 
 export const AddThemeSheet = ({
-  open,
   onOpenChange,
+  open,
 }: {
-  open: boolean;
   onOpenChange: (b: boolean) => void;
+  open: boolean;
 }) => {
   const allCustomThemes = useAppDataStore((state) => state.customThemes);
   const themeNameSet = new Set(
-    allCustomThemes.map((theme) => theme.name.toLowerCase())
+    allCustomThemes.map((theme) => theme.name.toLowerCase()),
   );
   const addCustomTheme = useAppDataStore((state) => state.addCustomTheme);
   const updatePrefsTab = useAppDataStore((state) => state.updatePrefsTab);
 
   const [baseTheme, setBaseTheme] = React.useState<string>(
-    allCustomThemes[0]?.name
+    allCustomThemes[0]?.name,
   );
-  const [themeName, setThemeName] = React.useState<string>('');
+  const [themeName, setThemeName] = React.useState<string>("");
   const [isNameError, setIsNameError] = React.useState(false);
 
   const validateThemeName = (name: string) => {
@@ -60,47 +61,47 @@ export const AddThemeSheet = ({
   const handleAddTheme = () => {
     const inheritedTheme = allCustomThemes.find((th) => th.name === baseTheme);
     if (!inheritedTheme) {
-      console.error('Base theme not found: ', baseTheme);
+      console.error("Base theme not found: ", baseTheme);
     } else {
       addCustomTheme(themeName, inheritedTheme);
       onOpenChange(false);
-      updatePrefsTab('theme');
+      updatePrefsTab("theme");
     }
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side={'bottom'} className="h-1/2">
-        <div className="w-1/2 mx-auto">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="h-1/2" side={"bottom"}>
+        <div className="mx-auto w-1/2">
           <SheetHeader>
             <SheetTitle>Add a new custom theme</SheetTitle>
             <SheetDescription>
-              <div className="grid grid-cols-6 w-full">
+              <div className="grid w-full grid-cols-6">
                 <span className="col-span-3"></span>
-                <span className="col-span-3 h-5 text-xs text-red-600 text-center">
-                  {isNameError && '*Theme name must be unique*'}
+                <span className="col-span-3 h-5 text-center text-xs text-red-600">
+                  {isNameError && "*Theme name must be unique*"}
                 </span>
-                <Label htmlFor="name" className="col-span-2">
+                <Label className="col-span-2" htmlFor="name">
                   Theme Name
                 </Label>
                 <span className="col-span-1" />
                 <Input
+                  className="col-span-3 mb-2 py-1.5"
                   error={isNameError}
-                  type="text"
-                  className="col-span-3 py-1.5 mb-2"
-                  placeholder="Unique theme name"
-                  value={themeName}
                   onChange={onThemeInputChange}
+                  placeholder="Unique theme name"
+                  type="text"
+                  value={themeName}
                 />
-                <Label htmlFor="base-theme" className="col-span-2">
+                <Label className="col-span-2" htmlFor="base-theme">
                   Base Theme
                 </Label>
                 <span className="col-span-1" />
                 <div className="col-span-3 mb-3">
                   <Select
                     name="base-theme"
-                    value={baseTheme}
                     onValueChange={(value) => setBaseTheme(value)}
+                    value={baseTheme}
                   >
                     <SelectTrigger className="w-[180px] capitalize">
                       <SelectValue defaultValue={baseTheme} />
@@ -108,7 +109,7 @@ export const AddThemeSheet = ({
                     <SelectContent className="capitalize">
                       {allCustomThemes.map((theme) => {
                         return (
-                          <SelectItem value={theme.name} key={theme.name}>
+                          <SelectItem key={theme.name} value={theme.name}>
                             {theme.name}
                           </SelectItem>
                         );

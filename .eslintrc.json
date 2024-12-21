@@ -1,44 +1,21 @@
 {
   "extends": [
-    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "@billyjacoby/eslint-config",
+    "prettier"
   ],
+  "env": {
+    "browser": true
+  },
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "unused-imports", "react", "react-hooks"],
-  "rules": {
-    "no-duplicate-imports": "error",
-    "no-template-curly-in-string": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "react/no-unescaped-entities": "warn",
-    "react-hooks/rules-of-hooks": "error",
-    "eqeqeq": "error",
-    "no-console": [
-      "warn",
-      {
-        "allow": ["error", "warn"]
-      }
-    ],
-    "prefer-const": "warn",
-    "no-await-in-loop": "warn"
-  },
   "overrides": [
     {
-      "files": "*",
+      "files": ["*.ts", "*.tsx"],
       "rules": {
-        "@next/next/no-img-element": "off",
-        "quotes": ["warn", "single", "avoid-escape"],
-        "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
-          "error",
-          {
-            "argsIgnorePattern": "^_",
-            "varsIgnorePattern": "^_"
-          }
-        ]
+        "no-console": "warn"
       }
     }
   ],

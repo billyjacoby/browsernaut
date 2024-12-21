@@ -17,9 +17,9 @@ export const HOMEPAGE_URL = "https://github.com/billyjacoby/browsernaut";
 export const colors = (() => {
   const theme = {
     background: "#1d1d1d",
-    text: "#d1d1d1",
     border: "#000",
     green: GREEN_HEX,
+    text: "#d1d1d1",
   };
   return theme;
 })();

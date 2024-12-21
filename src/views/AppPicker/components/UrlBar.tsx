@@ -1,7 +1,7 @@
-import { useAppDataStore } from '@stores/appDataStore';
+import { useAppDataStore } from "@stores/appDataStore";
 
 const UrlBar = () => {
-  const _URL = useAppDataStore((state) => state.URL) ?? '';
+  const _URL = useAppDataStore((state) => state.URL) ?? "";
   const openURL = useAppDataStore((state) => state.openURL);
 
   let parsedUrl;
@@ -9,18 +9,18 @@ const UrlBar = () => {
   try {
     parsedUrl = new URL(_URL);
   } catch {
-    parsedUrl = { hostname: '', port: '' };
+    parsedUrl = { hostname: "", port: "" };
   }
 
   return (
     <button
+      className="my-2"
       onClick={() => openURL({ URL: _URL })}
       onKeyDown={() => false}
       tabIndex={-1}
       type="button"
-      className="my-2"
     >
-      {parsedUrl.hostname?.replace(/^www\./u, '') || (
+      {parsedUrl.hostname?.replace(/^www\./u, "") || (
         <span className="">Browsernaut</span>
       )}
       {parsedUrl.port ? `:${parsedUrl.port}` : null}

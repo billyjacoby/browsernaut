@@ -1,19 +1,20 @@
-import { useAppDataStore } from '@stores/appDataStore';
-import React from 'react';
+import React from "react";
 
-import { appWindow } from '@tauri-apps/api/window';
-import { useSetCustomTheme } from './useSetCustomTheme';
+import { useAppDataStore } from "@stores/appDataStore";
+import { appWindow } from "@tauri-apps/api/window";
 
-const _systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-  ? 'dark'
-  : 'light';
+import { useSetCustomTheme } from "./useSetCustomTheme";
+
+const _systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+  ? "dark"
+  : "light";
 
 export const useIsDarkMode = () => {
   const appTheme = useAppDataStore((state) => state.appTheme);
   const { setCustomTheme } = useSetCustomTheme();
 
-  const [systemTheme, setSystemTheme] = React.useState<'dark' | 'light'>(
-    _systemTheme
+  const [systemTheme, setSystemTheme] = React.useState<"dark" | "light">(
+    _systemTheme,
   );
 
   React.useEffect(() => {
@@ -29,18 +30,18 @@ export const useIsDarkMode = () => {
   }, []);
 
   React.useEffect(() => {
-    if (appTheme === 'custom') {
+    if (appTheme === "custom") {
       setCustomTheme();
       // Set the theme as active here and update the css based on whats in local
     } else {
-      document.documentElement.classList.remove('custom');
+      document.documentElement.classList.remove("custom");
       if (
-        appTheme === 'dark' ||
-        (appTheme === 'system' && systemTheme === 'dark')
+        appTheme === "dark" ||
+        (appTheme === "system" && systemTheme === "dark")
       ) {
-        document.documentElement.classList.add('dark');
+        document.documentElement.classList.add("dark");
       } else {
-        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.remove("dark");
       }
     }
   }, [appTheme, systemTheme]);

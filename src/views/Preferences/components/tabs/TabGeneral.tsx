@@ -1,13 +1,13 @@
-import Button from "@components/Button";
-import { useAppDataStore } from "@stores/appDataStore";
+import React from "react";
 
+import Button from "@components/Button";
+import { Left, Right, Row } from "@components/ui/Layout";
 import { GREEN_RGB, PINK, PURPLE_RGB } from "@config/CONSTANTS";
+import { useAppDataStore } from "@stores/appDataStore";
 import { confirm, message } from "@tauri-apps/api/dialog";
 import { useDefaultBrowserCheck } from "@utils/hooks/useDefaultBrowserCheck";
-import React from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 
-import { Left, Right, Row } from "@components/ui/Layout";
 import { ThemeSelect } from "../ThemeSelect";
 
 export const TabGeneral = ({
@@ -20,14 +20,14 @@ export const TabGeneral = ({
 
   const resetAppData = useAppDataStore((state) => state.resetAppData);
 
-  const { isDefaultBrowser, checkForDefaultBrowser, setDefaultBrowser } =
+  const { checkForDefaultBrowser, isDefaultBrowser, setDefaultBrowser } =
     useDefaultBrowserCheck();
 
   const numberOfInstalledApps = installedApps.length;
 
   const onResetClick = async () => {
     const result = await confirm(
-      "Are you sure you wish to reset all of your preferences"
+      "Are you sure you wish to reset all of your preferences",
     );
     if (result) {
       resetAppData();
@@ -40,7 +40,7 @@ export const TabGeneral = ({
   }, [checkForDefaultBrowser]);
 
   return (
-    <div className="flex flex-col gap-8 content-center h-full overflow-y-auto">
+    <div className="flex h-full flex-col content-center gap-8 overflow-y-auto">
       <Row>
         <Left>Default browser:</Left>
         <Right>
@@ -100,7 +100,7 @@ export const TabGeneral = ({
       <Row>
         <ThemeSelect />
       </Row>
-      <Button onClick={setIsModalOpen} className="self-center" variant={"link"}>
+      <Button className="self-center" onClick={setIsModalOpen} variant={"link"}>
         Show welcome message
       </Button>
     </div>

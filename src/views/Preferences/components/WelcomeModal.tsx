@@ -1,24 +1,25 @@
 /* eslint-disable react/no-unescaped-entities */
-import Button from '@components/Button';
-import { useAppDataStore } from '@stores/appDataStore';
+import React from "react";
+
+import Button from "@components/Button";
+import { useAppDataStore } from "@stores/appDataStore";
 import {
   ListenedKeyboardCodes,
   useIsKeyPressed,
-} from '@utils/hooks/useIsKeyPressed';
-import React from 'react';
+} from "@utils/hooks/useIsKeyPressed";
 
 export const WelcomeModal = ({
-  isOpen,
   close,
+  isOpen,
 }: {
-  isOpen: boolean;
   close: () => void;
+  isOpen: boolean;
 }) => {
   const modalRef = React.useRef<HTMLDialogElement>(null);
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
 
   const clearWelcomeMessage = useAppDataStore(
-    (state) => state.clearWelcomeMessage
+    (state) => state.clearWelcomeMessage,
   );
 
   const handleCloseClick = () => {
@@ -45,8 +46,8 @@ export const WelcomeModal = ({
   }, [isOpen, isEscPressed, close]);
 
   return (
-    <dialog ref={modalRef} className="welcome-modal bg-muted text-foreground">
-      <h1 className="text-2xl font-bold mb-2">Welcome to Browsernaut!</h1>
+    <dialog className="welcome-modal bg-muted text-foreground" ref={modalRef}>
+      <h1 className="mb-2 text-2xl font-bold">Welcome to Browsernaut!</h1>
       <Paragraph>
         Browsernaut is an application picker for macOS that helps you to open
         links in the application of your choice.

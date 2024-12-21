@@ -1,9 +1,12 @@
+import React from "react";
+
 import Button from "@components/Button";
 import { Input } from "@components/Input";
 import { Left, Row } from "@components/ui/Layout";
 import { useAppDataStore } from "@stores/appDataStore";
+import { AppTheme } from "@stores/themeDataSlice/types";
 import { confirm } from "@tauri-apps/api/dialog";
-import React from "react";
+
 import { ColorPicker } from "../ColorPicker";
 
 export const TabThemes = () => {
@@ -16,11 +19,11 @@ export const TabThemes = () => {
   const resetThemeState = useAppDataStore((state) => state.resetThemeState);
 
   const themeNameSet = new Set(
-    allCustomThemes.map((theme) => theme.name.toLowerCase())
+    allCustomThemes.map((theme) => theme.name.toLowerCase()),
   );
 
   const [editedThemeName, setEditedThemeName] = React.useState(
-    activeCustomTheme.name
+    activeCustomTheme.name,
   );
   const [isEditing, setIsEditing] = React.useState(false);
   const [inputError, setInputError] = React.useState(false);
@@ -28,7 +31,7 @@ export const TabThemes = () => {
     activeCustomTheme.name === "default dark" ||
     activeCustomTheme.name === "default light";
 
-  const userTheme = React.useRef<null | AppTheme>(null);
+  const userTheme = React.useRef<AppTheme | null>(null);
 
   const { themeVariableMap } = activeCustomTheme;
 
@@ -49,7 +52,7 @@ export const TabThemes = () => {
   const onDeleteThemeClick = async () => {
     const shouldDelete = await confirm(
       "Are you sure you want to delete this theme?",
-      { type: "warning", title: "Delete Theme" }
+      { title: "Delete Theme", type: "warning" },
     );
     if (shouldDelete) {
       deleteCustomTheme(activeCustomTheme.name);
@@ -59,7 +62,7 @@ export const TabThemes = () => {
   const onResetThemeDataClick = async () => {
     const shouldReset = await confirm(
       "Are you sure you want to reset all theme data to the default?",
-      { type: "warning", title: "Reset Theme Data" }
+      { title: "Reset Theme Data", type: "warning" },
     );
     if (shouldReset) {
       resetThemeState();
@@ -103,16 +106,16 @@ export const TabThemes = () => {
   }, []);
 
   return (
-    <div className="flex flex-col flex-1 text-center gap-1 h-full">
+    <div className="flex h-full flex-1 flex-col gap-1 text-center">
       <h1 className="text-4xl font-bold">Theme Customizer</h1>
-      <p className="text-xl -mb-2">
+      <p className="-mb-2 text-xl">
         Currently editing:{" "}
         {isEditing ? (
           <Input
             error={inputError}
+            onChange={(e) => handleInputChange(e.target.value)}
             type="text"
             value={editedThemeName}
-            onChange={(e) => handleInputChange(e.target.value)}
           />
         ) : (
           <span className="font-bold capitalize">{activeCustomTheme.name}</span>
@@ -121,44 +124,44 @@ export const TabThemes = () => {
       {isEditing ? (
         <div>
           <Button
-            variant={"link"}
             disabled={!editedThemeName.length}
             onClick={handleThemeRename}
+            variant={"link"}
           >
             Save
           </Button>
           <Button
-            variant={"link"}
             onClick={() => {
               setEditedThemeName(activeCustomTheme.name);
               setIsEditing(false);
             }}
+            variant={"link"}
           >
             Cancel
           </Button>
         </div>
       ) : (
         <Button
-          variant={"link"}
           disabled={isRenameDisabled}
           onClick={() => setIsEditing((prev) => !prev)}
+          variant={"link"}
         >
           Rename
         </Button>
       )}
-      <div className="flex flex-row flex-1 justify-center overflow-y-auto mb-24">
+      <div className="mb-24 flex flex-1 flex-row justify-center overflow-y-auto">
         <div className="grid grid-cols-2">
           {themeVariableMap &&
             Object.entries(themeVariableMap).map(([_key, value]) => (
-              <Row key={value.cssVarName} className="col-span-1 p-3 m-1 gap-0">
+              <Row className="col-span-1 m-1 gap-0 p-3" key={value.cssVarName}>
                 <Left className="col-span-6">
                   <Label>{value.label}: </Label>
                 </Left>
                 <div className="col-span-5 text-right">
                   <ColorPicker
-                    themeVar={value}
-                    beforeChange={setCustomThemeTemp}
                     activeTheme={activeCustomTheme}
+                    beforeChange={setCustomThemeTemp}
+                    themeVar={value}
                   />
                 </div>
               </Row>
@@ -166,16 +169,16 @@ export const TabThemes = () => {
           <div className="col-span-2">
             <Button
               className="col-span-1 text-destructive"
-              variant={"link"}
-              onClick={onDeleteThemeClick}
               disabled={activeCustomTheme.name.toLowerCase() === "default"}
+              onClick={onDeleteThemeClick}
+              variant={"link"}
             >
               Delete Theme
             </Button>
             <Button
-              className="text-destructive col-span-1"
-              variant={"link"}
+              className="col-span-1 text-destructive"
               onClick={onResetThemeDataClick}
+              variant={"link"}
             >
               Reset Theme Data
             </Button>
@@ -187,5 +190,5 @@ export const TabThemes = () => {
 };
 
 const Label = ({ children }: { children: React.ReactNode }) => (
-  <p className="font-bold text-lg capitalize">{children}</p>
+  <p className="text-lg font-bold capitalize">{children}</p>
 );

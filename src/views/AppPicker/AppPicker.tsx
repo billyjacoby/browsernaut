@@ -1,3 +1,5 @@
+import React from "react";
+
 import { DraggableTitleBar } from "@components/DraggableTitleBar";
 import { Spinner } from "@components/Spinner";
 import { InstalledApp } from "@config/apps";
@@ -8,7 +10,7 @@ import {
   ListenedKeyboardCodes,
   useIsKeyPressed,
 } from "@utils/hooks/useIsKeyPressed";
-import React from "react";
+
 import { AppButton } from "./components/AppButton";
 import UrlBar from "./components/UrlBar";
 
@@ -23,9 +25,9 @@ export const AppPicker = () => {
 
   const isEscPressed = useIsKeyPressed(ListenedKeyboardCodes.escape);
 
-  const hotCodeMap = new Map<string | null, InstalledApp>();
+  const hotCodeMap = new Map<null | string, InstalledApp>();
   apps.forEach((app) =>
-    hotCodeMap.set(app.hotCode ? app.hotCode.toLowerCase() : null, app)
+    hotCodeMap.set(app.hotCode ? app.hotCode.toLowerCase() : null, app),
   );
 
   React.useEffect(() => {
@@ -45,14 +47,14 @@ export const AppPicker = () => {
   const onBrowserButtonClick = (
     app: InstalledApp,
     shiftPressed?: boolean,
-    altPressed?: boolean
+    altPressed?: boolean,
   ) => {
     console.log(app);
     openURL({
-      app,
-      shiftPressed,
       altPressed,
+      app,
       onSuccess: pickerWindow.close,
+      shiftPressed,
     });
   };
 
@@ -67,7 +69,7 @@ export const AppPicker = () => {
     >
       <DraggableTitleBar height={24} />
       <div
-        className="flex flex-col flex-1 overflow-y-auto"
+        className="flex flex-1 flex-col overflow-y-auto"
         style={{ maxHeight: "calc(100vh - 25px)" }}
       >
         {!apps[0] && (
@@ -79,12 +81,12 @@ export const AppPicker = () => {
         <div className="flex flex-col overflow-y-auto">
           {apps.map((app, index) => (
             <AppButton
-              key={app.name}
-              index={index}
-              buttonRefs={buttonRefs}
               app={app}
-              onBrowserButtonClick={onBrowserButtonClick}
+              buttonRefs={buttonRefs}
               iconString={app?.icon ?? ""}
+              index={index}
+              key={app.name}
+              onBrowserButtonClick={onBrowserButtonClick}
             />
           ))}
         </div>
