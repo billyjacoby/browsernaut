@@ -1,14 +1,14 @@
 {
   "version": "v1.3.3",
   "notes": "Test version",
-  "pub_date": "2025-01-03T18:20:45Z",
+  "pub_date": "2025-01-03T18:33:05Z",
   "platforms": {
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTR2d1blVzaFhhL1hwd0h1emRQbXdnNU1vRUxFR0xXQmx3aGg5TFRFQzZpRFpZUEJFSjBQZlFqL2hIVkNiY1Q2N294eFV5V3RBQ3V2Z0ZmdHNwTlJnK04xL25CaDc4UndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM0NzQxOTk5CWZpbGU6QnJvd3Nlcm5hdXQuYXBwLnRhci5nego5ZUI0S0hqT2xhVUY0ZGFuR3d1cm5RQ1lodTRPT3hKdVZ6NDgxWkxRM1kyaERmUXdUN2JKNGJ4cHRtaUN3Q0VZZ0pvNStMS05LQTI0UzJDbHNUd0NDdz09Cg==",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTR2d1blVzaFhhL1RnbXpSRUlCbVJMaDh1UnpJcSswdXE5clV6RkE0WnJXbDJCZ25BU3hVQ0ZIOWh2aTVkLzB5VjliR1hTREtsV01wWTlMOVFVa1U1S2Z0Ty9sdS94bmdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM1OTI5MDI5CWZpbGU6QnJvd3Nlcm5hdXQuYXBwLnRhci5negoyd0RNajJwdzRUWGxpaHZLT0NzN2liNzEwaWtISTVjOU1Nazhlc3JuZnNQY0NUVFhBNmUxZEk2ME43M0FQc2R6N0ZPV2tWWVUyeGxLbGFydDJlREFDdz09Cg==",
       "url": "https://github.com/billyjacoby/browsernaut/releases/download/v1.3.3/Browsernaut.app.tar.gz"
     },
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTR2d1blVzaFhhL1hwd0h1emRQbXdnNU1vRUxFR0xXQmx3aGg5TFRFQzZpRFpZUEJFSjBQZlFqL2hIVkNiY1Q2N294eFV5V3RBQ3V2Z0ZmdHNwTlJnK04xL25CaDc4UndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM0NzQxOTk5CWZpbGU6QnJvd3Nlcm5hdXQuYXBwLnRhci5nego5ZUI0S0hqT2xhVUY0ZGFuR3d1cm5RQ1lodTRPT3hKdVZ6NDgxWkxRM1kyaERmUXdUN2JKNGJ4cHRtaUN3Q0VZZ0pvNStMS05LQTI0UzJDbHNUd0NDdz09Cg==",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTR2d1blVzaFhhL1RnbXpSRUlCbVJMaDh1UnpJcSswdXE5clV6RkE0WnJXbDJCZ25BU3hVQ0ZIOWh2aTVkLzB5VjliR1hTREtsV01wWTlMOVFVa1U1S2Z0Ty9sdS94bmdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzM1OTI5MDI5CWZpbGU6QnJvd3Nlcm5hdXQuYXBwLnRhci5negoyd0RNajJwdzRUWGxpaHZLT0NzN2liNzEwaWtISTVjOU1Nazhlc3JuZnNQY0NUVFhBNmUxZEk2ME43M0FQc2R6N0ZPV2tWWVUyeGxLbGFydDJlREFDdz09Cg==",
       "url": "https://github.com/billyjacoby/browsernaut/releases/download/v1.3.3/Browsernaut.app.tar.gz"
     }
   }
