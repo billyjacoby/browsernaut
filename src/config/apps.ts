@@ -137,6 +137,9 @@ export const apps = typeApps({
   Whist: {},
   Yandex: {},
   Yattee: {},
+  Zen: {
+    privateArg: "--private-window",
+  },
   "Zen Browser": {
     privateArg: "--private-window",
   },
