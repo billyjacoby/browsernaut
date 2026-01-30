@@ -40,7 +40,8 @@ export const getInstalledApps = async (
   if (storedNotInstalled.length) {
     // Remove newly uninstalled apps here
     for (const appName of storedNotInstalled) {
-      newInstalledApps.filter((app) => app.name !== appName);
+      const idx = newInstalledApps.findIndex((app) => app.name === appName);
+      if (idx > -1) newInstalledApps.splice(idx, 1);
     }
   }
 
