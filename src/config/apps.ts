@@ -7,6 +7,7 @@ const typeApps = <T extends Record<string, App>>(apps: T) => apps;
 
 export const apps = typeApps({
   Arc: {},
+  Basilisk: {},
   Blisk: {},
   "Brave Browser": {
     privateArg: "--incognito",
@@ -23,6 +24,12 @@ export const apps = typeApps({
   Chromium: {
     privateArg: "--incognito",
   },
+  "Chromium-Gost": {
+    privateArg: "--incognito",
+  },
+  Comet: {},
+  Crest: {},
+  Dia: {},
   Discord: {
     convertUrl: (url) =>
       url.replace(
@@ -59,6 +66,7 @@ export const apps = typeApps({
   "Firefox Nightly": {
     privateArg: "--private-window",
   },
+  Floorp: {},
   Framer: {},
   FreeTube: {},
   "Google Chrome": {
@@ -84,11 +92,27 @@ export const apps = typeApps({
   },
   Linear: {},
   Maxthon: {},
-  "Microsoft Edge": {},
-  "Microsoft Edge Beta": {},
-  "Microsoft Edge Canary": {},
-  "Microsoft Edge Dev": {},
+  "Microsoft Edge": {
+    privateArg: "--inprivate",
+  },
+  "Microsoft Edge Beta": {
+    privateArg: "--inprivate",
+  },
+  "Microsoft Edge Canary": {
+    privateArg: "--inprivate",
+  },
+  "Microsoft Edge Dev": {
+    privateArg: "--inprivate",
+  },
   "Microsoft Teams": {
+    convertUrl: (url) =>
+      url.replace("https://teams.microsoft.com/", "msteams:/"),
+  },
+  "Microsoft Teams (work or school)": {
+    convertUrl: (url) =>
+      url.replace("https://teams.microsoft.com/", "msteams:/"),
+  },
+  "Microsoft Teams classic": {
     convertUrl: (url) =>
       url.replace("https://teams.microsoft.com/", "msteams:/"),
   },
@@ -109,10 +133,13 @@ export const apps = typeApps({
   "Opera Neon": {},
   Orion: {},
   "Orion RC": {},
+  "Pale Moon": {},
   Pocket: {
     convertUrl: (url) => `pocket://add?url=${url}`,
   },
   Polypane: {},
+  PrivateWindow: {},
+  PublicWindow: {},
   qutebrowser: {},
   Safari: {},
   "Safari Technology Preview": {},
@@ -123,7 +150,13 @@ export const apps = typeApps({
   Sizzy: {},
   Slack: {},
   Spotify: {},
+  Thorium: {
+    privateArg: "--incognito",
+  },
   "Tor Browser": {},
+  Twilight: {
+    privateArg: "--incognito",
+  },
   Twitter: {},
   Ulaa: {
     privateArg: "--incognito",
