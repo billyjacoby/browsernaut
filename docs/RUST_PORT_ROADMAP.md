@@ -1,9 +1,10 @@
-# Browsernaut → Rust + GPUI: A Learn-By-Porting Roadmap
+# Browsernaut → Rust + Rune: A Learn-By-Porting Roadmap
 
 This roadmap ports Browsernaut from **Tauri v1 + React/TypeScript** to a
-**pure Rust app built on [GPUI](https://www.gpui.rs/) and
-[GPUI Kit](https://gpui-kit.com)** (`gpui-kit`, which re-exports
-`gpui`, `gpui-base`, and `gpui-component`).
+**pure Rust app built on [Rune](https://github.com/anomalyco/rune)**. Rune is a
+GPU-rendered Rust UI framework with its own renderer, layout (Taffy), text and
+springs, plus a component kit, `rune-kit` (buttons, switches, selects, text
+inputs, menus, toasts, reorderable rows, …).
 
 **You write the code.** Each phase lists:
 
@@ -12,14 +13,17 @@ This roadmap ports Browsernaut from **Tauri v1 + React/TypeScript** to a
 - **Hints**: nudges, not solutions. Try it yourself first.
 - **Done when**: concrete checks so you know when to move on.
 
-The phases go from "pure Rust, no UI" to "full GPUI app", so you learn
-the language before you fight a UI framework. Phases 1–3 compile and test on
+The phases go from "pure Rust, no UI" to "full Rune app", so you learn the
+language before you deal with a UI framework. Phases 1–3 compile and test on
 any OS. Phase 4 onward needs a Mac.
 
-> **About the GPUI API:** GPUI and GPUI Kit move fast. Method names in this doc
-> (`on_open_urls`, `observe_window_activation`, `WindowKind::PopUp`, …) are
-> *things to look for*, not guaranteed signatures. Pin one `gpui-kit` version
-> and treat its docs.rs page and `examples/` folder as the source of truth.
+> **About the Rune API:** Rune is pre-release. Its README says to pin a `rev` of
+> its `dev` branch (`dev` is never rewritten). The API names in this doc
+> (`App::on_open_url`, `on_window_focus`, `WindowOptions`, `ImageCache`, …) come
+> from its README at the time of writing. Treat them as *things to look for*,
+> and treat `crates/rune/README.md`, `crates/rune-kit/README.md` and `examples/`
+> **at your pinned rev** as the source of truth. Rune doesn't take pull
+> requests; bugs and ideas go in its GitHub issues.
 
 ---
 
@@ -29,7 +33,7 @@ You'll be re-implementing each of these pieces:
 
 | Piece | Where it lives today | What it does |
 |---|---|---|
-| App registry | `src/config/apps.ts` | ~75 known browsers/apps, some with a `privateArg` (incognito flag) or `convertUrl` (e.g. Discord → `discord://`) |
+| App registry | `src/config/apps.ts` | ~90 known browsers/apps, some with a `privateArg` (incognito flag) or `convertUrl` (e.g. Discord → `discord://`) |
 | App discovery | `src-tauri/src/apps.rs`, `src/utils/get-installed-app-names.ts` | Scans `/Applications`, `~/Applications`, `/System/Applications` for `*.app`, keeps the ones in the registry |
 | Installed-app merge | `src/stores/appDataStore/actions.ts` → `getInstalledApps` | Merges newly found apps into the saved, user-ordered list |
 | Opening a URL | `src/utils/open-app.ts` | Shells out to `open -a <App> [--background] [--new --args <privateArg>] <url>` |
@@ -42,6 +46,27 @@ You'll be re-implementing each of these pieces:
 | Tray menu | `src-tauri/src/main.rs` | Menu bar icon: "Open last URL", "Preferences", "Quit" |
 | Themes | `src/stores/themeDataSlice/*` | Light/dark/system + user-editable HSL custom themes |
 | Updater / release | `tauri.conf.json`, `updates.json`, `.github/workflows/publish.yml` | Auto-update, signing, DMG release |
+
+---
+
+## How Rune's model differs from React
+
+Rune works more like Elm than React, and that's good for learning Rust:
+
+- Each window has **one state struct** (`S`) and a **view function**:
+  `fn view(s: &S, cx: &mut Cx<S>) -> El`. The view only *reads* state (`&S`).
+- Event handlers are closures that get `&mut S`: `.on_press(|s: &mut S| s.count += 1)`.
+  Rune queues them, runs them between frames, re-runs your view, and diffs the result.
+- There's no `useState`, no hooks, and no store library. Zustand's whole job is done
+  by "a struct, plus functions that take `&mut` to it".
+- The borrow checker matters less here than in callback-heavy frameworks: you never hold
+  `&mut S` across frames, so most of your code is plain functions over plain data.
+
+Rune also renders **headlessly**. A unit test can build a `Runtime`, tap an
+element by its key, step frames, and assert on state or on where elements were
+drawn. The CLI can render PNGs and dump the element tree (`--snap`, `--tree`,
+`--script`). You'll use this from Phase 5 on to test UI the same way you test
+plain functions.
 
 ---
 
@@ -59,12 +84,12 @@ browsernaut/
 │   │   └── src/{lib.rs, registry.rs, discovery.rs, launch.rs, settings.rs, theme.rs}
 │   ├── macos/                 # browsernaut-macos: all the platform glue (objc2 / Command)
 │   │   └── src/{lib.rs, default_browser.rs, icons.rs, cursor.rs}
-│   └── app/                   # browsernaut: the GPUI binary
-│       └── src/{main.rs, state.rs, picker.rs, prefs/…, tray.rs}
+│   └── app/                   # browsernaut: the Rune binary
+│       └── src/{main.rs, shared.rs, picker.rs, prefs/…, tray.rs}
 ├── src-tauri/  src/  swift/   # the old app; leave it working until Phase 10
 ```
 
-Rule of thumb: if a function can be written without GPUI or macOS, it goes in
+Rule of thumb: if a function can be written without Rune or macOS, it goes in
 `core` **with tests**.
 
 ---
@@ -80,8 +105,9 @@ Rule of thumb: if a function can be written without GPUI or macOS, it goes in
 1. Read `src-tauri/src/main.rs` and `apps.rs` line by line. For every `&`, `unwrap()`, `Option`, `move`, and `unsafe`, write down what you *think* it does, then check.
 2. Create the workspace and three empty crates (`cargo new --lib crates/core`, and so on). The top-level `Cargo.toml` contains only `[workspace]`.
 3. Add `crates/core` to CI: a GitHub Actions job running `cargo fmt --check`, `cargo clippy -- -D warnings`, and `cargo test`.
+4. Clone Rune and run `examples/hello` on your Mac (`cargo run -p hello`). Then render it headlessly (`cargo run -p hello -- --snap hello.png --scene on`) and open the PNG. Read its `#[cfg(test)]` test; you'll write tests like it later.
 
-**Done when:** `cargo test --workspace` passes (with zero tests) and CI is green.
+**Done when:** `cargo test --workspace` passes (with zero tests), CI is green, and you've seen a Rune window and a Rune snapshot.
 
 ---
 
@@ -102,7 +128,7 @@ Replaces `src/config/apps.ts` and the argument-building half of `src/utils/open-
    - `name: &'static str`
    - `private_arg: Option<&'static str>`
    - a URL converter. TypeScript uses a closure. In Rust, choose between an `enum UrlConversion { None, Discord }` and a `fn(&str) -> Cow<str>` pointer. **Try the enum first.** Explain to yourself why it's simpler than storing closures.
-2. Port all ~75 entries into a `pub static APPS: &[AppSpec]`.
+2. Port all ~90 entries into a `pub static APPS: &[AppSpec]`.
 3. Write `fn find(name: &str) -> Option<&'static AppSpec>`.
 4. Write a **pure** function that builds the `open` arguments:
    `fn open_args(app: &AppSpec, url: &str, opts: LaunchOptions) -> Vec<String>`
@@ -110,6 +136,7 @@ Replaces `src/config/apps.ts` and the argument-building half of `src/utils/open-
 
 **Hints**
 - Pay attention to argument order: the URL must come **last**, after `--new --args <privateArg>`. See the comment in `open-app.ts`.
+- Name your struct something other than `AppSpec` if it clashes with `rune::AppSpec` later (e.g. `KnownApp`). Name clashes across crates are a good intro to `use … as …`.
 - 🐛 **Spot the bug:** `AppButton.tsx` calls `onBrowserButtonClick(app, event.altKey, event.shiftKey)`, but the function's parameters are `(app, shiftPressed, altPressed)`. Alt and Shift are swapped on click. A named-field `LaunchOptions` struct makes this mistake hard to write in Rust. Note that and move on.
 
 **Done when:** tests cover a plain app, a private-window app (Firefox `--private-window`, Chrome `--incognito`), and the three Discord URL shapes (`discord.com`, `ptb.discord.com`, `canary.discord.com`).
@@ -129,7 +156,7 @@ Replaces `src-tauri/src/apps.rs` (drops the `rust_search` dependency) and `getIn
 
 **Port**
 1. `fn scan_app_dirs(dirs: &[PathBuf]) -> Vec<String>` returns the app names (folder name without `.app`) found one level deep. Expand `~` yourself (`std::env::var("HOME")` or the `dirs` crate).
-2. `fn installed_known_apps(found: &[String]) -> Vec<&'static AppSpec>` keeps only apps in the registry.
+2. `fn installed_known_apps(found: &[String]) -> Vec<&'static KnownApp>` keeps only apps in the registry.
 3. Define the user's saved entry: `struct InstalledApp { name: String, hotkey: Option<char> }`.
 4. `fn merge(saved: Vec<InstalledApp>, found: &[&str]) -> Vec<InstalledApp>` keeps the saved order and hotkeys, appends newly installed apps, and drops uninstalled ones.
 5. `fn set_hotkey(apps: &mut [InstalledApp], name: &str, key: Option<char>)` and `fn move_app(apps: &mut Vec<InstalledApp>, from: usize, to: usize)`.
@@ -177,11 +204,11 @@ Replaces `swift/Browsernaut/src/lib.swift`, `swift-rs`, `enigo`, and the shell-o
 
 **Port**
 1. **Launch:** `fn launch(args: &[String]) -> std::io::Result<()>` runs `open` with the args from Phase 1. *(Easiest; do it first.)*
-2. **Cursor position:** `fn cursor_location() -> (f64, f64)` uses `NSEvent::mouseLocation`. macOS screen coordinates have their origin at the **bottom-left**, so you'll need to flip Y using the screen height. This replaces `enigo`.
+2. **Cursor position:** `fn cursor_location() -> (f64, f64)` uses `NSEvent::mouseLocation`. macOS screen coordinates have their origin at the **bottom-left**, so you'll need to flip Y using the screen height. Rune positions windows in **physical pixels** (`AppHandle::set_position`), so you'll also multiply by the screen's backing scale factor. This replaces `enigo`.
 3. **Default browser:**
    - `fn is_default_browser() -> bool` asks NSWorkspace which app opens `https://` URLs and compares it to your bundle.
    - `fn make_default_browser()` uses NSWorkspace's "set default application for URL scheme" API (macOS 12+), or LaunchServices' `LSSetDefaultHandlerForURLScheme` as the Swift code does.
-4. **Icons:** `fn app_icon_png(app_name: &str, size: u32) -> Option<Vec<u8>>` gets the icon from NSWorkspace and converts it to PNG **bytes**. Skip base64: GPUI can render image bytes directly, so the base64 data-URL step goes away.
+4. **Icons:** `fn app_icon_png(app_name: &str, size: u32) -> Option<Vec<u8>>` gets the icon from NSWorkspace and converts it to PNG **bytes**. Skip base64: Rune's `ImageCache::load(bytes)` takes PNG bytes directly, so the base64 data-URL step goes away.
 
 **Hints**
 - Allowed shortcut: if objc2 is too much at first, keep using `swift-rs` and the existing Swift package temporarily, then come back. Getting a working app first is fine.
@@ -192,34 +219,33 @@ Replaces `swift/Browsernaut/src/lib.swift`, `swift-rs`, `enigo`, and the shell-o
 
 ---
 
-## Phase 5: First GPUI window (2–3 days)
+## Phase 5: First Rune window (2–3 days)
 
-The UI starts here. Do **not** port the picker yet; get comfortable with GPUI first.
+The UI starts here. Do **not** port the picker yet; get comfortable with Rune first.
 
 **Learn**
-- Read the GPUI Kit "Getting Started" guide and run 3–4 of its examples
-- GPUI's model:
-  - `Application` / `App` (global context)
-  - `Window`
-  - `Entity<T>` (a handle to state that GPUI owns)
-  - `Context<T>` (what you get inside an entity's methods)
-  - the `Render` trait
-  - `cx.notify()` to re-render
-- The element builder style: `div().flex().flex_col().gap_2().child(...)`. It reads a lot like Tailwind, which helps here.
-- Closures: `Fn` vs `FnMut` vs `FnOnce`, `move`, and why event handlers want `'static`
-- `cx.listener(...)` for handlers that need `&mut Self`
+- Rune's README sections: the view API, layout gotchas (`.grow`, `.min_h(0.0)`), focus, key routing
+- Rune's model:
+  - `AppSpec::new(title, size, init, view)` (or `rune::run(spec)` for one window)
+  - `El` builders: `col()`, `row()`, `el()`, `text()`, with `.key("…")`, `.gap()`, `.fill()`, `.radius()`
+  - handlers: `.on_press(|s: &mut S| …)`, and `.on_press_tx(|s, tx| …)` when you need the `Tx` (to close the window, scroll, copy, …)
+  - `rune-kit`: `Kit::from_palette(…)` or a theme crate, and components like `Button::new("…").on_press(…).build(k)`
+- Closures: `Fn` vs `FnMut` vs `FnOnce`, `move`, and why handlers need to be `'static`
+- Headless tests: `rune::Runtime::new(state, view, size, env)`, `rt.frame(dt)`, `rt.find("key")`, `rt.pointer_down/up`, `rt.state`
 
 **Port**
-1. `crates/app`: depend on `gpui-kit` (one pinned version) and your two crates.
-2. Open one window that renders a hard-coded list of three app names with GPUI Kit `Button`s.
-3. Add a counter: clicking a button increments a number in your view struct and re-renders. This is the "aha" step for `cx.notify()`.
-4. Load `Settings` at startup and render the real installed-app list (names only).
+1. `crates/app`: depend on `rune` and `rune-kit` (git, one pinned `rev`) and your two crates.
+2. Open one window that renders a hard-coded list of three app names as `rune-kit` `Button`s.
+3. Add a counter: clicking a button increments a number in your state struct, and the label updates. Notice you never told Rune to re-render; mutating state in a handler is enough.
+4. Write your first **headless test**: tap the button by key, step a few frames, assert the counter changed.
+5. Load `Settings` at startup and render the real installed-app list (names only).
 
 **Hints**
-- Compare GPUI's `Entity` + `cx.notify()` with React's `useState`, and Zustand's store with a GPUI *global* (`cx.set_global` / `cx.global`). Your `appDataStore` probably becomes either a global `AppState` or an `Entity<AppState>` that both windows hold.
-- When the borrow checker complains inside a closure, the usual fix is to clone a handle (an `Entity<T>` or `WeakEntity<T>`) **before** the `move`.
+- Compare with React: `useState` + `setState` becomes "a field on `S`" + "a handler that mutates it". Zustand's store becomes your state struct, and its actions become `impl S { fn …(&mut self) }`.
+- Give every element you'll test or scroll to a stable `.key(…)`. `rune-kit` keys its own parts (`label`, `icon`, …), so prefix yours (`app/firefox`).
+- Run your view headlessly with `--snap` / `--tree` when something looks wrong. The tree JSON tells you each element's laid-out rect.
 
-**Done when:** `cargo run -p browsernaut` opens a window that lists your installed browsers from `settings.json`.
+**Done when:** `cargo run -p browsernaut` opens a window that lists your installed browsers from `settings.json`, and `cargo test -p browsernaut` runs at least one headless UI test.
 
 ---
 
@@ -228,30 +254,32 @@ The UI starts here. Do **not** port the picker yet; get comfortable with GPUI fi
 Replaces `open_picker_window` in `main.rs` and `src/views/AppPicker/*`.
 
 **Learn**
-- Window options: size, position, kind (look for a pop-up / floating kind for "always on top"), titlebar
-- Focus handling: `FocusHandle`, `track_focus`
-- Actions and key bindings: GPUI's `actions!` macro, `cx.bind_keys`, `on_action`
-- Raw key events with modifiers (`on_key_down`, `event.keystroke`)
-- Window activation events (look for `observe_window_activation`) for close-on-blur
-- Rendering images from bytes (`img(...)` with an image source)
+- `rune::App` for apps that outlive their window: `.windowless()`, `.keep_running()`, `.accessory()`, `.on_close(…)`
+- `AppHandle<S>` (`Clone + Send + Sync`): `show()`, `focus()`, `hide()`, `open()`, `set_position(…)`, `update(|s, tx| …)`
+- `WindowOptions`: `borderless`, `always_on_top`, `resizable`, `min_size`/`max_size`
+- Focus and keys: `.focusable(true)`, `.focus_group()` with `.role("listbox")` for arrow-key movement, the window's `on_key`, modifier state (`mods`)
+- `.on_window_focus(|s, focused, tx| …)` on the root, for close-on-blur
+- Images: `rune::ImageCache::new(waker)`, `cache.load(png_bytes)`, `el().size(40.0, 40.0).pixels(icon.pixels())`
 
 **Port**
-1. Open a 250×300 window centred horizontally on the cursor, 48 px above it (same math as `main.rs`).
-2. Render each app as a row: name, hotkey letter, icon (from Phase 4, loaded once and cached). Show the URL's host at the bottom (`UrlBar.tsx`; use the `url` crate instead of `new URL()`).
+1. Build the picker as a windowless, accessory `App` with a borderless, always-on-top 250×300 window. Show it centred horizontally on the cursor, 48 px above it (same math as `main.rs`, using Phase 4's `cursor_location()` and `set_position`).
+2. Render each app as a row: name, hotkey letter, icon (from Phase 4, loaded through `ImageCache` once and kept in state). Show the URL's host at the bottom (`UrlBar.tsx`; use the `url` crate instead of `new URL()`).
 3. Keyboard:
-   - ↑/↓ moves the selection (a `selected: usize` in your view; no DOM refs needed)
+   - ↑/↓ moves the selection (try `focus_group` first; if you need full control, keep a `selected: usize` in state and handle the arrows in `on_key`)
    - Enter opens the selected app
    - Esc closes the window
    - Typing a hotkey letter opens that app
    - Shift means private window, Alt (⌥) means open in background
 4. Mouse: hover selects the row, click opens the app with the current modifiers.
-5. Close the window when it loses focus or after a successful open.
+5. Hide the window when it loses focus (`on_window_focus` with `focused == false`) or after a successful open.
+6. Headless tests: "pressing `f` opens Firefox", "Shift+`c` opens Chrome private", "Esc closes". Make `launch` injectable (e.g. a `Vec<Vec<String>>` of recorded launches in test state, or a trait) so tests don't actually run `open`.
 
 **Hints**
-- Build the hotkey lookup as a `HashMap<char, usize>` once per render, or keep it in state and rebuild it when apps change. Think about which is clearer. Both are fine at this size.
+- Build the hotkey lookup as a `HashMap<char, usize>` once per view, or keep it in state and rebuild it when apps change. Think about which is clearer. Both are fine at this size.
 - Clamp the selection index with `saturating_sub` / `min` instead of `if` chains.
+- Making `launch` swappable for tests is a good first use of a **trait** (`trait Launcher { fn launch(&self, args: &[String]); }`) or a function pointer. Try both and compare.
 
-**Done when:** with a hard-coded URL, you can open the picker, pick Firefox with `f`, pick a private Chrome window with Shift+`c`, and Esc or clicking away dismisses it.
+**Done when:** with a hard-coded URL, you can open the picker, pick Firefox with `f`, pick a private Chrome window with Shift+`c`, and Esc or clicking away dismisses it. The headless tests pass.
 
 ---
 
@@ -261,23 +289,25 @@ Replaces `tauri_plugin_deep_link`, the system tray code, `Info.plist`, and `Acti
 
 **Learn**
 - How macOS delivers URLs: Apple Events, which arrive **only when running as a `.app` bundle**
-- App bundling with [`cargo-packager`](https://github.com/crabnebula-dev/cargo-packager) or [`cargo-bundle`](https://github.com/burtonageo/cargo-bundle)
-- Channels (`std::sync::mpsc` or `async-channel`) and GPUI's executors (`cx.spawn`, `cx.background_spawn`) for getting events from another library into GPUI
+- `App::on_open_url(|s, url: &str, tx| …)`: Rune installs the get-URL Apple Event handler and replays the link that launched the app
+- Threads and `Send`/`Sync`: why `AppHandle` can be moved into another thread's closure, and what `handle.update(|s, tx| …)` does (it runs your closure on the UI thread)
+- App bundling: Rune's `scripts/mac-app` for the dev loop, and [`cargo-packager`](https://github.com/crabnebula-dev/cargo-packager) (or [`cargo-bundle`](https://github.com/burtonageo/cargo-bundle)) for releases
 
 **Port**
-1. **Receiving URLs:** register a handler for opened URLs on the GPUI application (look for `on_open_urls`). In it: save `last_url` to settings, then open (or re-show) the picker.
+1. **Receiving URLs:** register `on_open_url` on the picker app. In it: validate the URL (it comes from anyone who can run `open`), save `last_url` to settings, then show and focus the picker at the cursor. Rune doesn't bring the window forward for you.
 2. **Bundle:** produce `Browsernaut.app` with the existing `Info.plist` keys:
    - `CFBundleURLTypes` (http/https/ftp/file)
    - `CFBundleDocumentTypes` (.html, …)
-   - `LSUIElement = true` (no Dock icon; replaces the accessory activation policy)
+   - `LSUIElement = true` (no Dock icon; pairs with `.accessory()`)
    - the same bundle id `com.billyjacoby.browsernaut`, so "set as default browser" keeps working
-3. **Tray / menu bar icon:** GPUI doesn't provide a status-bar item, so use the [`tray-icon`](https://docs.rs/tray-icon) crate (+ its `muda` menus). Recreate "Open last URL ⌘O", "Preferences ⌘P", and "Quit ⌘Q". Forward its menu events into GPUI through a channel that a `cx.spawn` task listens on.
+3. **Tray / menu bar icon:** Rune doesn't provide a status-bar item ("the app owns its tray"), so use the [`tray-icon`](https://docs.rs/tray-icon) crate (+ its `muda` menus). Recreate "Open last URL ⌘O", "Preferences ⌘P", and "Quit ⌘Q". In each menu callback, call `AppHandle::update` / `open` / `quit` on a cloned handle. No channels or polling needed.
 4. **First launch:** if `!has_seen_welcome`, open Preferences (same as `App.tsx`).
-5. **Dev loop:** add a CLI fallback (`browsernaut --url https://example.com`) so you can test the picker without bundling every time.
+5. **Dev loop:** add a CLI fallback (`browsernaut --url https://example.com`, via `AppSpec::extra_args`) so you can test the picker without bundling every time.
 
 **Hints**
-- Expect to spend time here. It's integration work, not hard Rust, but the feedback loop is slower. Make a script (`bin/dev-bundle.sh`) that builds, bundles, and runs `open -a ./target/.../Browsernaut.app https://example.com`.
-- `tray-icon` must be created on the main thread **after** the app has started. Create it inside GPUI's `run` callback.
+- Expect to spend time here. It's integration work, not hard Rust, but the feedback loop is slower. Rune's `scripts/mac-app` installs a build to `~/Applications/NAME.app` and relaunches it in place. Its `--scheme` flag registers *one* custom scheme, so check whether it covers `http`/`https`; if not, use your own `Info.plist` with cargo-packager here too.
+- Rune's docs only show `on_open_url` with custom schemes (`myapp://`). Browser links use the same Apple Event, so `http`/`https` links should arrive there too. **Verify this early** with a throwaway bundle before building the rest of the phase on it.
+- `tray-icon` must be created on the main thread **after** the event loop has started. Look for where Rune gives you main-thread setup (`AppSpec::setup`, or an `AppHandle::update`, which runs on the main thread "even while no window shows").
 
 **Done when:** you can set the bundled app as your default browser, click a link in Slack/Mail, and the Rust picker appears at your cursor.
 
@@ -290,10 +320,11 @@ Replaces `tauri_plugin_deep_link`, the system tray code, `Info.plist`, and `Acti
 Replaces `src/views/Preferences/*`.
 
 **Learn**
-- Composing views: one `Entity` per tab, the parent holds them
-- GPUI Kit components: `Tabs`/`TabBar`, `Button`, `Input`, `Switch`, `Dialog`/`Modal`, notifications
-- Drag and drop in GPUI (look for `on_drag` / `on_drop`)
-- Running blocking work off the main thread (rescanning `/Applications`, loading icons) with `cx.background_spawn` and getting the result back
+- A second window with its **own state type**: `app.window(WindowSpec::new("prefs", prefs_spec).options(hidden))` returns a handle; call `.open()` from the tray or first-launch check
+- Sharing data between two windows: `Arc<Mutex<Settings>>` (shared ownership + interior mutability), and why `Rc<RefCell<…>>` won't compile across threads
+- `rune-kit` components: `SegmentedControl` (tabs), `Button`, `Switch`, `TextInput`, `Select`, `List`, `Toast`, and `SidebarRow::reorder` (or `.on_drag`) for drag-to-reorder
+- `.modal(click_outside, close)` for in-app dialogs, or [`rfd`](https://docs.rs/rfd) for native confirm dialogs like Tauri's `confirm()`
+- Running blocking work off the main thread (rescanning `/Applications`, loading icons) with `rune::Latest` or a thread + `AppHandle::update`
 
 **Port, one tab at a time**
 1. **General** (`TabGeneral.tsx`):
@@ -301,35 +332,38 @@ Replaces `src/views/Preferences/*`.
    - "Rescan" (Phase 2, run in the background)
    - "Reset" with a confirmation dialog
    - "Show welcome message"
-   - Skip the confetti (or don't — a particle effect is a fun stretch exercise).
+   - Skip the confetti (or don't — Rune's springs and shapes make a particle burst a fun stretch exercise).
 2. **Apps** (`TabApps.tsx`):
-   - reorderable list (drag and drop, or ↑/↓ buttons first, then add drag later)
+   - reorderable list (↑/↓ buttons first, then drag)
    - per-app one-character hotkey input; Backspace/Delete clears it
 3. **About** (`TabAbout.tsx`): version from `env!("CARGO_PKG_VERSION")`, Homepage and Issues links (open with your Phase 4 `launch`), "Check for update" (stub until Phase 10).
 4. **Welcome modal** (`WelcomeModal.tsx`): shown on first run; dismissing it sets `has_seen_welcome`.
-5. Save settings whenever something changes. Consider debouncing so you don't write the file on every keystroke.
+5. Save settings whenever something changes, then tell the picker with its `AppHandle::update` so it picks up new order and hotkeys. Debounce saves so you don't write the file on every keystroke (`tx.wake_after` + a "save due at" time in state).
 
-**Done when:** every setting you can change in the Tauri prefs window can be changed here, persists across restarts, and the picker reflects the changes immediately (shared state!).
+**Hints**
+- Design exercise: should the shared `Settings` live in an `Arc<Mutex<_>>` both windows read, or should prefs *send* changes to the picker with `AppHandle::update` and each window keep its own copy? Try sketching both. The second avoids locks and is closer to how Rune works.
+
+**Done when:** every setting you can change in the Tauri prefs window can be changed here, persists across restarts, and the picker reflects the changes immediately.
 
 ---
 
-## Phase 9: Themes (3–5 days, scope it yourself)
+## Phase 9: Themes (2–4 days, scope it yourself)
 
 Replaces `src/stores/themeDataSlice/*`, `useIsDarkMode.ts`, `ColorPicker.tsx`, `AddThemeSheet.tsx`.
 
 **Learn**
-- GPUI Kit's theme system (`Theme`, theme colors, light/dark mode, following the system appearance)
-- `HashMap` vs a struct with named fields (which fits 19 fixed color slots better?)
-- Colour math: HSL ↔ RGBA (GPUI has `hsla()`, which is very convenient)
+- Rune's theming: `cx.system_dark()` for the OS appearance, `rune::Theme::from_json(src, dark)` for themes as data, and `rune_kit::Kit::from_palette(PaletteSeed { bg, fg, accent })`, which derives every semantic colour from three
+- Colour spaces: the TS app stores HSL; Rune works in OKLCH/OKLab. Converting between them is a good small, testable exercise
+- `#[derive(Clone)]` vs the TS `JSON.parse(JSON.stringify(...))` deep clones
 
 **Port**
-1. Light / Dark / System selection, wired to GPUI Kit's theme and the OS appearance changes.
-2. Port the Browsernaut gradient (green → purple, `BG_GRADIENT_ACTIVE` in `CONSTANTS.ts`) for the selected picker row.
-3. **Custom themes (optional and largest):** model `CustomTheme`, including the `inherits` / `inheritedFrom` relationship between colour slots, then map it onto GPUI Kit theme colours. Add, rename, delete, and edit with a colour picker.
+1. Light / Dark / System selection. System follows `cx.system_dark()`; theme switches animate in Rune automatically.
+2. Port the Browsernaut gradient (green → purple, `BG_GRADIENT_ACTIVE` in `CONSTANTS.ts`) for the selected picker row (`.linear_gradient(angle, stops)`).
+3. **Custom themes, simplified:** instead of 19 editable colour slots with `inherits` / `inheritedFrom` links, let users pick **three seeds** (background, text, accent) and let `Kit::from_palette` derive the rest. This removes the whole inheritance mechanism. Add, rename, delete; store seeds in `Settings`.
+4. **Migration:** map each old custom theme's `--background`, `--foreground` and `--primary` to the three seeds.
 
 **Hints**
-- The TS code deep-clones with `JSON.parse(JSON.stringify(...))` all over the place. In Rust, `#[derive(Clone)]` + `.clone()` does this, and the borrow checker tells you when you actually need to.
-- Consider modelling inheritance as "this slot *is* a reference to that slot" (`enum Slot { Value(Hsla), Inherit(SlotId) }`) instead of keeping two lists in sync. Ask yourself which version can't get out of sync.
+- If you want the full 19-slot editor anyway, model inheritance as "this slot *is* a reference to that slot" (`enum Slot { Value(Color), Inherit(SlotId) }`) instead of keeping two lists in sync. Ask yourself which version can't get out of sync.
 
 **Done when:** theme choice persists, follows the system when set to System, and the picker and preferences windows both use it.
 
@@ -346,8 +380,8 @@ Replaces `tauri.conf.json` bundling/updater, `bin/apple.sh`, `.github/workflows/
 4. **Updates:** pick one:
    - `cargo-packager-updater` (closest to what Tauri did; reuse the minisign key idea)
    - Sparkle
-   - simplest: "Check for update" fetches the latest GitHub release JSON with `reqwest`/`ureq` and opens the download page
-5. **CI:** a `publish` workflow on tags that builds, signs, notarizes, and uploads the DMG. Keep the Phase 0 check job.
+   - simplest: "Check for update" fetches the latest GitHub release JSON with `reqwest`/`ureq` (through `rune::Latest`, so the window doesn't block) and opens the download page
+5. **CI:** a `publish` workflow on tags that builds, signs, notarizes, and uploads the DMG. Keep the Phase 0 check job, and add your headless UI tests to it if they run on the CI runner (they need a GPU adapter, so try a macOS runner first).
 6. **Homebrew:** update `bin/commit-homebrew-update.sh` for the new artifact name if it changes.
 7. Delete the Tauri/TS app, `package.json`, `pnpm-lock.yaml`, and the Node CI job. Update `README.md`.
 
@@ -363,9 +397,12 @@ Replaces `tauri.conf.json` bundling/updater, `bin/apple.sh`, `.github/workflows/
 | 2 | ch. 8 (collections), 9 (errors), 13 (closures and iterators) |
 | 3 | ch. 10 (generics and traits); serde.rs docs |
 | 4 | ch. 7 (modules), 20.1 (unsafe); objc2 docs and examples |
-| 5–6 | ch. 15 (smart pointers: `Rc`, `RefCell`, why GPUI has `Entity`); GPUI Kit docs and examples |
-| 7 | ch. 16 (concurrency: threads and channels); async basics (*Asynchronous Programming in Rust*) |
-| 8–10 | Read Zed's source (`crates/gpui/examples`) when you're stuck on how to do something in GPUI |
+| 5–6 | ch. 13 again (closures as handlers); ch. 18 (trait objects, for the test launcher); Rune's `crates/rune/README.md`, `examples/hello`, `examples/settings` |
+| 7 | ch. 16 (concurrency: threads, `Send`/`Sync`); Rune's "App lifetime" and "Compact tray-controlled windows" sections, `examples/background` |
+| 8 | ch. 15 (smart pointers: `Rc`, `RefCell`, `Arc`, `Mutex`); `crates/rune-kit/README.md`, `cargo run -p rune-kit --example shell` |
+| 9–10 | Rune's `examples/kit-gallery` for components; read Rune's source when the docs run out |
+
+Optional: Rune has a hot-reload dev loop (`scripts/rune-dev`) that patches view functions while the app runs. It's worth trying once you're in Phases 6–8 and iterating on layout.
 
 ## Working with Claude as a tutor
 
