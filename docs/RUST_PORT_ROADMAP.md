@@ -15,15 +15,19 @@ inputs, menus, toasts, reorderable rows, …).
 
 The phases go from "pure Rust, no UI" to "full Rune app", so you learn the
 language before you deal with a UI framework. Phases 1–3 compile and test on
-any OS. Phase 4 onward needs a Mac.
+any OS. The Phase 0.5 spike and Phase 4 onward need a Mac.
 
 > **About the Rune API:** Rune is pre-release. Its README says to pin a `rev` of
 > its `dev` branch (`dev` is never rewritten). The API names in this doc
 > (`App::on_open_url`, `on_window_focus`, `WindowOptions`, `ImageCache`, …) come
 > from its README at the time of writing. Treat them as *things to look for*,
 > and treat `crates/rune/README.md`, `crates/rune-kit/README.md` and `examples/`
-> **at your pinned rev** as the source of truth. Rune doesn't take pull
-> requests; bugs and ideas go in its GitHub issues.
+> **at your pinned rev** as the source of truth. Every API name in this doc was
+> checked against `dev` at `a7f276c` (2026-11-08), which is a reasonable first rev
+> to pin. Rune doesn't take pull requests; bugs and ideas go in its GitHub issues.
+>
+> **Phase 0.5 is a spike** that checks the risky parts on a real Mac before you
+> build anything on them. Don't skip it.
 
 ---
 
@@ -108,6 +112,52 @@ Rule of thumb: if a function can be written without Rune or macOS, it goes in
 4. Clone Rune and run `examples/hello` on your Mac (`cargo run -p hello`). Then render it headlessly (`cargo run -p hello -- --snap hello.png --scene on`) and open the PNG. Read its `#[cfg(test)]` test; you'll write tests like it later.
 
 **Done when:** `cargo test --workspace` passes (with zero tests), CI is green, and you've seen a Rune window and a Rune snapshot.
+
+---
+
+## Phase 0.5: Rune spike — check the risky parts first (1–2 days, on a Mac)
+
+A **spike** is throwaway code that answers one question. Each check below covers
+something the rest of the plan depends on but that Rune's docs don't fully
+promise. Do them now, while changing course is cheap. Write the spike in a
+scratch crate (`spikes/rune-spike`, outside the workspace members) and delete it
+afterwards.
+
+Write each result in `docs/SPIKE_NOTES.md`: what you ran, what happened, and
+what it changes in the plan. That file is the real deliverable.
+
+**Learn**
+- How a `.app` bundle is laid out (`Contents/MacOS`, `Contents/Info.plist`, `Contents/Resources`)
+- `lsregister` and Launch Services, and how macOS picks the default browser
+- `fn` pointers vs closures: `App::on_open_url` takes `fn(&mut S, &str, &mut Tx)`, a plain function pointer that **can't capture variables**. Work out where the data it needs has to live instead (hint: in `S`).
+
+**Checks**
+
+1. **Pin and build.** Add `rune` + `rune-kit` as git dependencies pinned to one `rev`. Build and run `examples/hello` and `examples/background` from that rev.
+   - *Pass:* both run, and the `rev` is recorded in `SPIKE_NOTES.md`.
+
+2. **Browser links reach `on_open_url`.** This is the one the whole app depends on. Rune's docs only show custom schemes (`myapp://`). Its source (`crates/rune/src/open_url/incoming.rs`) handles the `kAEGetURL` Apple Event, which macOS uses for every link, with no scheme filter, so `http`/`https` *should* arrive. Prove it:
+   - Make a windowless, `.accessory()` spike app whose `on_open_url` appends each URL to a log file.
+   - Bundle it by hand with an `Info.plist` that declares `http`/`https` in `CFBundleURLTypes` and sets `LSUIElement`. Give it a **different** bundle id from Browsernaut (e.g. `com.billyjacoby.browsernaut-spike`) so you don't confuse Launch Services.
+   - Register it (`lsregister -f Spike.app`), run `open -a Spike.app https://example.com`, then make it the default browser in System Settings and click a link in Mail or Slack. **Switch your default browser back afterwards.**
+   - Also test the cold-start case: quit the spike, then click a link. The link that *launches* the app must arrive too.
+   - *Pass:* both URLs show up in the log, warm and cold.
+   - *If it fails:* stop and decide before Phase 5. Options: install your own Apple Event handler with `objc2` before `run` (Rune's docs say an app's own handler installed before `run` is kept), or open an issue on Rune. Write down what you chose.
+
+3. **Bundling a browser.** `scripts/mac-app --scheme NAME` writes `CFBundleURLTypes` with **one** custom scheme and nothing else: no `http`/`https` pair, no `CFBundleDocumentTypes`, no `LSUIElement`. It's still useful for fast relaunches, but it can't produce the real bundle. Pick the release path now:
+   - Try [`cargo-packager`](https://github.com/crabnebula-dev/cargo-packager) with the existing `src-tauri/Info.plist` keys merged in, or a small script that runs `mac-app` and then patches `Info.plist` with `plutil`.
+   - *Pass:* one command produces a `.app` with all the keys from check 2, and the spike's links still arrive from that bundle.
+
+4. **Tray icon inside Rune's event loop.** Rune doesn't provide a menu-bar item. Create a [`tray-icon`](https://docs.rs/tray-icon) icon with one menu item from inside the running app: try `AppSpec::setup`, or an `AppHandle::update`, which runs on the main thread. Make the item call `handle.open()`.
+   - *Pass:* the icon appears in the menu bar of an accessory app, and clicking the item shows the window.
+
+5. **Picker window placement.** Open a borderless, `always_on_top` window and move it to the cursor with `AppHandle::set_position`, which takes **physical pixels**. Get the cursor from `NSEvent::mouseLocation` (bottom-left origin, in points).
+   - *Pass:* the window lands at the cursor on a Retina screen, and on a second display if you have one.
+
+6. **Headless tests in CI.** Copy `examples/hello`'s `#[cfg(test)]` test into the spike and run it on a GitHub Actions `macos-latest` runner and on `ubuntu-latest`. Also try a `--snap` PNG on each.
+   - *Pass:* you know which runners can run `Runtime` tests and which can render PNGs. Runtime tests drive state and layout and may not need a GPU. PNG snapshots render, so they probably do.
+
+**Done when:** `docs/SPIKE_NOTES.md` has a pass/fail and a decision for every check. If check 2 or 3 failed, update Phases 7 and 10 before starting Phase 1.
 
 ---
 
@@ -234,7 +284,7 @@ The UI starts here. Do **not** port the picker yet; get comfortable with Rune fi
 - Headless tests: `rune::Runtime::new(state, view, size, env)`, `rt.frame(dt)`, `rt.find("key")`, `rt.pointer_down/up`, `rt.state`
 
 **Port**
-1. `crates/app`: depend on `rune` and `rune-kit` (git, one pinned `rev`) and your two crates.
+1. `crates/app`: depend on `rune` and `rune-kit` (git, the `rev` you pinned in Phase 0.5) and your two crates.
 2. Open one window that renders a hard-coded list of three app names as `rune-kit` `Button`s.
 3. Add a counter: clicking a button increments a number in your state struct, and the label updates. Notice you never told Rune to re-render; mutating state in a handler is enough.
 4. Write your first **headless test**: tap the button by key, step a few frames, assert the counter changed.
@@ -262,7 +312,7 @@ Replaces `open_picker_window` in `main.rs` and `src/views/AppPicker/*`.
 - Images: `rune::ImageCache::new(waker)`, `cache.load(png_bytes)`, `el().size(40.0, 40.0).pixels(icon.pixels())`
 
 **Port**
-1. Build the picker as a windowless, accessory `App` with a borderless, always-on-top 250×300 window. Show it centred horizontally on the cursor, 48 px above it (same math as `main.rs`, using Phase 4's `cursor_location()` and `set_position`).
+1. Build the picker as a windowless, accessory `App` with a borderless, always-on-top 250×300 window. Show it centred horizontally on the cursor, 48 px above it (same math as `main.rs`, using Phase 4's `cursor_location()` and `set_position`, as in the spike's check 5).
 2. Render each app as a row: name, hotkey letter, icon (from Phase 4, loaded through `ImageCache` once and kept in state). Show the URL's host at the bottom (`UrlBar.tsx`; use the `url` crate instead of `new URL()`).
 3. Keyboard:
    - ↑/↓ moves the selection (try `focus_group` first; if you need full control, keep a `selected: usize` in state and handle the arrows in `on_key`)
@@ -291,10 +341,10 @@ Replaces `tauri_plugin_deep_link`, the system tray code, `Info.plist`, and `Acti
 - How macOS delivers URLs: Apple Events, which arrive **only when running as a `.app` bundle**
 - `App::on_open_url(|s, url: &str, tx| …)`: Rune installs the get-URL Apple Event handler and replays the link that launched the app
 - Threads and `Send`/`Sync`: why `AppHandle` can be moved into another thread's closure, and what `handle.update(|s, tx| …)` does (it runs your closure on the UI thread)
-- App bundling: Rune's `scripts/mac-app` for the dev loop, and [`cargo-packager`](https://github.com/crabnebula-dev/cargo-packager) (or [`cargo-bundle`](https://github.com/burtonageo/cargo-bundle)) for releases
+- App bundling: use the release path you chose in the Phase 0.5 spike (check 3), and Rune's `scripts/mac-app` only for quick relaunches
 
 **Port**
-1. **Receiving URLs:** register `on_open_url` on the picker app. In it: validate the URL (it comes from anyone who can run `open`), save `last_url` to settings, then show and focus the picker at the cursor. Rune doesn't bring the window forward for you.
+1. **Receiving URLs:** register `on_open_url` on the picker app (the spike's check 2 proved `http`/`https` links arrive). In it: validate the URL (it comes from anyone who can run `open`), save `last_url` to settings, then show and focus the picker at the cursor. Rune doesn't bring the window forward for you. The handler is a `fn` pointer, so it can't capture your `AppHandle`: keep the handle (and anything else it needs) in the picker's state.
 2. **Bundle:** produce `Browsernaut.app` with the existing `Info.plist` keys:
    - `CFBundleURLTypes` (http/https/ftp/file)
    - `CFBundleDocumentTypes` (.html, …)
@@ -305,9 +355,9 @@ Replaces `tauri_plugin_deep_link`, the system tray code, `Info.plist`, and `Acti
 5. **Dev loop:** add a CLI fallback (`browsernaut --url https://example.com`, via `AppSpec::extra_args`) so you can test the picker without bundling every time.
 
 **Hints**
-- Expect to spend time here. It's integration work, not hard Rust, but the feedback loop is slower. Rune's `scripts/mac-app` installs a build to `~/Applications/NAME.app` and relaunches it in place. Its `--scheme` flag registers *one* custom scheme, so check whether it covers `http`/`https`; if not, use your own `Info.plist` with cargo-packager here too.
-- Rune's docs only show `on_open_url` with custom schemes (`myapp://`). Browser links use the same Apple Event, so `http`/`https` links should arrive there too. **Verify this early** with a throwaway bundle before building the rest of the phase on it.
-- `tray-icon` must be created on the main thread **after** the event loop has started. Look for where Rune gives you main-thread setup (`AppSpec::setup`, or an `AppHandle::update`, which runs on the main thread "even while no window shows").
+- Expect to spend time here. It's integration work, not hard Rust, but the feedback loop is slower. Start from your spike code: checks 2–5 already proved each piece works on its own, and this phase is mostly wiring them together.
+- Make the bundle step one script (`bin/dev-bundle.sh`) that builds, bundles with your chosen packager, and runs `open -a ./…/Browsernaut.app https://example.com`.
+- Create `tray-icon` the way the spike's check 4 showed works (on the main thread, after the event loop has started).
 
 **Done when:** you can set the bundled app as your default browser, click a link in Slack/Mail, and the Rust picker appears at your cursor.
 
@@ -381,7 +431,7 @@ Replaces `tauri.conf.json` bundling/updater, `bin/apple.sh`, `.github/workflows/
    - `cargo-packager-updater` (closest to what Tauri did; reuse the minisign key idea)
    - Sparkle
    - simplest: "Check for update" fetches the latest GitHub release JSON with `reqwest`/`ureq` (through `rune::Latest`, so the window doesn't block) and opens the download page
-5. **CI:** a `publish` workflow on tags that builds, signs, notarizes, and uploads the DMG. Keep the Phase 0 check job, and add your headless UI tests to it if they run on the CI runner (they need a GPU adapter, so try a macOS runner first).
+5. **CI:** a `publish` workflow on tags that builds, signs, notarizes, and uploads the DMG. Keep the Phase 0 check job, and add your headless UI tests to it on whichever runner the spike's check 6 showed can run them.
 6. **Homebrew:** update `bin/commit-homebrew-update.sh` for the new artifact name if it changes.
 7. Delete the Tauri/TS app, `package.json`, `pnpm-lock.yaml`, and the Node CI job. Update `README.md`.
 
