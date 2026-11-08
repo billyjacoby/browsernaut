@@ -101,17 +101,44 @@ Rule of thumb: if a function can be written without Rune or macOS, it goes in
 ## Phase 0: Setup and orientation (½–1 day)
 
 **Learn**
-- Install with `rustup`. Add `rust-analyzer` to your editor and run `cargo clippy` often; Clippy is a good teacher.
+- Install every tool through [mise](https://mise.jdx.dev), as in step 2 below. Point your editor at the `rust-analyzer` it installs and run `cargo clippy` often; Clippy is a good teacher.
+- Know which tool owns what: **mise owns the tools** (Rust, Node, pnpm, Cargo subcommands) and **Cargo owns the crates** your code imports (`[dependencies]` and `Cargo.lock`). mise can't replace that second job.
 - Read *The Rust Programming Language* ("the Book") ch. 1–6: ownership, borrowing, structs, enums, `match`.
 - Optional warm-up: do the first ~30 [Rustlings](https://github.com/rust-lang/rustlings) exercises.
 
 **Port**
 1. Read `src-tauri/src/main.rs` and `apps.rs` line by line. For every `&`, `unwrap()`, `Option`, `move`, and `unsafe`, write down what you *think* it does, then check.
-2. Create the workspace and three empty crates (`cargo new --lib crates/core`, and so on). The top-level `Cargo.toml` contains only `[workspace]`.
-3. Add `crates/core` to CI: a GitHub Actions job running `cargo fmt --check`, `cargo clippy -- -D warnings`, and `cargo test`.
-4. Clone Rune and run `examples/hello` on your Mac (`cargo run -p hello`). Then render it headlessly (`cargo run -p hello -- --snap hello.png --scene on`) and open the PNG. Read its `#[cfg(test)]` test; you'll write tests like it later.
+2. Add a `mise.toml` at the repo root and run `mise install`. On any other machine, run `mise trust` first, because mise won't read a repo's config until you do. Pin exact versions so your machine and CI match, and keep Node and pnpm here until Phase 10 so the Tauri app still builds:
 
-**Done when:** `cargo test --workspace` passes (with zero tests), CI is green, and you've seen a Rune window and a Rune snapshot.
+   ```toml
+   [tools]
+   rust = { version = "1.99.1", components = "rustfmt,clippy,rust-analyzer" }
+   node = "24"
+   pnpm = "12.14.0"
+   ```
+
+   From now on, a new tool goes in this file. The commands mise replaces are the ones that install tools: `rustup component add`, `rustup target add`, and `cargo install`. For a Cargo subcommand, use mise's cargo backend (`"cargo:cargo-packager" = "0.11.8"`). Everyday Cargo commands (`cargo new`, `cargo add`, `cargo build`, `cargo test`) are still how you work, using the Cargo that mise installed.
+3. Create the workspace. The top-level `Cargo.toml` contains only:
+
+   ```toml
+   [workspace]
+   resolver = "3"
+   members = ["crates/*"]
+   ```
+
+   Then create the three crates. Pass `--name`, because a package named `core` is confused with Rust's standard library `core`:
+
+   ```sh
+   cargo new --vcs none --lib crates/core --name browsernaut-core
+   cargo new --vcs none --lib crates/macos --name browsernaut-macos
+   cargo new --vcs none crates/app --name browsernaut
+   ```
+
+   Add `/target` to the root `.gitignore`, since the workspace builds there rather than in `src-tauri/target`.
+4. Pin Rune in the root `Cargo.toml`, under `[workspace.dependencies]`, as `rune` and `rune-kit` git dependencies with the same full `rev`. Add `rune.workspace = true` and `rune-kit.workspace = true` to `crates/app/Cargo.toml`, and commit `Cargo.lock`. This is the only place the version lives. Cargo downloads that exact commit on any machine, with no separate clone. To upgrade, change both `rev` values, and match `rust` in `mise.toml` to the channel in Rune's `rust-toolchain.toml`.
+5. Clone Rune outside this repo, check out the `rev` from `Cargo.toml` (the clone is only for reading and running its examples), and run `examples/hello` on your Mac (`cargo run -p hello`). Then render it headlessly (`cargo run -p hello -- --snap hello.png --scene on`) and open the PNG. Read its `#[cfg(test)]` test; you'll write tests like it later.
+
+**Done when:** a fresh clone needs only `mise trust && mise install` to get every tool, `cargo fmt --all --check`, `cargo clippy --workspace -- -D warnings` and `cargo test --workspace` all pass locally, and you've seen a Rune window and a Rune snapshot.
 
 ---
 
@@ -133,7 +160,7 @@ what it changes in the plan. That file is the real deliverable.
 
 **Checks**
 
-1. **Pin and build.** Add `rune` + `rune-kit` as git dependencies pinned to one `rev`. Build and run `examples/hello` and `examples/background` from that rev.
+1. **Pin and build.** Depend on `rune` and `rune-kit` with `workspace = true`, using the pin from Phase 0. Build and run `examples/hello` and `examples/background` from that rev.
    - *Pass:* both run, and the `rev` is recorded in `SPIKE_NOTES.md`.
 
 2. **Browser links reach `on_open_url`.** This is the one the whole app depends on. Rune's docs only show custom schemes (`myapp://`). Its source (`crates/rune/src/open_url/incoming.rs`) handles the `kAEGetURL` Apple Event, which macOS uses for every link, with no scheme filter, so `http`/`https` *should* arrive. Prove it:
@@ -145,7 +172,7 @@ what it changes in the plan. That file is the real deliverable.
    - *If it fails:* stop and decide before Phase 5. Options: install your own Apple Event handler with `objc2` before `run` (Rune's docs say an app's own handler installed before `run` is kept), or open an issue on Rune. Write down what you chose.
 
 3. **Bundling a browser.** `scripts/mac-app --scheme NAME` writes `CFBundleURLTypes` with **one** custom scheme and nothing else: no `http`/`https` pair, no `CFBundleDocumentTypes`, no `LSUIElement`. It's still useful for fast relaunches, but it can't produce the real bundle. Pick the release path now:
-   - Try [`cargo-packager`](https://github.com/crabnebula-dev/cargo-packager) with the existing `src-tauri/Info.plist` keys merged in, or a small script that runs `mac-app` and then patches `Info.plist` with `plutil`.
+   - Try [`cargo-packager`](https://github.com/crabnebula-dev/cargo-packager) (installed through `mise.toml`) with the existing `src-tauri/Info.plist` keys merged in, or a small script that runs `mac-app` and then patches `Info.plist` with `plutil`.
    - *Pass:* one command produces a `.app` with all the keys from check 2, and the spike's links still arrive from that bundle.
 
 4. **Tray icon inside Rune's event loop.** Rune doesn't provide a menu-bar item. Create a [`tray-icon`](https://docs.rs/tray-icon) icon with one menu item from inside the running app: try `AppSpec::setup`, or an `AppHandle::update`, which runs on the main thread. Make the item call `handle.open()`.
@@ -183,6 +210,7 @@ Replaces `src/config/apps.ts` and the argument-building half of `src/utils/open-
 4. Write a **pure** function that builds the `open` arguments:
    `fn open_args(app: &AppSpec, url: &str, opts: LaunchOptions) -> Vec<String>`
    where `LaunchOptions { background: bool, private: bool }`.
+5. Now that there are real tests, add CI: a `pull_request` GitHub Actions job on `ubuntu-latest`, limited with `paths` to `crates/**`, `Cargo.toml`, `Cargo.lock`, `mise.toml` and the workflow file, so it doesn't run on unrelated changes. Install tools with [`jdx/mise-action@v5.2.7`](https://github.com/jdx/mise-action) (`install_args: rust` skips Node and pnpm), then run `cargo fmt`, `cargo clippy` and `cargo test` with `-p browsernaut-core`. Use `-p` rather than `--workspace`, because the other crates won't build on Linux once they use macOS APIs and Rune. Don't add a separate Rust setup action, or CI can drift from `mise.toml`.
 
 **Hints**
 - Pay attention to argument order: the URL must come **last**, after `--new --args <privateArg>`. See the comment in `open-app.ts`.
@@ -284,7 +312,7 @@ The UI starts here. Do **not** port the picker yet; get comfortable with Rune fi
 - Headless tests: `rune::Runtime::new(state, view, size, env)`, `rt.frame(dt)`, `rt.find("key")`, `rt.pointer_down/up`, `rt.state`
 
 **Port**
-1. `crates/app`: depend on `rune` and `rune-kit` (git, the `rev` you pinned in Phase 0.5) and your two crates.
+1. `crates/app`: add your two crates as dependencies (it already has `rune` and `rune-kit` from the Phase 0 pin).
 2. Open one window that renders a hard-coded list of three app names as `rune-kit` `Button`s.
 3. Add a counter: clicking a button increments a number in your state struct, and the label updates. Notice you never told Rune to re-render; mutating state in a handler is enough.
 4. Write your first **headless test**: tap the button by key, step a few frames, assert the counter changed.
@@ -424,16 +452,16 @@ Replaces `src/stores/themeDataSlice/*`, `useIsDarkMode.ts`, `ColorPicker.tsx`, `
 Replaces `tauri.conf.json` bundling/updater, `bin/apple.sh`, `.github/workflows/publish.yml`, and finally `src/`, `src-tauri/`, `swift/`, and the Node toolchain.
 
 **Port**
-1. **Universal binary:** build both `aarch64-apple-darwin` and `x86_64-apple-darwin`, combine with `lipo`. Or check whether your packager supports universal builds directly.
+1. **Universal binary:** add `targets = "aarch64-apple-darwin,x86_64-apple-darwin"` to the `rust` entry in `mise.toml`, build both, and combine them with `lipo`. Or check whether your packager supports universal builds directly.
 2. **Sign and notarize:** reuse the Apple secrets the current workflow uses (`codesign`, `xcrun notarytool`).
 3. **DMG** via your packager.
 4. **Updates:** pick one:
    - `cargo-packager-updater` (closest to what Tauri did; reuse the minisign key idea)
    - Sparkle
    - simplest: "Check for update" fetches the latest GitHub release JSON with `reqwest`/`ureq` (through `rune::Latest`, so the window doesn't block) and opens the download page
-5. **CI:** a `publish` workflow on tags that builds, signs, notarizes, and uploads the DMG. Keep the Phase 0 check job, and add your headless UI tests to it on whichever runner the spike's check 6 showed can run them.
+5. **CI:** a `publish` workflow on tags that installs tools with `jdx/mise-action`, then builds, signs, notarizes, and uploads the DMG. Keep the Phase 1 check job, and add your headless UI tests to it on whichever runner the spike's check 6 showed can run them.
 6. **Homebrew:** update `bin/commit-homebrew-update.sh` for the new artifact name if it changes.
-7. Delete the Tauri/TS app, `package.json`, `pnpm-lock.yaml`, and the Node CI job. Update `README.md`.
+7. Delete the Tauri/TS app, `package.json`, `pnpm-lock.yaml`, and the Node CI job. Remove `node` and `pnpm` from `mise.toml`. Update `README.md`.
 
 **Done when:** pushing a tag produces a signed, notarized DMG, and an existing Tauri user who installs it keeps their apps, order, and hotkeys (Phase 3 migration).
 

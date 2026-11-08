@@ -1,0 +1,22 @@
+# name: Rust checks
+
+# on:
+#   pull_request:
+#     paths:
+#       - "crates/**"
+#       - "Cargo.toml"
+#       - "Cargo.lock"
+#       - "mise.toml"
+#       - ".github/workflows/rust_checks.yml"
+
+# jobs:
+#   core:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: jdx/mise-action@v5.2.7
+#         with:
+#           install_args: rust # skips Node and pnpm
+#       - run: cargo fmt -p browsernaut-core --check
+#       - run: cargo clippy -p browsernaut-core -- -D warnings
+#       - run: cargo test -p browsernaut-core
