@@ -29,6 +29,8 @@ Last updated: 2026-11-08
 6. **Don't commit or push unless Billy asks.**
 7. **API names in the roadmap are starting points.** Rune is pre-release, so check them against
    Rune's docs and source at the pinned commit.
+8. **Claude Code users:** the `rust-port-progress` skill in `.claude/skills/` has the workflow for
+   updating this file and the roadmap.
 
 ## Picking this up on a new machine
 
@@ -54,7 +56,7 @@ cargo build
 | Step | Status | Notes |
 |---|---|---|
 | 1. Read the Tauri Rust code | Not recorded | Reading exercise, so the repo can't show it |
-| 2. `mise.toml` | Done | Rust 1.99.1, Node 24, pnpm 12.14.0 |
+| 2. `mise.toml` | Done | Rust 1.99.1, Node 24, pnpm 12.14.0 (see "Corrections to finished steps") |
 | 3. Workspace and three crates | Done | `/target`-style ignore added to `.gitignore` |
 | 4. Pin Rune | Done | Added for Billy by Claude |
 | 5. Clone Rune and run `hello` | Not started | No clone at `~/Programming/rune` yet |
@@ -110,13 +112,23 @@ PR now contains the setup code as well as the docs, and its description still sa
 
 ### CI
 
-`.github/workflows/rust_checks.yml` exists with every line commented out. It's the draft for
-Phase 1 step 5, and it should only be `-p browsernaut-core`, because the other crates won't
-build on Linux once they use macOS APIs and Rune.
+`.github/workflows/rust_checks.yml.disabled` is the commented-out draft for Phase 1 step 5. It
+has the `.disabled` suffix because GitHub reports a commented-out workflow as a failed run on
+every push. To turn it on, uncomment it and remove the suffix. It should only use `-p
+browsernaut-core`, because the other crates won't build on Linux once they use macOS APIs and
+Rune.
+
+The existing `Type check & Lint` workflow fails on this branch and on `release-v1.3.6`, with
+`ERR_PNPM_IGNORED_BUILDS` for `esbuild@0.24.0` during install. It isn't caused by the Rust work.
 
 ## Corrections to finished steps
 
-None yet.
+- **Phase 0 step 2, the pnpm pin.** `pnpm = "12.14.0"` fails a normal `pnpm install
+  --frozen-lockfile` with `ERR_PNPM_IGNORED_BUILDS` for `esbuild@0.24.0`. The original test had
+  install scripts turned off, so it missed this. pnpm 10.34.9 exits 0 on the same lockfile, with
+  a warning that the esbuild script was skipped. Unresolved: Billy needs to choose between
+  pinning pnpm 10.34.9 in `mise.toml` and allowing esbuild's script in `package.json`. This only
+  matters when working on the old Tauri app.
 
 ## Known risks
 
